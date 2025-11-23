@@ -24,6 +24,22 @@ const HERO_SLIDES = [
     badge: 'Trending',
     buttonText: 'Explore',
   },
+  {
+    id: '3',
+    title: 'Kids Essentials',
+    subtitle: 'Premium Baby & Kids Products',
+    image: 'https://images.unsplash.com/photo-1516627145497-ae6968895b2f?w=800',
+    badge: 'Best Sellers',
+    buttonText: 'Discover',
+  },
+  {
+    id: '4',
+    title: 'Summer Collection',
+    subtitle: 'Bright & Colorful Fashion',
+    image: 'https://images.unsplash.com/photo-1527529482837-4698179dc6ce?w=800',
+    badge: 'New In',
+    buttonText: 'Browse',
+  },
 ];
 
 interface ModernHeroSectionProps {
