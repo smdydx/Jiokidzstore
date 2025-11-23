@@ -8,7 +8,7 @@ import { ScreenScrollView } from '@/components/ScreenScrollView';
 import { ThemedText } from '@/components/ThemedText';
 import { ProductCard } from '@/components/ProductCard';
 import { ModernCategory } from '@/components/ModernCategory';
-import { ModernHeader } from '@/components/ModernHeader';
+import { ModernSearchBar } from '@/components/ModernSearchBar';
 import { ModernHeroSection } from '@/components/ModernHeroSection';
 import { BadgeLabel } from '@/components/BadgeLabel';
 import { BestSellersCarousel } from '@/components/BestSellersCarousel';
@@ -87,12 +87,11 @@ export default function HomeScreen() {
 
   return (
     <View style={styles.container}>
-      <ModernHeader notificationCount={2} />
+      <ScreenScrollView contentContainerStyle={styles.scrollContent}>
+        {/* Search Bar */}
+        <ModernSearchBar onSearch={handleSearchPress} />
 
-      <View style={styles.scrollWrapper}>
-        <ScreenScrollView contentContainerStyle={styles.scrollContent}>
-
-          {/* Hero Section */}
+        {/* Hero Section */}
           <View style={styles.heroContainer}>
             <ModernHeroSection
               onSlidePress={() => {}}
@@ -198,8 +197,7 @@ export default function HomeScreen() {
             </View>
           </View>
 
-        </ScreenScrollView>
-      </View>
+      </ScreenScrollView>
 
       {/* Floating Cart Button */}
       <Pressable
@@ -225,12 +223,9 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#FFFFFF',
   },
-  scrollWrapper: {
-    flex: 1,
-  },
   scrollContent: {
     flexGrow: 1,
-    paddingBottom: 24,
+    paddingBottom: 100,
     paddingTop: 0,
   },
   section: {
@@ -335,7 +330,7 @@ const styles = StyleSheet.create({
   },
   cartFAB: {
     position: 'absolute',
-    bottom: Spacing.xl,
+    bottom: 90,
     right: Spacing.lg,
     width: 64,
     height: 64,
