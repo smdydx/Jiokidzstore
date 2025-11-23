@@ -28,12 +28,12 @@ const styles = StyleSheet.create({
   container: {
     width: '100%',
     paddingHorizontal: Spacing.lg,
-    paddingVertical: Spacing.sm,
+    paddingVertical: Spacing.md,
     alignItems: 'flex-start',
-    justifyContent: 'center',
+    justifyContent: 'flex-start',
   },
   logo: {
-    width: 120,
-    height: 36,
+    width: 100,
+    height: 40,
   },
 });

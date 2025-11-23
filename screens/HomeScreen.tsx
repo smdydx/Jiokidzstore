@@ -237,6 +237,7 @@ const styles = StyleSheet.create({
   },
   heroSection: {
     marginBottom: 24,
+    marginTop: 0,
   },
   heroSlide: {
     width: width,
