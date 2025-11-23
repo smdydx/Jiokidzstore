@@ -7,6 +7,7 @@ import Animated, {
   useSharedValue,
   withTiming,
   Easing,
+  useAnimatedReaction,
 } from 'react-native-reanimated';
 import { Feather } from '@expo/vector-icons';
 import { ThemedText } from '@/components/ThemedText';
@@ -20,20 +21,67 @@ interface SlideProps {
   icon?: string;
   logo?: any;
   gradient: [string, string];
+  isFirstSlide?: boolean;
+  slideIndex: number;
+  currentSlide: number;
 }
 
-function Slide({ title, subtitle, icon, logo, gradient }: SlideProps) {
-  const fadeAnim = useSharedValue(0);
+function Slide({ title, subtitle, icon, logo, gradient, isFirstSlide, slideIndex, currentSlide }: SlideProps) {
+  const textFadeAnim = useSharedValue(0);
+  const textTranslateAnim = useSharedValue(50);
+  const logoFadeAnim = useSharedValue(0);
+  const logoScaleAnim = useSharedValue(0.8);
 
   useEffect(() => {
-    fadeAnim.value = withTiming(1, {
-      duration: 600,
-      easing: Easing.ease,
-    });
-  }, []);
+    if (slideIndex === currentSlide && isFirstSlide) {
+      // Animate text first
+      textFadeAnim.value = withTiming(1, {
+        duration: 600,
+        easing: Easing.ease,
+      });
+      textTranslateAnim.value = withTiming(0, {
+        duration: 600,
+        easing: Easing.ease,
+      });
 
-  const animatedStyle = useAnimatedStyle(() => ({
-    opacity: fadeAnim.value,
+      // Then animate logo with delay
+      setTimeout(() => {
+        logoFadeAnim.value = withTiming(1, {
+          duration: 800,
+          easing: Easing.bezier(0.34, 1.56, 0.64, 1),
+        });
+        logoScaleAnim.value = withTiming(1, {
+          duration: 800,
+          easing: Easing.bezier(0.34, 1.56, 0.64, 1),
+        });
+      }, 300);
+    } else if (slideIndex === currentSlide && !isFirstSlide) {
+      // For other slides, simple fade in
+      textFadeAnim.value = withTiming(1, {
+        duration: 600,
+        easing: Easing.ease,
+      });
+      logoFadeAnim.value = withTiming(1, {
+        duration: 600,
+        easing: Easing.ease,
+      });
+    } else {
+      // Reset animations when not visible
+      textFadeAnim.value = 0;
+      textTranslateAnim.value = 50;
+      logoFadeAnim.value = 0;
+      logoScaleAnim.value = 0.8;
+    }
+  }, [slideIndex, currentSlide]);
+
+  const textAnimatedStyle = useAnimatedStyle(() => ({
+    opacity: textFadeAnim.value,
+    transform: [{ translateY: textTranslateAnim.value }],
+  }));
+
+  const logoAnimatedStyle = useAnimatedStyle(() => ({
+    opacity: logoFadeAnim.value,
+    transform: [{ scale: logoScaleAnim.value }],
   }));
 
   return (
@@ -43,19 +91,31 @@ function Slide({ title, subtitle, icon, logo, gradient }: SlideProps) {
       end={{ x: 1, y: 1 }}
       style={styles.slide}
     >
-      <Animated.View style={[styles.slideContent, animatedStyle]}>
-        {logo ? (
-          <View style={styles.logoContainer}>
-            <Image source={logo} style={styles.logo} resizeMode="contain" />
-          </View>
+      <View style={styles.slideContent}>
+        {isFirstSlide ? (
+          <>
+            <Animated.View style={[styles.textContainer, textAnimatedStyle]}>
+              <ThemedText style={styles.slideTitle}>{title}</ThemedText>
+            </Animated.View>
+            <Animated.View style={[styles.logoContainer, logoAnimatedStyle]}>
+              <Image source={logo} style={styles.logo} resizeMode="contain" />
+            </Animated.View>
+            <Animated.View style={[{ opacity: textFadeAnim }, styles.subtitleContainer]}>
+              <ThemedText style={styles.slideSubtitle}>{subtitle}</ThemedText>
+            </Animated.View>
+          </>
         ) : (
-          <View style={styles.iconContainer}>
-            <Feather name={icon as any} size={120} color="#FFFFFF" />
-          </View>
+          <>
+            <Animated.View style={[styles.iconContainer, logoAnimatedStyle]}>
+              <Feather name={icon as any} size={120} color="#FFFFFF" />
+            </Animated.View>
+            <Animated.View style={[textAnimatedStyle, styles.textContainerOther]}>
+              <ThemedText style={styles.slideTitle}>{title}</ThemedText>
+              <ThemedText style={styles.slideSubtitle}>{subtitle}</ThemedText>
+            </Animated.View>
+          </>
         )}
-        <ThemedText style={styles.slideTitle}>{title}</ThemedText>
-        <ThemedText style={styles.slideSubtitle}>{subtitle}</ThemedText>
-      </Animated.View>
+      </View>
     </LinearGradient>
   );
 }
@@ -72,18 +132,27 @@ export default function SplashScreen() {
       subtitle: 'Premium Kids E-Commerce Store',
       logo: require('@/attached_assets/JioKidslogo_1763923777175.png'),
       gradient: ['#FFB6D9', '#FF6B9D'],
+      isFirstSlide: true,
+      slideIndex: 0,
+      currentSlide,
     },
     {
       title: 'Easy Shopping',
       subtitle: 'Browse, filter, and find everything you need in just a few taps',
       icon: 'shopping-bag',
       gradient: ['#FF8FB3', '#FF6B9D'],
+      isFirstSlide: false,
+      slideIndex: 1,
+      currentSlide,
     },
     {
       title: 'Fast Delivery',
       subtitle: 'Quick checkout and reliable delivery to your doorstep',
       icon: 'truck',
       gradient: ['#FF6B9D', '#E5426B'],
+      isFirstSlide: false,
+      slideIndex: 2,
+      currentSlide,
     },
   ];
 
@@ -226,24 +295,37 @@ const styles = StyleSheet.create({
   slideContent: {
     alignItems: 'center',
     paddingHorizontal: Spacing.xl,
+    width: '100%',
+  },
+  textContainer: {
+    marginBottom: Spacing.lg,
+  },
+  textContainerOther: {
+    marginTop: Spacing.lg,
   },
   logoContainer: {
     marginBottom: Spacing.xl,
     width: 180,
     height: 180,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   logo: {
     width: '100%',
     height: '100%',
   },
+  subtitleContainer: {
+    marginTop: Spacing.lg,
+  },
   iconContainer: {
     marginBottom: Spacing.xxl,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   slideTitle: {
     fontSize: 32,
     fontWeight: '700',
     color: '#FFFFFF',
-    marginBottom: Spacing.lg,
     textAlign: 'center',
     fontFamily: 'Poppins',
   },
