@@ -2,11 +2,6 @@ import React, { useState } from 'react';
 import { StyleSheet, Pressable, TextInput, View } from 'react-native';
 import { Feather } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
-import Animated, {
-  useAnimatedStyle,
-  useSharedValue,
-  withTiming,
-} from 'react-native-reanimated';
 import { Colors, Spacing, BorderRadius } from '@/constants/theme';
 
 interface SearchBarProps {
@@ -16,15 +11,9 @@ interface SearchBarProps {
 
 export function SearchBar({ onSearch, onMicPress }: SearchBarProps) {
   const [text, setText] = useState('');
-  const [isFocused, setIsFocused] = useState(false);
-  const scale = useSharedValue(1);
-
-  const animatedStyle = useAnimatedStyle(() => ({
-    transform: [{ scale: scale.value }],
-  }));
 
   return (
-    <Animated.View style={[styles.container, animatedStyle]}>
+    <View style={styles.container}>
       <LinearGradient
         colors={['rgba(255,255,255,0.9)', 'rgba(255,255,255,0.95)']}
         style={styles.gradient}
@@ -40,21 +29,13 @@ export function SearchBar({ onSearch, onMicPress }: SearchBarProps) {
               setText(newText);
               onSearch?.(newText);
             }}
-            onFocus={() => {
-              setIsFocused(true);
-              scale.value = withTiming(1.02, { duration: 300 });
-            }}
-            onBlur={() => {
-              setIsFocused(false);
-              scale.value = withTiming(1, { duration: 300 });
-            }}
           />
           <Pressable onPress={onMicPress}>
             <Feather name="mic" size={18} color={Colors.light.primary} />
           </Pressable>
         </View>
       </LinearGradient>
-    </Animated.View>
+    </View>
   );
 }
 

@@ -2,11 +2,6 @@ import React from 'react';
 import { StyleSheet, Pressable, View } from 'react-native';
 import { Feather } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
-import Animated, {
-  useAnimatedStyle,
-  useSharedValue,
-  withSpring,
-} from 'react-native-reanimated';
 import { ThemedText } from './ThemedText';
 import { Spacing, BorderRadius, Colors } from '@/constants/theme';
 import { Category } from '@/data/types';
@@ -17,20 +12,6 @@ interface ModernCategoryProps {
 }
 
 export function ModernCategory({ category, onPress }: ModernCategoryProps) {
-  const scale = useSharedValue(1);
-
-  const handlePressIn = () => {
-    scale.value = withSpring(0.9);
-  };
-
-  const handlePressOut = () => {
-    scale.value = withSpring(1);
-  };
-
-  const animatedStyle = useAnimatedStyle(() => ({
-    transform: [{ scale: scale.value }],
-  }));
-
   const categoryColors: Record<string, string[]> = {
     'Boy Fashion': ['#3498DB', '#5DADE2'],
     'Girl Fashion': ['#FF6B9D', '#FF8FB3'],
@@ -42,12 +23,10 @@ export function ModernCategory({ category, onPress }: ModernCategoryProps) {
   const colors = categoryColors[category.name] || ['#3498DB', '#5DADE2'];
 
   return (
-    <Animated.View style={animatedStyle}>
+    <View style={styles.container}>
       <Pressable
         onPress={onPress}
-        onPressIn={handlePressIn}
-        onPressOut={handlePressOut}
-        style={styles.container}
+        style={({ pressed }) => [pressed && styles.pressed]}
       >
         <LinearGradient
           colors={colors}
@@ -59,12 +38,12 @@ export function ModernCategory({ category, onPress }: ModernCategoryProps) {
             <Feather name="shopping-bag" size={28} color="#FFFFFF" />
           </View>
         </LinearGradient>
-        <ThemedText style={styles.label} numberOfLines={1}>
-          {category.name}
-        </ThemedText>
-        <ThemedText style={styles.count}>{category.itemCount} items</ThemedText>
       </Pressable>
-    </Animated.View>
+      <ThemedText style={styles.label} numberOfLines={1}>
+        {category.name}
+      </ThemedText>
+      <ThemedText style={styles.count}>{category.itemCount} items</ThemedText>
+    </View>
   );
 }
 
@@ -73,6 +52,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: Spacing.sm,
     width: 100,
+  },
+  pressed: {
+    opacity: 0.8,
   },
   gradient: {
     width: 90,
