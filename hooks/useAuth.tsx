@@ -47,15 +47,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         setHasSeenOnboarding(true);
       }
 
-      // Ensure splash screen shows for at least 3 seconds for animation
+      // Ensure splash screen shows for at least 13 seconds (3 slides × 4 sec each + transitions)
       setTimeout(() => {
         setIsLoading(false);
-      }, 3000);
+      }, 13000);
     } catch (error) {
       console.error('Failed to load user data:', error);
       setTimeout(() => {
         setIsLoading(false);
-      }, 3000);
+      }, 13000);
     }
   };
 

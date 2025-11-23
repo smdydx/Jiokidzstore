@@ -1,219 +1,260 @@
-import React, { useEffect } from 'react';
-import { View, StyleSheet, Image, Dimensions } from 'react-native';
+import React, { useEffect, useRef } from 'react';
+import { View, StyleSheet, Image, Pressable, ScrollView, Dimensions } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
+import { useNavigation } from '@react-navigation/native';
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
   withTiming,
-  withSequence,
   Easing,
-  withDelay,
+  interpolate,
 } from 'react-native-reanimated';
+import { Feather } from '@expo/vector-icons';
 import { ThemedText } from '@/components/ThemedText';
 import { Colors, Spacing } from '@/constants/theme';
 
-const { height: screenHeight } = Dimensions.get('window');
+const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
 
-export default function SplashScreen() {
-  // Logo animations
-  const logoScale = useSharedValue(0);
-  const logoRotate = useSharedValue(-180);
-  const logoOpacity = useSharedValue(0);
-  
-  // Text animations
-  const textOpacity = useSharedValue(0);
-  const textTranslateY = useSharedValue(50);
-  
-  // Pulse animation
-  const pulseScale = useSharedValue(1);
+interface SlideProps {
+  title: string;
+  subtitle: string;
+  icon: string;
+  gradient: [string, string];
+  delay: number;
+}
+
+function Slide({ title, subtitle, icon, gradient, delay }: SlideProps) {
+  const fadeAnim = useSharedValue(0);
 
   useEffect(() => {
-    // Logo entrance animation
-    logoScale.value = withTiming(1, {
-      duration: 800,
-      easing: Easing.out(Easing.cubic),
-    });
-
-    logoRotate.value = withTiming(0, {
-      duration: 800,
-      easing: Easing.out(Easing.cubic),
-    });
-
-    logoOpacity.value = withTiming(1, {
+    fadeAnim.value = withTiming(1, {
       duration: 600,
       easing: Easing.ease,
     });
-
-    // Text entrance animation (delayed)
-    textOpacity.value = withDelay(
-      400,
-      withTiming(1, {
-        duration: 600,
-        easing: Easing.ease,
-      })
-    );
-
-    textTranslateY.value = withDelay(
-      400,
-      withTiming(0, {
-        duration: 600,
-        easing: Easing.out(Easing.cubic),
-      })
-    );
-
-    // Pulse animation (after entrance)
-    pulseScale.value = withDelay(
-      1200,
-      withSequence(
-        withTiming(1.1, {
-          duration: 600,
-          easing: Easing.inOut(Easing.ease),
-        }),
-        withTiming(1, {
-          duration: 600,
-          easing: Easing.inOut(Easing.ease),
-        })
-      )
-    );
   }, []);
 
-  const logoAnimatedStyle = useAnimatedStyle(() => ({
-    transform: [
-      { scale: logoScale.value },
-      { rotate: `${logoRotate.value}deg` },
-    ],
-    opacity: logoOpacity.value,
-  }));
-
-  const textAnimatedStyle = useAnimatedStyle(() => ({
-    opacity: textOpacity.value,
-    transform: [{ translateY: textTranslateY.value }],
-  }));
-
-  const pulseAnimatedStyle = useAnimatedStyle(() => ({
-    transform: [{ scale: pulseScale.value }],
+  const animatedStyle = useAnimatedStyle(() => ({
+    opacity: fadeAnim.value,
   }));
 
   return (
     <LinearGradient
-      colors={['#FFB6D9', '#FF6B9D']}
+      colors={gradient}
       start={{ x: 0, y: 0 }}
       end={{ x: 1, y: 1 }}
-      style={styles.container}
+      style={styles.slide}
     >
-      {/* Animated pulse background */}
-      <Animated.View style={[styles.pulseCircle, pulseAnimatedStyle]} />
-
-      {/* Logo */}
-      <Animated.View style={[styles.logoContainer, logoAnimatedStyle]}>
-        <Image
-          source={require('@/attached_assets/JioKidslogo_1763923777175.png')}
-          style={styles.logo}
-          resizeMode="contain"
-        />
+      <Animated.View style={[styles.slideContent, animatedStyle]}>
+        <View style={styles.iconContainer}>
+          <Feather name={icon as any} size={120} color="#FFFFFF" />
+        </View>
+        <ThemedText style={styles.slideTitle}>{title}</ThemedText>
+        <ThemedText style={styles.slideSubtitle}>{subtitle}</ThemedText>
       </Animated.View>
-
-      {/* App Name */}
-      <Animated.View style={[styles.textContainer, textAnimatedStyle]}>
-        <ThemedText style={styles.appName}>JioKidz</ThemedText>
-        <ThemedText style={styles.tagline}>Premium Kids Store</ThemedText>
-      </Animated.View>
-
-      {/* Loading dots animation */}
-      <View style={styles.dotsContainer}>
-        <Animated.View 
-          style={[
-            styles.dot, 
-            {
-              opacity: withSequence(
-                withDelay(0, withTiming(1, { duration: 400 })),
-                withDelay(200, withTiming(0.5, { duration: 400 })),
-                withDelay(200, withTiming(1, { duration: 400 }))
-              ),
-            }
-          ]} 
-        />
-        <Animated.View 
-          style={[
-            styles.dot, 
-            {
-              opacity: withSequence(
-                withDelay(200, withTiming(1, { duration: 400 })),
-                withDelay(200, withTiming(0.5, { duration: 400 })),
-                withDelay(200, withTiming(1, { duration: 400 }))
-              ),
-            }
-          ]} 
-        />
-        <Animated.View 
-          style={[
-            styles.dot, 
-            {
-              opacity: withSequence(
-                withDelay(400, withTiming(1, { duration: 400 })),
-                withDelay(200, withTiming(0.5, { duration: 400 })),
-                withDelay(200, withTiming(1, { duration: 400 }))
-              ),
-            }
-          ]} 
-        />
-      </View>
     </LinearGradient>
+  );
+}
+
+export default function SplashScreen() {
+  const navigation = useNavigation<any>();
+  const scrollViewRef = useRef<ScrollView>(null);
+  const currentSlide = useRef(0);
+
+  const slides: SlideProps[] = [
+    {
+      title: 'Welcome to JioKidz',
+      subtitle: 'Discover amazing products for your kids with best prices and quality',
+      icon: 'smile',
+      gradient: ['#FFB6D9', '#FF6B9D'],
+      delay: 0,
+    },
+    {
+      title: 'Easy Shopping',
+      subtitle: 'Browse, filter, and find everything you need in just a few taps',
+      icon: 'shopping-bag',
+      gradient: ['#FF8FB3', '#FF6B9D'],
+      delay: 5000,
+    },
+    {
+      title: 'Fast Delivery',
+      subtitle: 'Quick checkout and reliable delivery to your doorstep',
+      icon: 'truck',
+      gradient: ['#FF6B9D', '#E5426B'],
+      delay: 10000,
+    },
+  ];
+
+  useEffect(() => {
+    // Auto-scroll to each slide
+    const timer1 = setTimeout(() => {
+      scrollViewRef.current?.scrollTo({ x: screenWidth, animated: true });
+      currentSlide.current = 1;
+    }, 4000);
+
+    const timer2 = setTimeout(() => {
+      scrollViewRef.current?.scrollTo({ x: screenWidth * 2, animated: true });
+      currentSlide.current = 2;
+    }, 8000);
+
+    return () => {
+      clearTimeout(timer1);
+      clearTimeout(timer2);
+    };
+  }, []);
+
+  const handleGetStarted = () => {
+    navigation.navigate('Login');
+  };
+
+  const handleDotPress = (index: number) => {
+    scrollViewRef.current?.scrollTo({ x: screenWidth * index, animated: true });
+    currentSlide.current = index;
+  };
+
+  return (
+    <View style={styles.container}>
+      <ScrollView
+        ref={scrollViewRef}
+        horizontal
+        pagingEnabled
+        scrollEnabled={false}
+        showsHorizontalScrollIndicator={false}
+        style={styles.scrollView}
+      >
+        {slides.map((slide, index) => (
+          <View key={index} style={{ width: screenWidth }}>
+            <Slide {...slide} />
+          </View>
+        ))}
+      </ScrollView>
+
+      {/* Dots Indicator */}
+      <View style={styles.dotsContainer}>
+        {slides.map((_, index) => (
+          <Pressable
+            key={index}
+            style={[
+              styles.dot,
+              currentSlide.current === index ? styles.activeDot : styles.inactiveDot,
+            ]}
+            onPress={() => handleDotPress(index)}
+          />
+        ))}
+      </View>
+
+      {/* Get Started Button - Only on last slide */}
+      {currentSlide.current === 2 && (
+        <Animated.View
+          style={[
+            styles.buttonContainer,
+            {
+              opacity: useSharedValue(1),
+            },
+          ]}
+        >
+          <Pressable
+            style={({ pressed }) => [
+              styles.getStartedButton,
+              pressed && styles.getStartedButtonPressed,
+            ]}
+            onPress={handleGetStarted}
+          >
+            <LinearGradient
+              colors={['#FF6B9D', '#FF8FB3']}
+              style={styles.buttonGradient}
+            >
+              <ThemedText style={styles.buttonText}>Get Started</ThemedText>
+              <Feather name="arrow-right" size={18} color="#FFFFFF" style={{ marginLeft: Spacing.sm }} />
+            </LinearGradient>
+          </Pressable>
+        </Animated.View>
+      )}
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: '#FFFFFF',
+  },
+  scrollView: {
+    flex: 1,
+  },
+  slide: {
+    width: screenWidth,
+    height: screenHeight,
     justifyContent: 'center',
     alignItems: 'center',
   },
-  logoContainer: {
-    width: 200,
-    height: 200,
-    justifyContent: 'center',
+  slideContent: {
     alignItems: 'center',
-    marginBottom: Spacing.xl,
+    paddingHorizontal: Spacing.xl,
   },
-  logo: {
-    width: '100%',
-    height: '100%',
-  },
-  pulseCircle: {
-    position: 'absolute',
-    width: 300,
-    height: 300,
-    borderRadius: 150,
-    backgroundColor: 'rgba(255, 255, 255, 0.1)',
-  },
-  textContainer: {
-    alignItems: 'center',
+  iconContainer: {
     marginBottom: Spacing.xxl,
   },
-  appName: {
-    fontSize: 32,
+  slideTitle: {
+    fontSize: 28,
     fontWeight: '700',
     color: '#FFFFFF',
-    marginBottom: Spacing.xs,
+    marginBottom: Spacing.lg,
+    textAlign: 'center',
     fontFamily: 'Poppins',
   },
-  tagline: {
-    fontSize: 14,
-    color: 'rgba(255, 255, 255, 0.8)',
-    fontWeight: '500',
+  slideSubtitle: {
+    fontSize: 16,
+    color: 'rgba(255, 255, 255, 0.9)',
+    textAlign: 'center',
+    lineHeight: 24,
     fontFamily: 'Poppins',
+    fontWeight: '500',
   },
   dotsContainer: {
     position: 'absolute',
-    bottom: 60,
+    bottom: 100,
+    left: 0,
+    right: 0,
     flexDirection: 'row',
+    justifyContent: 'center',
     gap: Spacing.md,
-    alignItems: 'center',
   },
   dot: {
-    width: 10,
-    height: 10,
-    borderRadius: 5,
+    width: 12,
+    height: 12,
+    borderRadius: 6,
+  },
+  activeDot: {
     backgroundColor: '#FFFFFF',
+    width: 32,
+  },
+  inactiveDot: {
+    backgroundColor: 'rgba(255, 255, 255, 0.5)',
+  },
+  buttonContainer: {
+    position: 'absolute',
+    bottom: 40,
+    left: Spacing.lg,
+    right: Spacing.lg,
+  },
+  getStartedButton: {
+    borderRadius: 12,
+    overflow: 'hidden',
+  },
+  getStartedButtonPressed: {
+    opacity: 0.8,
+  },
+  buttonGradient: {
+    paddingVertical: Spacing.lg,
+    paddingHorizontal: Spacing.xl,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  buttonText: {
+    fontSize: 16,
+    fontWeight: '700',
+    color: '#FFFFFF',
+    fontFamily: 'Poppins',
   },
 });
