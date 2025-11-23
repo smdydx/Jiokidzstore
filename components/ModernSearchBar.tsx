@@ -77,10 +77,8 @@ export function ModernSearchBar({ onSearch, onMicPress }: ModernSearchBarProps) 
 const styles = StyleSheet.create({
   container: {
     paddingHorizontal: Spacing.lg,
-    paddingVertical: Spacing.lg,
+    paddingVertical: 32,
     zIndex: 10,
-    aspectRatio: 2,
-    justifyContent: 'center',
   },
   searchBox: {
     borderRadius: 20,
@@ -93,8 +91,6 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.08,
     shadowRadius: 4,
     elevation: 3,
-    flex: 1,
-    justifyContent: 'center',
   },
   searchBoxFocused: {
     borderColor: Colors.light.primary,
@@ -104,13 +100,13 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     paddingHorizontal: Spacing.lg,
-    paddingVertical: Spacing.xl,
+    paddingVertical: Spacing.md,
     gap: Spacing.md,
   },
   input: {
     flex: 1,
     color: Colors.light.text,
-    fontSize: 16,
+    fontSize: 15,
     fontWeight: '500',
   },
   suggestionsContainer: {
