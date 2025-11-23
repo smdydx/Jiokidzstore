@@ -118,10 +118,9 @@ export function ModernHeroSection({ onSlidePress, onButtonPress }: ModernHeroSec
 const styles = StyleSheet.create({
   container: {
     marginBottom: Spacing.xl,
-    borderTopLeftRadius: 20,
-    borderTopRightRadius: 20,
+    borderTopLeftRadius: 24,
+    borderTopRightRadius: 24,
     overflow: 'hidden',
-    marginHorizontal: Spacing.lg,
   },
   slide: {
     width: width,

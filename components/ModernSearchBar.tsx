@@ -16,11 +16,13 @@ export function ModernSearchBar({ onSearch, onMicPress }: ModernSearchBarProps) 
   const [isFocused, setIsFocused] = useState(false);
 
   return (
-    <View style={styles.container}>
-      <LinearGradient
-        colors={['#FFB6D9', '#FFE5EE']}
-        start={{ x: 0, y: 0 }}
-        end={{ x: 1, y: 1 }}
+    <LinearGradient
+      colors={['#FFB6D9', '#FFE5EE']}
+      start={{ x: 0, y: 0 }}
+      end={{ x: 1, y: 1 }}
+      style={styles.container}
+    >
+      <View
         style={[styles.searchBox, isFocused && styles.searchBoxFocused]}
       >
         <View style={styles.content}>
@@ -68,7 +70,7 @@ export function ModernSearchBar({ onSearch, onMicPress }: ModernSearchBarProps) 
           />
         </View>
       )}
-    </View>
+    </LinearGradient>
   );
 }
 
@@ -77,13 +79,13 @@ const styles = StyleSheet.create({
     paddingHorizontal: Spacing.lg,
     paddingVertical: Spacing.md,
     zIndex: 10,
-    backgroundColor: '#FFFFFF',
   },
   searchBox: {
     borderRadius: 20,
     overflow: 'hidden',
     borderWidth: 1,
     borderColor: Colors.light.border,
+    backgroundColor: '#FFFFFF',
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.08,
