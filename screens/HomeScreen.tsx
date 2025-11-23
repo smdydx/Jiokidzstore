@@ -121,7 +121,7 @@ export default function HomeScreen() {
   return (
     <ScreenScrollView contentContainerStyle={styles.scrollContent}>
       {/* Hero Slider */}
-      <View style={styles.heroSection}>
+      <View style={styles.heroSection} pointerEvents="none">
         <FlatList
           ref={heroScrollRef}
           data={HERO_SLIDES}
@@ -233,11 +233,12 @@ export default function HomeScreen() {
 const styles = StyleSheet.create({
   scrollContent: {
     flexGrow: 1,
-    paddingBottom: 100,
+    paddingBottom: 120,
   },
   heroSection: {
     marginBottom: 24,
     marginTop: 0,
+    marginHorizontal: 0,
   },
   heroSlide: {
     width: width,
@@ -385,18 +386,21 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
   },
   cartFAB: {
-    position: 'absolute',
-    bottom: 24,
-    right: 16,
+    position: 'relative',
+    alignSelf: 'flex-end',
     width: 64,
     height: 64,
     borderRadius: 32,
+    marginRight: 16,
+    marginTop: -70,
+    marginBottom: 16,
     overflow: 'visible',
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.3,
     shadowRadius: 8,
     elevation: 8,
+    zIndex: 999,
   },
   cartFABGradient: {
     width: '100%',

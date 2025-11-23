@@ -31,6 +31,9 @@ const styles = StyleSheet.create({
     paddingVertical: Spacing.md,
     alignItems: 'flex-start',
     justifyContent: 'flex-start',
+    borderBottomLeftRadius: 20,
+    borderBottomRightRadius: 20,
+    overflow: 'hidden',
   },
   logo: {
     width: 100,
