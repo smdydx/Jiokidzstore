@@ -8,7 +8,6 @@ import { ScreenScrollView } from '@/components/ScreenScrollView';
 import { ThemedText } from '@/components/ThemedText';
 import { ProductCard } from '@/components/ProductCard';
 import { ModernCategory } from '@/components/ModernCategory';
-import { ModernHeader } from '@/components/ModernHeader';
 import { ModernSearchBar } from '@/components/ModernSearchBar';
 import { ModernHeroSection } from '@/components/ModernHeroSection';
 import { BadgeLabel } from '@/components/BadgeLabel';
@@ -88,10 +87,7 @@ export default function HomeScreen() {
 
   return (
     <View style={styles.container}>
-      <ModernHeader notificationCount={2} />
-
-      <View style={styles.scrollWrapper}>
-        <ScreenScrollView contentContainerStyle={styles.scrollContent}>
+      <ScreenScrollView contentContainerStyle={styles.scrollContent}>
           {/* Search Bar */}
           <ModernSearchBar onSearch={handleSearchPress} />
 
@@ -201,23 +197,23 @@ export default function HomeScreen() {
             </View>
           </View>
 
-          {/* Floating Cart */}
-          <Pressable
-            style={styles.cartFAB}
-            onPress={() => navigation.navigate('Cart')}
-          >
-            <LinearGradient
-              colors={['#FF6B9D', '#FF8FB3']}
-              style={styles.cartFABGradient}
-            >
-              <Feather name="shopping-cart" size={24} color="#FFFFFF" />
-              <View style={styles.cartBadge}>
-                <ThemedText style={styles.cartBadgeText}>3</ThemedText>
-              </View>
-            </LinearGradient>
-          </Pressable>
         </ScreenScrollView>
-      </View>
+
+      {/* Floating Cart Button */}
+      <Pressable
+        style={styles.cartFAB}
+        onPress={() => navigation.navigate('Cart')}
+      >
+        <LinearGradient
+          colors={['#FF6B9D', '#FF8FB3']}
+          style={styles.cartFABGradient}
+        >
+          <Feather name="shopping-cart" size={24} color="#FFFFFF" />
+          <View style={styles.cartBadge}>
+            <ThemedText style={styles.cartBadgeText}>3</ThemedText>
+          </View>
+        </LinearGradient>
+      </Pressable>
     </View>
   );
 }
@@ -227,12 +223,9 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#FFFFFF',
   },
-  scrollWrapper: {
-    flex: 1,
-  },
   scrollContent: {
     flexGrow: 1,
-    paddingBottom: 120,
+    paddingBottom: 24,
     paddingTop: 0,
   },
   section: {
@@ -337,18 +330,18 @@ const styles = StyleSheet.create({
   },
   cartFAB: {
     position: 'absolute',
-    bottom: 24,
-    right: 16,
+    bottom: Spacing.xl,
+    right: Spacing.lg,
     width: 64,
     height: 64,
     borderRadius: 32,
-    overflow: 'hidden',
+    overflow: 'visible',
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.3,
     shadowRadius: 8,
-    elevation: 8,
-    zIndex: 999,
+    elevation: 12,
+    zIndex: 100,
   },
   cartFABGradient: {
     width: '100%',
@@ -359,27 +352,27 @@ const styles = StyleSheet.create({
   },
   cartBadge: {
     position: 'absolute',
-    top: -4,
-    right: -4,
-    minWidth: 24,
-    height: 24,
-    borderRadius: 12,
+    top: -6,
+    right: -6,
+    minWidth: 28,
+    height: 28,
+    borderRadius: 14,
     backgroundColor: '#EF4444',
     justifyContent: 'center',
     alignItems: 'center',
-    paddingHorizontal: 6,
-    borderWidth: 3,
+    borderWidth: 2.5,
     borderColor: '#FFFFFF',
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.2,
+    shadowOpacity: 0.25,
     shadowRadius: 4,
-    elevation: 4,
+    elevation: 5,
   },
   cartBadgeText: {
-    fontSize: 12,
-    fontWeight: '800',
+    fontSize: 13,
+    fontWeight: '900',
     color: '#FFFFFF',
-    lineHeight: 14,
+    lineHeight: 18,
+    textAlign: 'center',
   },
 });
