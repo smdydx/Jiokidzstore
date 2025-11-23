@@ -148,7 +148,8 @@ const styles = StyleSheet.create({
   },
   header: {
     alignItems: 'center',
-    paddingVertical: Spacing.xxl,
+    paddingVertical: Spacing.xl,
+    paddingTop: Spacing.xl,
     borderBottomWidth: 1,
     borderBottomColor: Colors.light.border,
   },
@@ -172,7 +173,7 @@ const styles = StyleSheet.create({
   section: {
     marginBottom: Spacing.lg,
     paddingHorizontal: Spacing.lg,
-    marginTop: Spacing.lg,
+    marginTop: Spacing.md,
   },
   menuItem: {
     flexDirection: 'row',
