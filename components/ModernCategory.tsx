@@ -18,9 +18,24 @@ export function ModernCategory({ category, onPress }: ModernCategoryProps) {
     Footwear: ['#F39C12', '#F5B041'],
     Toys: ['#9B59B6', '#AF7AC5'],
     Diapers: ['#27AE60', '#52BE80'],
+    Books: ['#E74C3C', '#EC7063'],
+    Accessories: ['#1ABC9C', '#48C9B0'],
+    'Baby Care': ['#FF6B9D', '#FF8FB3'],
+  };
+
+  const categoryIcons: Record<string, string> = {
+    'Boy Fashion': 'user',
+    'Girl Fashion': 'heart',
+    Footwear: 'arrow-up-right',
+    Toys: 'gift',
+    Diapers: 'package',
+    Books: 'book',
+    Accessories: 'watch',
+    'Baby Care': 'smile',
   };
 
   const colors = categoryColors[category.name] || ['#3498DB', '#5DADE2'];
+  const icon = categoryIcons[category.name] || 'shopping-bag';
 
   return (
     <View style={styles.container}>
@@ -35,7 +50,7 @@ export function ModernCategory({ category, onPress }: ModernCategoryProps) {
           style={styles.gradient}
         >
           <View style={styles.iconContainer}>
-            <Feather name="shopping-bag" size={28} color="#FFFFFF" />
+            <Feather name={icon as any} size={28} color="#FFFFFF" />
           </View>
         </LinearGradient>
       </Pressable>
