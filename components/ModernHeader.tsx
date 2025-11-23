@@ -18,8 +18,15 @@ export function ModernHeader({ onNotificationPress, notificationCount = 0 }: Mod
       style={styles.container}
     >
       <View style={styles.content}>
-        {/* JioKidz Logo - Left aligned */}
-        <Text style={styles.logo}>JioKidz</Text>
+        {/* Left Section - Location + Logo */}
+        <View style={styles.leftSection}>
+          {/* Location */}
+          <Pressable style={styles.iconButton}>
+            <Feather name="map-pin" size={20} color={Colors.light.text} />
+          </Pressable>
+          {/* JioKidz Logo */}
+          <Text style={styles.logo}>JioKidz</Text>
+        </View>
 
         {/* Right Icons */}
         <View style={styles.rightSection}>
@@ -31,11 +38,6 @@ export function ModernHeader({ onNotificationPress, notificationCount = 0 }: Mod
                 <Text style={styles.badgeText}>{notificationCount}</Text>
               </View>
             )}
-          </Pressable>
-
-          {/* Share */}
-          <Pressable style={styles.iconButton}>
-            <Feather name="share-2" size={20} color={Colors.light.text} />
           </Pressable>
         </View>
       </View>
@@ -60,6 +62,11 @@ const styles = StyleSheet.create({
     fontWeight: '800',
     color: Colors.light.primary,
     letterSpacing: 1,
+  },
+  leftSection: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: Spacing.md,
   },
   rightSection: {
     flexDirection: 'row',
