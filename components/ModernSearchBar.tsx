@@ -78,9 +78,10 @@ const styles = StyleSheet.create({
     paddingVertical: Spacing.md,
     zIndex: 10,
     backgroundColor: '#FFE5EE',
+    borderRadius: 24,
   },
   searchBox: {
-    borderRadius: BorderRadius.lg,
+    borderRadius: 20,
     overflow: 'hidden',
     borderWidth: 1,
     borderColor: Colors.light.border,
