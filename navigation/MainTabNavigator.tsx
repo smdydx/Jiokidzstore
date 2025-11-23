@@ -2,16 +2,18 @@ import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Feather } from "@expo/vector-icons";
 import { BlurView } from "expo-blur";
-import { Platform, StyleSheet } from "react-native";
+import { Platform, StyleSheet, View } from "react-native";
+import { LinearGradient } from 'expo-linear-gradient';
 import HomeStackNavigator from "@/navigation/HomeStackNavigator";
-import CategoriesStackNavigator from "@/navigation/CategoriesStackNavigator";
+import DealsStackNavigator from "@/navigation/DealsStackNavigator";
 import WishlistStackNavigator from "@/navigation/WishlistStackNavigator";
 import ProfileStackNavigator from "@/navigation/ProfileStackNavigator";
 import { useTheme } from "@/hooks/useTheme";
+import { Colors } from "@/constants/theme";
 
 export type MainTabParamList = {
   HomeTab: undefined;
-  CategoriesTab: undefined;
+  DealsTab: undefined;
   WishlistTab: undefined;
   ProfileTab: undefined;
 };
@@ -58,12 +60,12 @@ export default function MainTabNavigator() {
         }}
       />
       <Tab.Screen
-        name="CategoriesTab"
-        component={CategoriesStackNavigator}
+        name="DealsTab"
+        component={DealsStackNavigator}
         options={{
-          title: "Categories",
+          title: "Deals",
           tabBarIcon: ({ color, size }) => (
-            <Feather name="grid" size={size} color={color} />
+            <Feather name="zap" size={size} color={color} />
           ),
         }}
       />

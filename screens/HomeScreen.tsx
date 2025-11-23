@@ -12,6 +12,8 @@ import { ModernCategory } from '@/components/ModernCategory';
 import { ModernHeader } from '@/components/ModernHeader';
 import { ModernSearchBar } from '@/components/ModernSearchBar';
 import { ModernHeroSection } from '@/components/ModernHeroSection';
+import { BadgeLabel } from '@/components/BadgeLabel';
+import { EnhancedButton } from '@/components/EnhancedButton';
 import { useTheme } from '@/hooks/useTheme';
 import { Colors, Spacing, BorderRadius } from '@/constants/theme';
 import { PRODUCTS, CATEGORIES } from '@/data/mockData';
@@ -79,12 +81,30 @@ export default function HomeScreen() {
         onButtonPress={() => navigation.navigate('FlashSale')}
       />
 
+      {/* Promotional Banner */}
+      <View style={styles.promoBanner}>
+        <LinearGradient
+          colors={['#FFB6D9', '#FF8FB3']}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 1 }}
+          style={styles.promoBannerGradient}
+        >
+          <View>
+            <BadgeLabel label="Limited Time Offer" type="hot" />
+            <ThemedText style={styles.promoBannerText}>Free Shipping on Orders Above ₹499</ThemedText>
+          </View>
+          <Pressable>
+            <Feather name="arrow-right" size={24} color="#FFFFFF" />
+          </Pressable>
+        </LinearGradient>
+      </View>
+
       {/* Categories */}
       <View style={styles.section}>
         <View style={styles.sectionHeader}>
-          <ThemedText style={styles.sectionTitle}>Categories</ThemedText>
-          <Pressable onPress={() => navigation.navigate('HomeTab', { screen: 'CategoriesTab' } as any)}>
-            <ThemedText style={styles.seeAllText}>See All</ThemedText>
+          <ThemedText style={styles.sectionTitle}>Shop by Category</ThemedText>
+          <Pressable onPress={() => navigation.navigate('DealsTab' as any)}>
+            <ThemedText style={styles.seeAllText}>View All</ThemedText>
           </Pressable>
         </View>
         <FlatList
@@ -186,6 +206,30 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: '600',
     color: Colors.light.primary,
+  },
+  promoBanner: {
+    marginHorizontal: 16,
+    marginBottom: 24,
+    borderRadius: 16,
+    overflow: 'hidden',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.15,
+    shadowRadius: 8,
+    elevation: 5,
+  },
+  promoBannerGradient: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingHorizontal: 20,
+    paddingVertical: 16,
+  },
+  promoBannerText: {
+    fontSize: 15,
+    fontWeight: '700',
+    color: '#FFFFFF',
+    marginTop: 8,
   },
   categoriesList: {
     paddingHorizontal: 16,
