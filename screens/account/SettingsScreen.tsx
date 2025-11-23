@@ -10,7 +10,7 @@ export default function SettingsScreen() {
   const [orderUpdates, setOrderUpdates] = React.useState(true);
 
   return (
-    <ScreenScrollView>
+    <ScreenScrollView contentContainerStyle={{ paddingTop: Spacing.lg, paddingBottom: Spacing.xl }}>
       <View style={styles.container}>
         <ThemedText type="h3" style={styles.sectionTitle}>Notifications</ThemedText>
         <View style={styles.setting}>

@@ -14,7 +14,7 @@ export default function HelpSupportScreen() {
   ];
 
   return (
-    <ScreenScrollView>
+    <ScreenScrollView contentContainerStyle={{ paddingTop: Spacing.lg, paddingBottom: Spacing.xl }}>
       <View style={styles.container}>
         <ThemedText type="h3" style={styles.title}>How can we help you?</ThemedText>
         {helpItems.map((item, index) => (

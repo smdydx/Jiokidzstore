@@ -86,6 +86,7 @@ export default function CartScreen() {
   return (
     <View style={styles.container}>
       <ScreenFlatList
+        contentContainerStyle={{ paddingTop: Spacing.lg }}
         data={cartItems}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
