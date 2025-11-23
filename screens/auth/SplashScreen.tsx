@@ -26,11 +26,48 @@ interface SlideProps {
   currentSlide: number;
 }
 
+// Floating animation element
+function FloatingElement({ delay, position, size, icon }: any) {
+  const floatAnim = useSharedValue(0);
+  const opacityAnim = useSharedValue(0);
+
+  useEffect(() => {
+    opacityAnim.value = withTiming(0.3, {
+      duration: 500,
+      easing: Easing.ease,
+    }, () => {
+      floatAnim.value = withTiming(1, {
+        duration: 3000,
+        easing: Easing.inOut(Easing.sin),
+      }, () => {
+        floatAnim.value = withTiming(0, {
+          duration: 3000,
+          easing: Easing.inOut(Easing.sin),
+        });
+      });
+    });
+  }, []);
+
+  const animatedStyle = useAnimatedStyle(() => ({
+    opacity: opacityAnim.value,
+    transform: [{ translateY: floatAnim.value * 40 - 20 }],
+  }));
+
+  return (
+    <Animated.View style={[styles.floatingElement, { ...position }, animatedStyle]}>
+      <View style={[styles.floatingElementContent, { width: size, height: size, borderRadius: size / 2 }]}>
+        <Feather name={icon} size={size / 2} color="#FFFFFF" />
+      </View>
+    </Animated.View>
+  );
+}
+
 function Slide({ title, subtitle, icon, logo, gradient, isFirstSlide, slideIndex, currentSlide }: SlideProps) {
   const textFadeAnim = useSharedValue(0);
   const textTranslateAnim = useSharedValue(50);
   const logoFadeAnim = useSharedValue(0);
   const logoScaleAnim = useSharedValue(0.8);
+  const containerRotateAnim = useSharedValue(0);
 
   useEffect(() => {
     if (slideIndex === currentSlide && isFirstSlide) {
@@ -44,7 +81,7 @@ function Slide({ title, subtitle, icon, logo, gradient, isFirstSlide, slideIndex
         easing: Easing.ease,
       });
 
-      // Then animate logo with delay
+      // Then animate logo with delay and rotation
       setTimeout(() => {
         logoFadeAnim.value = withTiming(1, {
           duration: 800,
@@ -52,6 +89,10 @@ function Slide({ title, subtitle, icon, logo, gradient, isFirstSlide, slideIndex
         });
         logoScaleAnim.value = withTiming(1, {
           duration: 800,
+          easing: Easing.bezier(0.34, 1.56, 0.64, 1),
+        });
+        containerRotateAnim.value = withTiming(360, {
+          duration: 1000,
           easing: Easing.bezier(0.34, 1.56, 0.64, 1),
         });
       }, 300);
@@ -71,6 +112,7 @@ function Slide({ title, subtitle, icon, logo, gradient, isFirstSlide, slideIndex
       textTranslateAnim.value = 50;
       logoFadeAnim.value = 0;
       logoScaleAnim.value = 0.8;
+      containerRotateAnim.value = 0;
     }
   }, [slideIndex, currentSlide]);
 
@@ -81,7 +123,10 @@ function Slide({ title, subtitle, icon, logo, gradient, isFirstSlide, slideIndex
 
   const logoAnimatedStyle = useAnimatedStyle(() => ({
     opacity: logoFadeAnim.value,
-    transform: [{ scale: logoScaleAnim.value }],
+    transform: [
+      { scale: logoScaleAnim.value },
+      { rotateZ: `${containerRotateAnim.value}deg` },
+    ],
   }));
 
   return (
@@ -94,12 +139,20 @@ function Slide({ title, subtitle, icon, logo, gradient, isFirstSlide, slideIndex
       <View style={styles.slideContent}>
         {isFirstSlide ? (
           <>
+            {/* Floating shopping bags and toys in background */}
+            <FloatingElement delay={0} position={{ top: 80, left: 30 }} size={50} icon="shopping-bag" />
+            <FloatingElement delay={200} position={{ top: 200, right: 40 }} size={40} icon="gift" />
+            <FloatingElement delay={400} position={{ bottom: 150, left: 50 }} size={45} icon="heart" />
+            <FloatingElement delay={600} position={{ bottom: 120, right: 60 }} size={35} icon="star" />
+
             <Animated.View style={[styles.textContainer, textAnimatedStyle]}>
               <ThemedText style={styles.slideTitle}>{title}</ThemedText>
             </Animated.View>
+            
             <Animated.View style={[styles.logoContainer, logoAnimatedStyle]}>
               <Image source={logo} style={styles.logo} resizeMode="contain" />
             </Animated.View>
+            
             <Animated.View style={[{ opacity: textFadeAnim }, styles.subtitleContainer]}>
               <ThemedText style={styles.slideSubtitle}>{subtitle}</ThemedText>
             </Animated.View>
@@ -291,11 +344,22 @@ const styles = StyleSheet.create({
     height: screenHeight,
     justifyContent: 'center',
     alignItems: 'center',
+    overflow: 'hidden',
   },
   slideContent: {
     alignItems: 'center',
     paddingHorizontal: Spacing.xl,
     width: '100%',
+    position: 'relative',
+  },
+  floatingElement: {
+    position: 'absolute',
+  },
+  floatingElementContent: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    backdropFilter: 'blur(10px)',
   },
   textContainer: {
     marginBottom: Spacing.lg,
