@@ -45,18 +45,7 @@ export default function HomeStackNavigator() {
         name="Home"
         component={HomeScreen}
         options={{
-          headerTitle: () => <HeaderTitle />,
-          headerStyle: {
-            backgroundColor: 'transparent',
-          },
-          headerBackground: () => (
-            <LinearGradient
-              colors={['#FFB6D9', '#FFE5EE']}
-              start={{ x: 0, y: 0 }}
-              end={{ x: 1, y: 0 }}
-              style={{ flex: 1 }}
-            />
-          ),
+          headerShown: false,
         }}
       />
       <Stack.Screen
