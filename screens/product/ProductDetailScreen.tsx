@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, StyleSheet, ScrollView, Pressable, Dimensions } from 'react-native';
+import { View, StyleSheet, ScrollView, Pressable, Dimensions, Image } from 'react-native';
 import { useNavigation, useRoute, RouteProp } from '@react-navigation/native';
 import { Feather } from '@expo/vector-icons';
 import { ScreenScrollView } from '@/components/ScreenScrollView';
@@ -71,7 +71,14 @@ export default function ProductDetailScreen() {
         </Pressable>
       </View>
         <View style={styles.imageContainer}>
-          <View style={styles.imagePlaceholder} />
+          {product.images && product.images[0] ? (
+            <Image 
+              source={typeof product.images[0] === 'string' ? { uri: product.images[0] } : product.images[0]} 
+              style={styles.image}
+            />
+          ) : (
+            <View style={styles.imagePlaceholder} />
+          )}
         </View>
 
         <View style={styles.content}>

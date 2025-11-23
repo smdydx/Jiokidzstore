@@ -1,5 +1,18 @@
 import { Product, Category } from './types';
 
+// Product Images
+const images = {
+  fashion1: require('../public/images/kids_fashion_product_c424a971.jpg'),
+  fashion2: require('../public/images/kids_fashion_product_0590a006.jpg'),
+  fashion3: require('../public/images/kids_fashion_product_bf8f3520.jpg'),
+  fashion4: require('../public/images/kids_fashion_product_97455663.jpg'),
+  fashion5: require('../public/images/kids_fashion_product_2e456e3c.jpg'),
+  toys1: require('../public/images/colorful_toys_for_ch_59b68100.jpg'),
+  toys2: require('../public/images/colorful_toys_for_ch_edfeed54.jpg'),
+  toys3: require('../public/images/colorful_toys_for_ch_a86f28ec.jpg'),
+  summer1: require('../public/images/summer_collection_ki_28364bf6.jpg'),
+};
+
 export const CATEGORIES: Category[] = [
   {
     id: '1',
@@ -69,7 +82,7 @@ export const PRODUCTS: Product[] = [
     discount: 40,
     rating: 4.5,
     reviewCount: 245,
-    images: ['@assets/stock_images/kids_fashion_product_c424a971.jpg'],
+    images: [images.fashion1],
     description: 'Comfortable cotton t-shirt perfect for everyday wear. Soft fabric, vibrant colors, and durable stitching.',
     category: 'Boy Fashion',
     sizes: ['2-3Y', '3-4Y', '4-5Y', '5-6Y'],
@@ -86,7 +99,7 @@ export const PRODUCTS: Product[] = [
     discount: 40,
     rating: 4.8,
     reviewCount: 512,
-    images: ['@assets/stock_images/kids_fashion_product_0590a006.jpg'],
+    images: [images.fashion2],
     description: 'Beautiful princess dress with sparkles and soft fabric. Perfect for parties and special occasions.',
     category: 'Girl Fashion',
     sizes: ['2-3Y', '3-4Y', '4-5Y', '5-6Y'],
@@ -103,7 +116,7 @@ export const PRODUCTS: Product[] = [
     discount: 42,
     rating: 4.3,
     reviewCount: 189,
-    images: ['https://via.placeholder.com/400'],
+    images: [images.fashion3],
     description: 'Comfortable sports shoes with cushioned sole. Perfect for running and playing.',
     category: 'Footwear',
     sizes: ['UK 8', 'UK 9', 'UK 10', 'UK 11'],
@@ -120,7 +133,7 @@ export const PRODUCTS: Product[] = [
     discount: 38,
     rating: 4.7,
     reviewCount: 823,
-    images: ['https://via.placeholder.com/400'],
+    images: [images.toys1],
     description: '100 piece colorful building blocks set. Develops creativity and motor skills.',
     category: 'Toys',
     ageGroup: '3+ years',
@@ -135,7 +148,7 @@ export const PRODUCTS: Product[] = [
     discount: 20,
     rating: 4.6,
     reviewCount: 456,
-    images: ['https://via.placeholder.com/400'],
+    images: [images.fashion4],
     description: 'Soft, absorbent diapers with 12-hour protection. Gentle on baby skin.',
     category: 'Diapers',
     sizes: ['S', 'M', 'L', 'XL'],

@@ -60,7 +60,7 @@ export function ProductCard({
         style={styles.container}
       >
         <View style={[styles.imageContainer, { height: imageHeight }]}>
-          <Image source={{ uri: product.image }} style={styles.image} />
+          <Image source={typeof product.image === 'string' ? { uri: product.image } : product.image} style={styles.image} />
           <LinearGradient
             colors={['transparent', 'rgba(0,0,0,0.15)']}
             style={styles.imageGradient}
