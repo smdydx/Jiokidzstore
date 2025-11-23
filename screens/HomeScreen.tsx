@@ -260,10 +260,8 @@ const styles = StyleSheet.create({
     marginTop: 8,
   },
   heroContainer: {
-    paddingHorizontal: Spacing.lg,
     paddingVertical: Spacing.lg,
     borderRadius: 24,
-    marginHorizontal: Spacing.lg,
     marginBottom: Spacing.lg,
   },
   categoriesList: {
