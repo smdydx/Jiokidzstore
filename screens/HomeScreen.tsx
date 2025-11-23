@@ -14,6 +14,9 @@ import { ModernSearchBar } from '@/components/ModernSearchBar';
 import { ModernHeroSection } from '@/components/ModernHeroSection';
 import { BadgeLabel } from '@/components/BadgeLabel';
 import { EnhancedButton } from '@/components/EnhancedButton';
+import { BestSellersCarousel } from '@/components/BestSellersCarousel';
+import { PersonalizedSection } from '@/components/PersonalizedSection';
+import { TestimonialsSection } from '@/components/TestimonialsSection';
 import { useTheme } from '@/hooks/useTheme';
 import { Colors, Spacing, BorderRadius } from '@/constants/theme';
 import { PRODUCTS, CATEGORIES } from '@/data/mockData';
@@ -143,6 +146,15 @@ export default function HomeScreen() {
         </LinearGradient>
       </Pressable>
 
+      {/* Best Sellers Carousel */}
+      <BestSellersCarousel onProductPress={handleProductPress} />
+
+      {/* Personalized Section */}
+      <PersonalizedSection onItemPress={() => navigation.navigate('DealsTab' as any)} />
+
+      {/* Testimonials Section */}
+      <TestimonialsSection />
+
       {/* Trending Products */}
       <View style={styles.section}>
         <View style={styles.sectionHeader}>
@@ -152,7 +164,7 @@ export default function HomeScreen() {
           </Pressable>
         </View>
         <View style={styles.productsGrid}>
-          {products.map(product => (
+          {products.slice(0, 6).map(product => (
             <ProductCard
               key={product.id}
               product={product}
