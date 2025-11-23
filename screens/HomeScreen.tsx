@@ -86,14 +86,12 @@ export default function HomeScreen() {
   }, [navigation]);
 
   return (
-    <View style={[styles.container, { paddingBottom: 0 }]}>
-      {/* Fixed Header */}
-      <View style={styles.fixedHeader}>
+    <View style={styles.container}>
+      {/* Scrollable Content with Header */}
+      <ScreenScrollView contentContainerStyle={styles.scrollContent}>
+        {/* Search Bar */}
         <ModernSearchBar onSearch={handleSearchPress} />
-      </View>
 
-      {/* Scrollable Content */}
-      <ScreenScrollView contentContainerStyle={styles.scrollContent} scrollIndicatorInsets={{ bottom: 0 }}>
         {/* Hero Section */}
         <View style={styles.heroContainer}>
           <ModernHeroSection
@@ -245,16 +243,9 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#FFFFFF',
   },
-  fixedHeader: {
-    position: 'relative',
-    zIndex: 100,
-    backgroundColor: '#FFFFFF',
-    borderBottomWidth: 1,
-    borderBottomColor: '#F0F0F0',
-  },
   scrollContent: {
     flexGrow: 1,
-    paddingBottom: 0,
+    paddingBottom: Spacing.xl,
     paddingTop: 0,
   },
   section: {

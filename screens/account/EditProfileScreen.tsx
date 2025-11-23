@@ -143,13 +143,13 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#FFFFFF',
-    paddingHorizontal: Spacing.lg,
-    paddingVertical: Spacing.lg,
+    paddingHorizontal: Spacing.md,
+    paddingVertical: Spacing.md,
   },
   header: {
     alignItems: 'center',
-    marginBottom: Spacing.xxl,
-    paddingTop: Spacing.lg,
+    marginBottom: Spacing.lg,
+    paddingTop: Spacing.sm,
   },
   avatarContainer: {
     marginBottom: Spacing.lg,

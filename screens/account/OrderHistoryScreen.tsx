@@ -35,7 +35,7 @@ export default function OrderHistoryScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: { padding: Spacing.lg },
+  container: { padding: Spacing.md, paddingTop: Spacing.sm },
   orderCard: {
     backgroundColor: Colors.light.backgroundRoot,
     padding: Spacing.lg,

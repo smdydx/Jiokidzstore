@@ -72,7 +72,7 @@ export default function NotificationsScreen() {
   };
 
   return (
-    <ScreenScrollView>
+    <ScreenScrollView contentContainerStyle={styles.scrollContent}>
       <View style={styles.container}>
         <ThemedText type="h3" style={styles.header}>Notifications</ThemedText>
         {notifications.map((notif) => (
@@ -104,9 +104,12 @@ export default function NotificationsScreen() {
 }
 
 const styles = StyleSheet.create({
+  scrollContent: {
+    paddingTop: Spacing.sm,
+  },
   container: { 
-    padding: Spacing.lg,
-    paddingBottom: 100,
+    padding: Spacing.md,
+    paddingTop: Spacing.sm,
   },
   header: {
     marginBottom: Spacing.lg,

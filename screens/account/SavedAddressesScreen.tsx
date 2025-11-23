@@ -35,7 +35,7 @@ export default function SavedAddressesScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: { padding: Spacing.lg },
+  container: { padding: Spacing.md, paddingTop: Spacing.sm },
   addButton: { marginBottom: Spacing.xl },
   addressCard: {
     backgroundColor: Colors.light.backgroundRoot,
