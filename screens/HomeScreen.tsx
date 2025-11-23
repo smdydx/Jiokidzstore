@@ -251,11 +251,11 @@ export default function HomeScreen() {
 
 const styles = StyleSheet.create({
   header: {
-    paddingHorizontal: Spacing.lg,
+    paddingHorizontal: Spacing.md,
     paddingTop: Spacing.lg,
     paddingBottom: Spacing.xl,
-    borderBottomLeftRadius: BorderRadius.lg,
-    borderBottomRightRadius: BorderRadius.lg,
+    borderBottomLeftRadius: 0,
+    borderBottomRightRadius: 0,
   },
   headerTop: {
     flexDirection: 'row',
@@ -310,18 +310,18 @@ const styles = StyleSheet.create({
     fontSize: 15,
   },
   heroSection: {
-    marginTop: Spacing.lg,
-    marginBottom: Spacing.lg,
+    marginTop: Spacing.md,
+    marginBottom: Spacing.md,
   },
   heroContainer: {
-    paddingHorizontal: Spacing.lg,
-    gap: Spacing.md,
+    paddingHorizontal: 0,
+    gap: 0,
   },
   heroSlide: {
-    height: 200,
-    borderRadius: BorderRadius.lg,
+    height: 220,
+    borderRadius: 0,
     overflow: 'hidden',
-    marginRight: Spacing.md,
+    marginRight: 0,
   },
   heroImage: {
     width: '100%',
@@ -394,8 +394,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingHorizontal: Spacing.lg,
-    marginBottom: Spacing.lg,
+    paddingHorizontal: Spacing.md,
+    marginBottom: Spacing.md,
   },
   sectionTitle: {
     fontSize: 20,
@@ -408,12 +408,11 @@ const styles = StyleSheet.create({
     fontSize: 15,
   },
   categoriesScroll: {
-    paddingLeft: Spacing.lg,
+    paddingLeft: Spacing.md,
   },
   flashSaleBanner: {
-    marginHorizontal: Spacing.lg,
     marginVertical: Spacing.lg,
-    borderRadius: BorderRadius.md,
+    borderRadius: 0,
     overflow: 'hidden',
     shadowColor: Colors.light.primary,
     shadowOffset: { width: 0, height: 4 },
@@ -463,7 +462,7 @@ const styles = StyleSheet.create({
   productsGrid: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    paddingHorizontal: Spacing.sm,
+    paddingHorizontal: 0,
   },
   productItem: {
     width: '50%',
@@ -471,7 +470,7 @@ const styles = StyleSheet.create({
   cartFAB: {
     position: 'absolute',
     bottom: 90,
-    right: Spacing.lg,
+    right: Spacing.md,
     width: 60,
     height: 60,
     borderRadius: 30,

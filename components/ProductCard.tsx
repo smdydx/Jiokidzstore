@@ -42,8 +42,8 @@ export function ProductCard({
     scale.value = withSpring(1);
   };
 
-  // Calculate card width based on columns
-  const cardWidth = (width - spacing.xl * 2 - spacing.md * (columns - 1)) / columns;
+  // Calculate card width based on columns - full width
+  const cardWidth = (width - spacing.xs * (columns + 1)) / columns;
   const imageHeight = cardWidth * 1.0; // 1:1 aspect ratio
 
   const discount = Math.round(
@@ -60,8 +60,9 @@ export function ProductCard({
           styles.container,
           {
             backgroundColor: theme.backgroundRoot,
-            borderRadius: BorderRadius.md,
-            padding: spacing.sm,
+            borderRadius: 0,
+            padding: spacing.xs,
+            marginHorizontal: spacing.xs / 2,
           },
           Shadows.small,
         ]}

@@ -128,7 +128,7 @@ const styles = StyleSheet.create({
   gradientBackground: {
     flex: 1,
     minHeight: '100%',
-    paddingHorizontal: Spacing.xl,
+    paddingHorizontal: Spacing.lg,
   },
   logoContainer: {
     alignItems: 'center',

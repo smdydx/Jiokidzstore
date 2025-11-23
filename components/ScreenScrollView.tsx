@@ -1,4 +1,3 @@
-
 import { ScrollView, ScrollViewProps, StyleSheet } from "react-native";
 
 import { useTheme } from "@/hooks/useTheme";
@@ -9,6 +8,7 @@ export function ScreenScrollView({
   children,
   contentContainerStyle,
   style,
+  keyboardShouldPersistTaps, // Added this prop based on the changes snippet
   ...scrollViewProps
 }: ScrollViewProps) {
   const { theme } = useTheme();
@@ -26,11 +26,11 @@ export function ScreenScrollView({
         {
           paddingTop,
           paddingBottom,
-          paddingHorizontal: padding,
         },
         contentContainerStyle,
       ]}
       scrollIndicatorInsets={{ bottom: scrollInsetBottom }}
+      keyboardShouldPersistTaps={keyboardShouldPersistTaps}
       {...scrollViewProps}
     >
       {children}

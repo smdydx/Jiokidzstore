@@ -1,4 +1,3 @@
-
 import { Platform, StyleSheet } from "react-native";
 import {
   KeyboardAwareScrollView,
@@ -45,7 +44,6 @@ export function ScreenKeyboardAwareScrollView({
         {
           paddingTop,
           paddingBottom,
-          paddingHorizontal: padding,
         },
         contentContainerStyle,
       ]}

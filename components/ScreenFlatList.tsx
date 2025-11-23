@@ -1,4 +1,3 @@
-
 import React from "react";
 import { FlatList, FlatListProps, StyleSheet } from "react-native";
 
@@ -26,7 +25,6 @@ export function ScreenFlatList<T>({
         {
           paddingTop,
           paddingBottom,
-          paddingHorizontal: padding,
         },
         contentContainerStyle,
       ]}
