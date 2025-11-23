@@ -3,19 +3,24 @@ export interface Product {
   name: string;
   brand: string;
   price: number;
-  mrp: number;
-  discount: number;
+  originalPrice?: number;
+  mrp?: number;
+  discount?: number;
   rating: number;
-  reviewCount: number;
-  images: string[];
+  reviews?: number;
+  reviewCount?: number;
+  image?: string;
+  images?: string[];
   description: string;
   category: string;
   subcategory?: string;
   sizes?: string[];
   colors?: string[];
   ageGroup?: string;
-  inStock: boolean;
+  inStock?: boolean;
+  stock?: number;
   isWishlisted?: boolean;
+  isNew?: boolean;
 }
 
 export interface Category {

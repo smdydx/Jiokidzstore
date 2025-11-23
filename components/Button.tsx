@@ -16,23 +16,27 @@ import { BorderRadius, Shadows, Colors } from "@/constants/theme";
 type ButtonVariant = "primary" | "secondary" | "outline" | "gradient";
 
 interface ButtonProps {
-  title: string;
+  title?: string;
+  children?: React.ReactNode;
   onPress: () => void;
   variant?: ButtonVariant;
   disabled?: boolean;
   loading?: boolean;
   fullWidth?: boolean;
   icon?: React.ReactNode;
+  size?: 'sm' | 'md' | 'lg';
 }
 
 export function Button({
   title,
+  children,
   onPress,
   variant = "primary",
   disabled = false,
   loading = false,
   fullWidth = false,
   icon,
+  size = 'md',
 }: ButtonProps) {
   const { theme } = useTheme();
   const { buttonHeight, fontSize, spacing } = useResponsive();
@@ -50,11 +54,16 @@ export function Button({
     scale.value = withSpring(1);
   };
 
+  const sizeConfig = {
+    sm: { height: 40, paddingHorizontal: 16 },
+    md: { height: buttonHeight, paddingHorizontal: spacing.xl },
+    lg: { height: 56, paddingHorizontal: spacing.xxl },
+  };
+
   const getButtonStyle = () => {
     const baseStyle = {
-      height: buttonHeight,
-      paddingHorizontal: spacing.xl,
-      borderRadius: BorderRadius.sm,
+      ...sizeConfig[size],
+      borderRadius: BorderRadius.md,
     };
 
     switch (variant) {
@@ -75,6 +84,8 @@ export function Button({
           borderWidth: 2,
           borderColor: disabled ? theme.border : theme.primary,
         };
+      case "gradient":
+        return baseStyle;
     }
   };
 
@@ -90,20 +101,22 @@ export function Button({
     }
   };
 
-  return (
-    <Animated.View style={[animatedStyle, fullWidth && styles.fullWidth]}>
-      <Pressable
-        onPress={onPress}
-        onPressIn={handlePressIn}
-        onPressOut={handlePressOut}
-        disabled={disabled || loading}
-        style={[styles.button, getButtonStyle()]}
-      >
-        {loading ? (
-          <ActivityIndicator color={getTextColor()} />
-        ) : (
-          <>
-            {icon}
+  const content = (
+    <Pressable
+      onPress={onPress}
+      onPressIn={handlePressIn}
+      onPressOut={handlePressOut}
+      disabled={disabled || loading}
+      style={[styles.button, getButtonStyle()]}
+    >
+      {loading ? (
+        <ActivityIndicator color={getTextColor()} />
+      ) : (
+        <>
+          {icon}
+          {children ? (
+            children
+          ) : (
             <ThemedText
               style={[
                 styles.text,
@@ -113,9 +126,26 @@ export function Button({
             >
               {title}
             </ThemedText>
-          </>
-        )}
-      </Pressable>
+          )}
+        </>
+      )}
+    </Pressable>
+  );
+
+  return (
+    <Animated.View style={[animatedStyle, fullWidth && styles.fullWidth]}>
+      {variant === 'gradient' ? (
+        <LinearGradient
+          colors={['#FF6B9D', '#FF8FB3']}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 0 }}
+          style={[styles.button, getButtonStyle()]}
+        >
+          {content}
+        </LinearGradient>
+      ) : (
+        content
+      )}
     </Animated.View>
   );
 }
