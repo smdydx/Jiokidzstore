@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { StyleSheet, View, TextInput, Pressable, FlatList, Text } from 'react-native';
+import { StyleSheet, View, TextInput, Pressable, FlatList, Text, Image } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Feather } from '@expo/vector-icons';
 import { Colors, Spacing, BorderRadius } from '@/constants/theme';
@@ -29,9 +29,13 @@ export function ModernSearchBar({
       end={{ x: 1, y: 1 }}
       style={styles.container}
     >
-      {/* Top Row: Notification Icon */}
+      {/* Top Row: Logo and Notification Icon */}
       <View style={styles.topRow}>
-        <View />
+        <Image
+          source={require('@/attached_assets/JioKidslogo_1763923777175.png')}
+          style={styles.logo}
+          resizeMode="contain"
+        />
         <Pressable style={styles.notificationButton} onPress={onNotificationPress}>
           <Feather name="bell" size={20} color="#FFFFFF" />
         </Pressable>
@@ -106,6 +110,10 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     marginBottom: 16,
+  },
+  logo: {
+    width: 70,
+    height: 30,
   },
   notificationButton: {
     width: 40,
