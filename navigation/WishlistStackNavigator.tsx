@@ -24,7 +24,10 @@ export default function WishlistStackNavigator() {
       <Stack.Screen
         name="Wishlist"
         component={WishlistScreen}
-        options={{ headerTitle: "My Wishlist" }}
+        options={{ 
+          headerTitle: "My Wishlist",
+          tabBarStyle: { display: 'none' },
+        }}
       />
       <Stack.Screen
         name="ProductDetail"
