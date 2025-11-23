@@ -59,7 +59,7 @@ const styles = StyleSheet.create({
   gradient: {
     width: 90,
     height: 90,
-    borderRadius: 20,
+    borderRadius: 45,
     justifyContent: 'center',
     alignItems: 'center',
     shadowColor: '#000',
