@@ -20,6 +20,7 @@ export function HeaderTitle({ title }: HeaderTitleProps) {
         style={styles.logo}
         resizeMode="contain"
       />
+      <View style={{ flex: 1 }} />
     </LinearGradient>
   );
 }
@@ -29,8 +30,9 @@ const styles = StyleSheet.create({
     width: '100%',
     paddingHorizontal: Spacing.lg,
     paddingVertical: Spacing.md,
-    alignItems: 'flex-start',
+    alignItems: 'center',
     justifyContent: 'flex-start',
+    flexDirection: 'row',
     borderBottomLeftRadius: 20,
     borderBottomRightRadius: 20,
     overflow: 'hidden',
