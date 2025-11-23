@@ -28,10 +28,90 @@ interface SlideProps {
   currentSlide: number;
 }
 
+// Sparkle particles
+function Sparkle({ delay, position }: any) {
+  const sparkleAnim = useSharedValue(0);
+
+  useEffect(() => {
+    sparkleAnim.value = withRepeat(
+      withSequence(
+        withTiming(1, { duration: 500, easing: Easing.ease }),
+        withTiming(0, { duration: 500, easing: Easing.ease })
+      ),
+      -1,
+      false
+    );
+  }, []);
+
+  const animatedStyle = useAnimatedStyle(() => ({
+    opacity: sparkleAnim.value,
+  }));
+
+  return (
+    <Animated.View style={[styles.sparkle, position, animatedStyle]}>
+      <Feather name="star" size={12} color="#FFFFFF" />
+    </Animated.View>
+  );
+}
+
+// Rotating background shapes
+function RotatingShapes({ isActive }: { isActive: boolean }) {
+  const rotate1 = useSharedValue(0);
+  const rotate2 = useSharedValue(0);
+  const rotate3 = useSharedValue(0);
+
+  useEffect(() => {
+    if (isActive) {
+      rotate1.value = withRepeat(
+        withTiming(360, { duration: 8000, easing: Easing.linear }),
+        -1,
+        false
+      );
+      rotate2.value = withRepeat(
+        withTiming(360, { duration: 10000, easing: Easing.linear }),
+        -1,
+        true
+      );
+      rotate3.value = withRepeat(
+        withTiming(360, { duration: 12000, easing: Easing.linear }),
+        -1,
+        false
+      );
+    }
+  }, [isActive]);
+
+  const rotateStyle1 = useAnimatedStyle(() => ({
+    transform: [{ rotateZ: `${rotate1.value}deg` }],
+  }));
+
+  const rotateStyle2 = useAnimatedStyle(() => ({
+    transform: [{ rotateZ: `${rotate2.value}deg` }],
+  }));
+
+  const rotateStyle3 = useAnimatedStyle(() => ({
+    transform: [{ rotateZ: `${rotate3.value}deg` }],
+  }));
+
+  return (
+    <View style={styles.shapesContainer}>
+      <Animated.View style={[styles.shape, styles.shape1, rotateStyle1]}>
+        <View style={styles.shapeInner} />
+      </Animated.View>
+      <Animated.View style={[styles.shape, styles.shape2, rotateStyle2]}>
+        <View style={styles.shapeInner} />
+      </Animated.View>
+      <Animated.View style={[styles.shape, styles.shape3, rotateStyle3]}>
+        <View style={styles.shapeInner} />
+      </Animated.View>
+    </View>
+  );
+}
+
 // Animated corner threads flowing to center with boom effect
 function CornerThreads({ isActive }: { isActive: boolean }) {
   const threadAnim = useSharedValue(0);
   const boomAnim = useSharedValue(0);
+  const boomAnim2 = useSharedValue(0);
 
   useEffect(() => {
     if (isActive) {
@@ -43,13 +123,17 @@ function CornerThreads({ isActive }: { isActive: boolean }) {
       setTimeout(() => {
         boomAnim.value = withTiming(1, { duration: 800, easing: Easing.ease });
       }, 2000);
+
+      setTimeout(() => {
+        boomAnim2.value = withTiming(1, { duration: 600, easing: Easing.ease });
+      }, 2200);
     } else {
       threadAnim.value = 0;
       boomAnim.value = 0;
+      boomAnim2.value = 0;
     }
   }, [isActive]);
 
-  // Top-left thread
   const topLeftAnimStyle = useAnimatedStyle(() => {
     const progress = threadAnim.value;
     const x = interpolate(progress, [0, 1], [-screenWidth / 2, 0]);
@@ -61,7 +145,6 @@ function CornerThreads({ isActive }: { isActive: boolean }) {
     };
   });
 
-  // Top-right thread
   const topRightAnimStyle = useAnimatedStyle(() => {
     const progress = threadAnim.value;
     const x = interpolate(progress, [0, 1], [screenWidth / 2, 0]);
@@ -73,7 +156,6 @@ function CornerThreads({ isActive }: { isActive: boolean }) {
     };
   });
 
-  // Bottom-left thread
   const bottomLeftAnimStyle = useAnimatedStyle(() => {
     const progress = threadAnim.value;
     const x = interpolate(progress, [0, 1], [-screenWidth / 2, 0]);
@@ -85,7 +167,6 @@ function CornerThreads({ isActive }: { isActive: boolean }) {
     };
   });
 
-  // Bottom-right thread
   const bottomRightAnimStyle = useAnimatedStyle(() => {
     const progress = threadAnim.value;
     const x = interpolate(progress, [0, 1], [screenWidth / 2, 0]);
@@ -97,7 +178,6 @@ function CornerThreads({ isActive }: { isActive: boolean }) {
     };
   });
 
-  // Boom/radiate effect
   const boomStyle = useAnimatedStyle(() => {
     const boom = boomAnim.value;
     const scale = interpolate(boom, [0, 1], [0.3, 4]);
@@ -108,12 +188,21 @@ function CornerThreads({ isActive }: { isActive: boolean }) {
     };
   });
 
+  const boomStyle2 = useAnimatedStyle(() => {
+    const boom = boomAnim2.value;
+    const scale = interpolate(boom, [0, 1], [0.1, 2.5]);
+    const opacity = interpolate(boom, [0, 0.4, 1], [0, 0.8, 0]);
+    return {
+      transform: [{ scale }],
+      opacity,
+    };
+  });
+
   return (
     <View style={styles.threadContainer}>
-      {/* Boom effect - radiating burst */}
       <Animated.View style={[styles.boomEffect, boomStyle]} />
+      <Animated.View style={[styles.boomEffect2, boomStyle2]} />
 
-      {/* Top-left thread */}
       <Animated.View style={[styles.threadLine, styles.threadTopLeft, topLeftAnimStyle]}>
         <LinearGradient
           colors={['rgba(255, 255, 255, 0)', 'rgba(255, 255, 255, 0.8)']}
@@ -123,7 +212,6 @@ function CornerThreads({ isActive }: { isActive: boolean }) {
         />
       </Animated.View>
 
-      {/* Top-right thread */}
       <Animated.View style={[styles.threadLine, styles.threadTopRight, topRightAnimStyle]}>
         <LinearGradient
           colors={['rgba(255, 255, 255, 0)', 'rgba(255, 255, 255, 0.8)']}
@@ -133,7 +221,6 @@ function CornerThreads({ isActive }: { isActive: boolean }) {
         />
       </Animated.View>
 
-      {/* Bottom-left thread */}
       <Animated.View style={[styles.threadLine, styles.threadBottomLeft, bottomLeftAnimStyle]}>
         <LinearGradient
           colors={['rgba(255, 255, 255, 0)', 'rgba(255, 255, 255, 0.8)']}
@@ -143,7 +230,6 @@ function CornerThreads({ isActive }: { isActive: boolean }) {
         />
       </Animated.View>
 
-      {/* Bottom-right thread */}
       <Animated.View style={[styles.threadLine, styles.threadBottomRight, bottomRightAnimStyle]}>
         <LinearGradient
           colors={['rgba(255, 255, 255, 0)', 'rgba(255, 255, 255, 0.8)']}
@@ -165,7 +251,6 @@ function Slide({ title, subtitle, icon, logo, gradient, isFirstSlide, slideIndex
 
   useEffect(() => {
     if (slideIndex === currentSlide && isFirstSlide) {
-      // Delay animations until threads finish
       setTimeout(() => {
         textFadeAnim.value = withTiming(1, { duration: 600, easing: Easing.ease });
         textTranslateAnim.value = withTiming(0, { duration: 600, easing: Easing.ease });
@@ -217,7 +302,19 @@ function Slide({ title, subtitle, icon, logo, gradient, isFirstSlide, slideIndex
       end={{ x: 1, y: 1 }}
       style={styles.slide}
     >
-      {isFirstSlide && slideIndex === currentSlide && <CornerThreads isActive={true} />}
+      {isFirstSlide && slideIndex === currentSlide && (
+        <>
+          <RotatingShapes isActive={true} />
+          <CornerThreads isActive={true} />
+          
+          {/* Sparkles */}
+          <Sparkle delay={0} position={{ top: 100, left: 50 }} />
+          <Sparkle delay={200} position={{ top: 200, right: 60 }} />
+          <Sparkle delay={400} position={{ bottom: 150, left: 70 }} />
+          <Sparkle delay={600} position={{ bottom: 120, right: 80 }} />
+          <Sparkle delay={300} position={{ top: 300, right: 100 }} />
+        </>
+      )}
 
       <View style={styles.slideContent}>
         {isFirstSlide ? (
@@ -342,7 +439,7 @@ export default function SplashScreen() {
     if (autoScrollTimer.current) {
       clearTimeout(autoScrollTimer.current);
     }
-    navigation.navigate('Login');
+    // Don't navigate - just stay on splash screen
   };
 
   const handleDotPress = (index: number) => {
@@ -469,6 +566,54 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(255, 255, 255, 0.6)',
     borderWidth: 3,
     borderColor: 'rgba(255, 255, 255, 0.8)',
+  },
+  boomEffect2: {
+    position: 'absolute',
+    width: 80,
+    height: 80,
+    borderRadius: 40,
+    backgroundColor: 'rgba(255, 255, 255, 0.4)',
+    borderWidth: 2,
+    borderColor: 'rgba(255, 255, 255, 0.6)',
+  },
+  shapesContainer: {
+    ...StyleSheet.absoluteFillObject,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  shape: {
+    position: 'absolute',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  shape1: {
+    width: 280,
+    height: 280,
+    borderRadius: 140,
+    borderWidth: 2,
+    borderColor: 'rgba(255, 255, 255, 0.15)',
+  },
+  shape2: {
+    width: 200,
+    height: 200,
+    borderRadius: 100,
+    borderWidth: 2,
+    borderColor: 'rgba(255, 255, 255, 0.25)',
+  },
+  shape3: {
+    width: 120,
+    height: 120,
+    borderRadius: 60,
+    borderWidth: 2,
+    borderColor: 'rgba(255, 255, 255, 0.2)',
+  },
+  shapeInner: {
+    width: '100%',
+    height: '100%',
+    borderRadius: '50%',
+  },
+  sparkle: {
+    position: 'absolute',
   },
   slideContent: {
     alignItems: 'center',
