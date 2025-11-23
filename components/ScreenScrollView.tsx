@@ -1,9 +1,9 @@
 
-import { ScrollView, ScrollViewProps, StyleSheet, useWindowDimensions } from "react-native";
+import { ScrollView, ScrollViewProps, StyleSheet } from "react-native";
 
 import { useTheme } from "@/hooks/useTheme";
 import { useScreenInsets } from "@/hooks/useScreenInsets";
-import { Spacing } from "@/constants/theme";
+import { useResponsive } from "@/hooks/useResponsive";
 
 export function ScreenScrollView({
   children,
@@ -13,10 +13,7 @@ export function ScreenScrollView({
 }: ScrollViewProps) {
   const { theme } = useTheme();
   const { paddingTop, paddingBottom, scrollInsetBottom } = useScreenInsets();
-  const { width } = useWindowDimensions();
-  
-  // Responsive horizontal padding based on screen width
-  const horizontalPadding = width < 375 ? Spacing.md : Spacing.xl;
+  const { padding } = useResponsive();
 
   return (
     <ScrollView
@@ -29,7 +26,7 @@ export function ScreenScrollView({
         {
           paddingTop,
           paddingBottom,
-          paddingHorizontal: horizontalPadding,
+          paddingHorizontal: padding,
         },
         contentContainerStyle,
       ]}

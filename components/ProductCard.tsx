@@ -1,148 +1,202 @@
-import React from 'react';
-import { View, StyleSheet, Pressable, Image } from 'react-native';
-import { Feather } from '@expo/vector-icons';
-import { ThemedText } from '@/components/ThemedText';
-import { Product } from '@/data/types';
-import { Colors, Spacing, BorderRadius, Shadows } from '@/constants/theme';
+
+import React from "react";
+import { StyleSheet, Pressable, Image, View } from "react-native";
+import { Feather } from "@expo/vector-icons";
+import Animated, {
+  useAnimatedStyle,
+  useSharedValue,
+  withSpring,
+} from "react-native-reanimated";
+
+import { ThemedText } from "@/components/ThemedText";
+import { useTheme } from "@/hooks/useTheme";
+import { useResponsive } from "@/hooks/useResponsive";
+import { Product } from "@/data/types";
+import { BorderRadius, Shadows } from "@/constants/theme";
 
 interface ProductCardProps {
   product: Product;
   onPress: () => void;
-  onWishlistPress: () => void;
+  onWishlistToggle?: () => void;
+  isWishlisted?: boolean;
 }
 
-export function ProductCard({ product, onPress, onWishlistPress }: ProductCardProps) {
+export function ProductCard({
+  product,
+  onPress,
+  onWishlistToggle,
+  isWishlisted = false,
+}: ProductCardProps) {
+  const { theme } = useTheme();
+  const { width, columns, spacing, fontSize, iconSize } = useResponsive();
+  const scale = useSharedValue(1);
+
+  const animatedStyle = useAnimatedStyle(() => ({
+    transform: [{ scale: scale.value }],
+  }));
+
+  const handlePressIn = () => {
+    scale.value = withSpring(0.95);
+  };
+
+  const handlePressOut = () => {
+    scale.value = withSpring(1);
+  };
+
+  // Calculate card width based on columns
+  const cardWidth = (width - spacing.xl * 2 - spacing.md * (columns - 1)) / columns;
+  const imageHeight = cardWidth * 1.0; // 1:1 aspect ratio
+
+  const discount = Math.round(
+    ((product.originalPrice - product.price) / product.originalPrice) * 100
+  );
+
   return (
-    <Pressable
-      style={({ pressed }) => [
-        styles.container,
-        pressed && styles.pressed,
-      ]}
-      onPress={onPress}
-    >
-      <View style={styles.imageContainer}>
-        <View style={styles.placeholder} />
-        <Pressable style={styles.wishlistButton} onPress={onWishlistPress}>
-          <Feather
-            name={product.isWishlisted ? 'heart' : 'heart'}
-            size={20}
-            color={product.isWishlisted ? Colors.light.error : Colors.light.textGray}
-            fill={product.isWishlisted ? Colors.light.error : 'transparent'}
-          />
-        </Pressable>
-        {product.discount > 0 && (
-          <View style={styles.discountBadge}>
-            <ThemedText style={styles.discountText}>{product.discount}% OFF</ThemedText>
-          </View>
-        )}
-      </View>
+    <Animated.View style={[animatedStyle, { width: cardWidth }]}>
+      <Pressable
+        onPress={onPress}
+        onPressIn={handlePressIn}
+        onPressOut={handlePressOut}
+        style={[
+          styles.container,
+          {
+            backgroundColor: theme.backgroundRoot,
+            borderRadius: BorderRadius.md,
+            padding: spacing.sm,
+          },
+          Shadows.small,
+        ]}
+      >
+        <View style={[styles.imageContainer, { height: imageHeight, borderRadius: BorderRadius.sm }]}>
+          <Image source={{ uri: product.image }} style={styles.image} />
+          {discount > 0 && (
+            <View
+              style={[
+                styles.discountBadge,
+                { backgroundColor: theme.success, borderRadius: BorderRadius.xs },
+              ]}
+            >
+              <ThemedText style={[styles.discountText, { fontSize: fontSize.xs }]}>
+                {discount}% OFF
+              </ThemedText>
+            </View>
+          )}
+          {onWishlistToggle && (
+            <Pressable
+              onPress={onWishlistToggle}
+              style={[
+                styles.wishlistButton,
+                { backgroundColor: theme.backgroundRoot, borderRadius: BorderRadius.full },
+              ]}
+            >
+              <Feather
+                name={isWishlisted ? "heart" : "heart"}
+                size={iconSize * 0.7}
+                color={isWishlisted ? theme.error : theme.textGray}
+                fill={isWishlisted ? theme.error : "transparent"}
+              />
+            </Pressable>
+          )}
+        </View>
 
-      <View style={styles.content}>
-        <ThemedText type="caption" style={styles.brand}>
-          {product.brand}
-        </ThemedText>
-        <ThemedText type="small" numberOfLines={2} style={styles.name}>
-          {product.name}
-        </ThemedText>
-        
-        <View style={styles.ratingContainer}>
-          <Feather name="star" size={12} color={Colors.light.warning} fill={Colors.light.warning} />
-          <ThemedText type="caption" style={styles.rating}>
-            {product.rating} ({product.reviewCount})
+        <View style={{ marginTop: spacing.sm }}>
+          <ThemedText
+            type="caption"
+            style={[styles.brand, { color: theme.textGray, fontSize: fontSize.xs }]}
+          >
+            {product.brand}
           </ThemedText>
-        </View>
+          <ThemedText
+            numberOfLines={2}
+            style={[styles.name, { fontSize: fontSize.sm, marginTop: spacing.xs }]}
+          >
+            {product.name}
+          </ThemedText>
 
-        <View style={styles.priceContainer}>
-          <ThemedText style={styles.price}>₹{product.price}</ThemedText>
-          <ThemedText type="caption" style={styles.mrp}>₹{product.mrp}</ThemedText>
+          <View style={[styles.priceRow, { marginTop: spacing.xs }]}>
+            <ThemedText style={[styles.price, { color: theme.primary, fontSize: fontSize.md }]}>
+              ₹{product.price}
+            </ThemedText>
+            {product.originalPrice > product.price && (
+              <ThemedText
+                style={[
+                  styles.originalPrice,
+                  { color: theme.textGray, fontSize: fontSize.xs },
+                ]}
+              >
+                ₹{product.originalPrice}
+              </ThemedText>
+            )}
+          </View>
+
+          <View style={[styles.rating, { marginTop: spacing.xs }]}>
+            <Feather name="star" size={iconSize * 0.6} color={theme.warning} fill={theme.warning} />
+            <ThemedText style={[styles.ratingText, { fontSize: fontSize.xs }]}>
+              {product.rating} ({product.reviews})
+            </ThemedText>
+          </View>
         </View>
-      </View>
-    </Pressable>
+      </Pressable>
+    </Animated.View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    margin: Spacing.sm,
-    backgroundColor: Colors.light.backgroundRoot,
-    borderRadius: BorderRadius.sm,
-    ...Shadows.small,
-  },
-  pressed: {
-    opacity: 0.95,
-    transform: [{ scale: 0.98 }],
+    marginBottom: 16,
   },
   imageContainer: {
-    position: 'relative',
-    aspectRatio: 1,
-    borderTopLeftRadius: BorderRadius.sm,
-    borderTopRightRadius: BorderRadius.sm,
-    overflow: 'hidden',
+    width: "100%",
+    overflow: "hidden",
   },
-  placeholder: {
-    width: '100%',
-    height: '100%',
-    backgroundColor: Colors.light.backgroundSecondary,
-  },
-  wishlistButton: {
-    position: 'absolute',
-    top: Spacing.sm,
-    right: Spacing.sm,
-    width: 32,
-    height: 32,
-    borderRadius: 16,
-    backgroundColor: Colors.light.backgroundRoot,
-    justifyContent: 'center',
-    alignItems: 'center',
-    ...Shadows.small,
+  image: {
+    width: "100%",
+    height: "100%",
+    resizeMode: "cover",
   },
   discountBadge: {
-    position: 'absolute',
-    bottom: Spacing.sm,
-    left: Spacing.sm,
-    backgroundColor: Colors.light.success,
-    paddingHorizontal: Spacing.sm,
-    paddingVertical: 2,
-    borderRadius: 4,
+    position: "absolute",
+    top: 8,
+    left: 8,
+    paddingHorizontal: 8,
+    paddingVertical: 4,
   },
   discountText: {
-    color: '#FFFFFF',
-    fontSize: 10,
-    fontWeight: '700',
+    color: "#FFFFFF",
+    fontWeight: "600",
   },
-  content: {
-    padding: Spacing.md,
+  wishlistButton: {
+    position: "absolute",
+    top: 8,
+    right: 8,
+    width: 32,
+    height: 32,
+    alignItems: "center",
+    justifyContent: "center",
   },
   brand: {
-    color: Colors.light.textGray,
-    marginBottom: 2,
+    textTransform: "uppercase",
   },
   name: {
-    marginBottom: Spacing.xs,
-    fontWeight: '500',
+    fontWeight: "500",
   },
-  ratingContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: Spacing.sm,
-  },
-  rating: {
-    marginLeft: 4,
-    color: Colors.light.textGray,
-  },
-  priceContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
+  priceRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 8,
   },
   price: {
-    fontSize: 16,
-    fontWeight: '700',
-    color: Colors.light.text,
-    marginRight: Spacing.sm,
+    fontWeight: "700",
   },
-  mrp: {
-    textDecorationLine: 'line-through',
-    color: Colors.light.textGray,
+  originalPrice: {
+    textDecorationLine: "line-through",
+  },
+  rating: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 4,
+  },
+  ratingText: {
+    marginLeft: 4,
   },
 });
