@@ -8,7 +8,8 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { ScreenScrollView } from '@/components/ScreenScrollView';
 import { ThemedText } from '@/components/ThemedText';
 import { ProductCard } from '@/components/ProductCard';
-import { CategoryCircle } from '@/components/CategoryCircle';
+import { ModernCategory } from '@/components/ModernCategory';
+import { SearchBar } from '@/components/SearchBar';
 import { useTheme } from '@/hooks/useTheme';
 import { Colors, Spacing, BorderRadius } from '@/constants/theme';
 import { PRODUCTS, CATEGORIES } from '@/data/mockData';
@@ -120,6 +121,11 @@ export default function HomeScreen() {
 
   return (
     <ScreenScrollView contentContainerStyle={styles.scrollContent}>
+      {/* Search Bar */}
+      <View style={styles.searchSection}>
+        <SearchBar onSearch={handleSearchPress} />
+      </View>
+
       {/* Hero Slider */}
       <View style={styles.heroSection} pointerEvents="none">
         <FlatList
@@ -158,7 +164,7 @@ export default function HomeScreen() {
         <FlatList
           data={CATEGORIES}
           renderItem={({ item }) => (
-            <CategoryCircle
+            <ModernCategory
               category={item}
               onPress={() => handleCategoryPress(item.id, item.name)}
             />
@@ -234,6 +240,11 @@ const styles = StyleSheet.create({
   scrollContent: {
     flexGrow: 1,
     paddingBottom: 120,
+  },
+  searchSection: {
+    paddingHorizontal: Spacing.lg,
+    paddingVertical: Spacing.md,
+    marginTop: Spacing.md,
   },
   heroSection: {
     marginBottom: 24,

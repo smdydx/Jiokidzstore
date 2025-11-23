@@ -6,6 +6,7 @@ import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { ScreenScrollView } from '@/components/ScreenScrollView';
 import { ThemedText } from '@/components/ThemedText';
+import { ModernInput } from '@/components/ModernInput';
 import { useTheme } from '@/hooks/useTheme';
 import { Colors, Spacing, BorderRadius, Typography } from '@/constants/theme';
 import type { RootStackParamList } from '@/navigation/RootNavigator';
@@ -46,21 +47,14 @@ export default function LoginScreen() {
           <View style={styles.formContainer}>
             <View style={styles.inputWrapper}>
               <ThemedText style={styles.inputLabel}>Mobile Number</ThemedText>
-              <View style={styles.phoneInputContainer}>
-                <View style={styles.countryCodeBox}>
-                  <ThemedText style={styles.countryCodeText}>+91</ThemedText>
-                </View>
-                <TextInput
-                  style={[styles.phoneInput, { color: theme.text }]}
-                  value={phone}
-                  onChangeText={setPhone}
-                  placeholder="Enter 10 digit mobile number"
-                  placeholderTextColor="#9CA3AF"
-                  keyboardType="phone-pad"
-                  maxLength={10}
-                  autoFocus={false}
-                />
-              </View>
+              <ModernInput
+                icon="phone"
+                value={phone}
+                onChangeText={setPhone}
+                placeholder="10 digit mobile number"
+                keyboardType="phone-pad"
+                maxLength={10}
+              />
             </View>
 
             <Pressable
