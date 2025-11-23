@@ -8,6 +8,9 @@ import Animated, {
   withTiming,
   Easing,
   useAnimatedReaction,
+  withRepeat,
+  interpolate,
+  Extrapolate,
 } from 'react-native-reanimated';
 import { Feather } from '@expo/vector-icons';
 import { ThemedText } from '@/components/ThemedText';
@@ -26,39 +29,97 @@ interface SlideProps {
   currentSlide: number;
 }
 
-// Floating animation element
-function FloatingElement({ delay, position, size, icon }: any) {
-  const floatAnim = useSharedValue(0);
+// Advanced floating element with pulse and orbit effect
+function AdvancedFloatingElement({ delay, position, size, icon, isActive }: any) {
+  const orbitAnim = useSharedValue(0);
+  const pulseAnim = useSharedValue(0);
   const opacityAnim = useSharedValue(0);
+  const scaleAnim = useSharedValue(0.3);
 
   useEffect(() => {
-    opacityAnim.value = withTiming(0.3, {
-      duration: 500,
-      easing: Easing.ease,
-    }, () => {
-      floatAnim.value = withTiming(1, {
-        duration: 3000,
-        easing: Easing.inOut(Easing.sin),
-      }, () => {
-        floatAnim.value = withTiming(0, {
-          duration: 3000,
-          easing: Easing.inOut(Easing.sin),
-        });
+    if (isActive) {
+      // Fade in
+      opacityAnim.value = withTiming(0.4, { duration: 800, easing: Easing.ease });
+      scaleAnim.value = withTiming(1, { 
+        duration: 800, 
+        easing: Easing.bezier(0.34, 1.56, 0.64, 1) 
       });
-    });
-  }, []);
+
+      // Orbit animation
+      orbitAnim.value = withRepeat(
+        withTiming(360, {
+          duration: 8000 + delay,
+          easing: Easing.linear,
+        }),
+        -1,
+        false
+      );
+
+      // Pulse animation
+      pulseAnim.value = withRepeat(
+        withTiming(1, {
+          duration: 1500,
+          easing: Easing.inOut(Easing.ease),
+        }),
+        -1,
+        true
+      );
+    } else {
+      opacityAnim.value = 0;
+      scaleAnim.value = 0.3;
+    }
+  }, [isActive]);
+
+  const pulseScale = interpolate(
+    pulseAnim.value,
+    [0, 1],
+    [0.9, 1.1]
+  );
+
+  const orbitX = interpolate(
+    orbitAnim.value,
+    [0, 360],
+    [0, 360]
+  );
 
   const animatedStyle = useAnimatedStyle(() => ({
     opacity: opacityAnim.value,
-    transform: [{ translateY: floatAnim.value * 40 - 20 }],
+    transform: [
+      { scale: scaleAnim.value * pulseScale },
+      { rotateZ: `${orbitAnim.value}deg` },
+    ],
   }));
 
   return (
     <Animated.View style={[styles.floatingElement, { ...position }, animatedStyle]}>
       <View style={[styles.floatingElementContent, { width: size, height: size, borderRadius: size / 2 }]}>
-        <Feather name={icon} size={size / 2} color="#FFFFFF" />
+        <Feather name={icon} size={size / 2.5} color="#FFFFFF" />
       </View>
     </Animated.View>
+  );
+}
+
+// Shimmer background effect
+function ShimmerBackground() {
+  const shimmerAnim = useSharedValue(0);
+
+  useEffect(() => {
+    shimmerAnim.value = withRepeat(
+      withTiming(1, {
+        duration: 2000,
+        easing: Easing.inOut(Easing.ease),
+      }),
+      -1,
+      true
+    );
+  }, []);
+
+  const animatedStyle = useAnimatedStyle(() => ({
+    opacity: interpolate(shimmerAnim.value, [0, 1], [0.3, 0.6]),
+  }));
+
+  return (
+    <Animated.View style={[styles.shimmerOverlay, animatedStyle]} />
   );
 }
 
@@ -66,52 +127,44 @@ function Slide({ title, subtitle, icon, logo, gradient, isFirstSlide, slideIndex
   const textFadeAnim = useSharedValue(0);
   const textTranslateAnim = useSharedValue(50);
   const logoFadeAnim = useSharedValue(0);
-  const logoScaleAnim = useSharedValue(0.8);
+  const logoScaleAnim = useSharedValue(0.5);
   const containerRotateAnim = useSharedValue(0);
+  const glowyAnim = useSharedValue(0);
 
   useEffect(() => {
     if (slideIndex === currentSlide && isFirstSlide) {
-      // Animate text first
-      textFadeAnim.value = withTiming(1, {
-        duration: 600,
-        easing: Easing.ease,
-      });
-      textTranslateAnim.value = withTiming(0, {
-        duration: 600,
-        easing: Easing.ease,
-      });
+      // Staggered animation sequence
+      textFadeAnim.value = withTiming(1, { duration: 600, easing: Easing.ease });
+      textTranslateAnim.value = withTiming(0, { duration: 600, easing: Easing.ease });
 
-      // Then animate logo with delay and rotation
       setTimeout(() => {
         logoFadeAnim.value = withTiming(1, {
-          duration: 800,
-          easing: Easing.bezier(0.34, 1.56, 0.64, 1),
-        });
-        logoScaleAnim.value = withTiming(1, {
-          duration: 800,
-          easing: Easing.bezier(0.34, 1.56, 0.64, 1),
-        });
-        containerRotateAnim.value = withTiming(360, {
           duration: 1000,
           easing: Easing.bezier(0.34, 1.56, 0.64, 1),
         });
-      }, 300);
+        logoScaleAnim.value = withTiming(1, {
+          duration: 1000,
+          easing: Easing.bezier(0.34, 1.56, 0.64, 1),
+        });
+        containerRotateAnim.value = withTiming(360, {
+          duration: 1200,
+          easing: Easing.bezier(0.34, 1.56, 0.64, 1),
+        });
+
+        glowyAnim.value = withRepeat(
+          withTiming(1, { duration: 2000, easing: Easing.inOut(Easing.ease) }),
+          -1,
+          true
+        );
+      }, 400);
     } else if (slideIndex === currentSlide && !isFirstSlide) {
-      // For other slides, simple fade in
-      textFadeAnim.value = withTiming(1, {
-        duration: 600,
-        easing: Easing.ease,
-      });
-      logoFadeAnim.value = withTiming(1, {
-        duration: 600,
-        easing: Easing.ease,
-      });
+      textFadeAnim.value = withTiming(1, { duration: 600, easing: Easing.ease });
+      logoFadeAnim.value = withTiming(1, { duration: 600, easing: Easing.ease });
     } else {
-      // Reset animations when not visible
       textFadeAnim.value = 0;
       textTranslateAnim.value = 50;
       logoFadeAnim.value = 0;
-      logoScaleAnim.value = 0.8;
+      logoScaleAnim.value = 0.5;
       containerRotateAnim.value = 0;
     }
   }, [slideIndex, currentSlide]);
@@ -121,12 +174,18 @@ function Slide({ title, subtitle, icon, logo, gradient, isFirstSlide, slideIndex
     transform: [{ translateY: textTranslateAnim.value }],
   }));
 
+  const glowOpacity = interpolate(glowyAnim.value, [0, 1], [0, 0.3]);
+
   const logoAnimatedStyle = useAnimatedStyle(() => ({
     opacity: logoFadeAnim.value,
     transform: [
       { scale: logoScaleAnim.value },
       { rotateZ: `${containerRotateAnim.value}deg` },
     ],
+  }));
+
+  const glowyStyle = useAnimatedStyle(() => ({
+    opacity: glowOpacity,
   }));
 
   return (
@@ -136,22 +195,59 @@ function Slide({ title, subtitle, icon, logo, gradient, isFirstSlide, slideIndex
       end={{ x: 1, y: 1 }}
       style={styles.slide}
     >
+      <ShimmerBackground />
+      
       <View style={styles.slideContent}>
         {isFirstSlide ? (
           <>
-            {/* Floating shopping bags and toys in background */}
-            <FloatingElement delay={0} position={{ top: 80, left: 30 }} size={50} icon="shopping-bag" />
-            <FloatingElement delay={200} position={{ top: 200, right: 40 }} size={40} icon="gift" />
-            <FloatingElement delay={400} position={{ bottom: 150, left: 50 }} size={45} icon="heart" />
-            <FloatingElement delay={600} position={{ bottom: 120, right: 60 }} size={35} icon="star" />
+            {/* Advanced animated floating elements */}
+            <AdvancedFloatingElement 
+              delay={0} 
+              position={{ top: 60, left: 20 }} 
+              size={56} 
+              icon="shopping-bag"
+              isActive={slideIndex === currentSlide}
+            />
+            <AdvancedFloatingElement 
+              delay={200} 
+              position={{ top: 150, right: 30 }} 
+              size={48} 
+              icon="gift"
+              isActive={slideIndex === currentSlide}
+            />
+            <AdvancedFloatingElement 
+              delay={400} 
+              position={{ bottom: 180, left: 40 }} 
+              size={52} 
+              icon="heart"
+              isActive={slideIndex === currentSlide}
+            />
+            <AdvancedFloatingElement 
+              delay={600} 
+              position={{ bottom: 140, right: 50 }} 
+              size={44} 
+              icon="star"
+              isActive={slideIndex === currentSlide}
+            />
+            <AdvancedFloatingElement 
+              delay={300} 
+              position={{ top: 300, left: 50 }} 
+              size={40} 
+              icon="zap"
+              isActive={slideIndex === currentSlide}
+            />
 
             <Animated.View style={[styles.textContainer, textAnimatedStyle]}>
               <ThemedText style={styles.slideTitle}>{title}</ThemedText>
             </Animated.View>
             
-            <Animated.View style={[styles.logoContainer, logoAnimatedStyle]}>
-              <Image source={logo} style={styles.logo} resizeMode="contain" />
-            </Animated.View>
+            {/* Logo with glow effect */}
+            <View style={styles.logoWrapperContainer}>
+              <Animated.View style={[styles.glowEffect, glowyStyle]} />
+              <Animated.View style={[styles.logoContainer, logoAnimatedStyle]}>
+                <Image source={logo} style={styles.logo} resizeMode="contain" />
+              </Animated.View>
+            </View>
             
             <Animated.View style={[{ opacity: textFadeAnim }, styles.subtitleContainer]}>
               <ThemedText style={styles.slideSubtitle}>{subtitle}</ThemedText>
@@ -160,7 +256,9 @@ function Slide({ title, subtitle, icon, logo, gradient, isFirstSlide, slideIndex
         ) : (
           <>
             <Animated.View style={[styles.iconContainer, logoAnimatedStyle]}>
-              <Feather name={icon as any} size={120} color="#FFFFFF" />
+              <View style={styles.iconGradientBg}>
+                <Feather name={icon as any} size={80} color="#FFFFFF" />
+              </View>
             </Animated.View>
             <Animated.View style={[textAnimatedStyle, styles.textContainerOther]}>
               <ThemedText style={styles.slideTitle}>{title}</ThemedText>
@@ -346,11 +444,16 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     overflow: 'hidden',
   },
+  shimmerOverlay: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: 'rgba(255, 255, 255, 0.3)',
+  },
   slideContent: {
     alignItems: 'center',
     paddingHorizontal: Spacing.xl,
     width: '100%',
     position: 'relative',
+    justifyContent: 'center',
   },
   floatingElement: {
     position: 'absolute',
@@ -358,21 +461,38 @@ const styles = StyleSheet.create({
   floatingElementContent: {
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    backgroundColor: 'rgba(255, 255, 255, 0.25)',
     backdropFilter: 'blur(10px)',
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.3)',
   },
   textContainer: {
     marginBottom: Spacing.lg,
+    zIndex: 10,
   },
   textContainerOther: {
     marginTop: Spacing.lg,
   },
-  logoContainer: {
+  logoWrapperContainer: {
+    position: 'relative',
+    alignItems: 'center',
+    justifyContent: 'center',
     marginBottom: Spacing.xl,
+  },
+  glowEffect: {
+    position: 'absolute',
+    width: 240,
+    height: 240,
+    borderRadius: 120,
+    backgroundColor: 'rgba(255, 255, 255, 0.3)',
+    blur: 80,
+  },
+  logoContainer: {
     width: 180,
     height: 180,
     justifyContent: 'center',
     alignItems: 'center',
+    zIndex: 5,
   },
   logo: {
     width: '100%',
@@ -380,11 +500,22 @@ const styles = StyleSheet.create({
   },
   subtitleContainer: {
     marginTop: Spacing.lg,
+    paddingHorizontal: Spacing.md,
   },
   iconContainer: {
     marginBottom: Spacing.xxl,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  iconGradientBg: {
+    width: 140,
+    height: 140,
+    borderRadius: 70,
+    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderWidth: 2,
+    borderColor: 'rgba(255, 255, 255, 0.4)',
   },
   slideTitle: {
     fontSize: 32,
@@ -395,7 +526,7 @@ const styles = StyleSheet.create({
   },
   slideSubtitle: {
     fontSize: 16,
-    color: 'rgba(255, 255, 255, 0.9)',
+    color: 'rgba(255, 255, 255, 0.95)',
     textAlign: 'center',
     lineHeight: 24,
     fontFamily: 'Poppins',
