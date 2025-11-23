@@ -259,6 +259,8 @@ const styles = StyleSheet.create({
   heroContainer: {
     paddingVertical: Spacing.lg,
     borderRadius: 24,
+    borderBottomLeftRadius: 24,
+    borderBottomRightRadius: 24,
     marginBottom: Spacing.lg,
     backgroundColor: '#FFFFFF',
   },
