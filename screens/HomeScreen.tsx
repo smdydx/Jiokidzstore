@@ -9,45 +9,19 @@ import { ScreenScrollView } from '@/components/ScreenScrollView';
 import { ThemedText } from '@/components/ThemedText';
 import { ProductCard } from '@/components/ProductCard';
 import { ModernCategory } from '@/components/ModernCategory';
-import { SearchBar } from '@/components/SearchBar';
+import { ModernHeader } from '@/components/ModernHeader';
+import { ModernSearchBar } from '@/components/ModernSearchBar';
+import { ModernHeroSection } from '@/components/ModernHeroSection';
 import { useTheme } from '@/hooks/useTheme';
 import { Colors, Spacing, BorderRadius } from '@/constants/theme';
 import { PRODUCTS, CATEGORIES } from '@/data/mockData';
 import { wishlistStorage } from '@/utils/storage';
 import type { HomeStackParamList } from '@/navigation/HomeStackNavigator';
 
-const { width } = Dimensions.get('window');
-
-const HERO_SLIDES = [
-  {
-    id: '1',
-    title: 'Big Sale',
-    subtitle: 'Up to 60% OFF on Kids Fashion',
-    image: 'https://images.unsplash.com/photo-1503944583220-79d8926ad5e2?w=800',
-    buttonText: 'Shop Now',
-  },
-  {
-    id: '2',
-    title: 'New Arrivals',
-    subtitle: 'Latest Toys Collection',
-    image: 'https://images.unsplash.com/photo-1515488042361-ee00e0ddd4e4?w=800',
-    buttonText: 'Explore',
-  },
-  {
-    id: '3',
-    title: 'Baby Essentials',
-    subtitle: 'Everything for Your Little One',
-    image: 'https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?w=800',
-    buttonText: 'Shop Baby',
-  },
-];
-
 export default function HomeScreen() {
   const navigation = useNavigation<NativeStackNavigationProp<HomeStackParamList>>();
   const { theme } = useTheme();
   const [products, setProducts] = useState(PRODUCTS);
-  const [activeSlide, setActiveSlide] = useState(0);
-  const heroScrollRef = useRef<FlatList>(null);
 
   const handleProductPress = (productId: string) => {
     navigation.navigate('HomeTab', {
@@ -91,67 +65,19 @@ export default function HomeScreen() {
     navigation.navigate('Search');
   };
 
-  const onViewableItemsChanged = useRef(({ viewableItems }: any) => {
-    if (viewableItems.length > 0) {
-      setActiveSlide(viewableItems[0].index || 0);
-    }
-  }).current;
-
-  const renderHeroSlide = ({ item }: any) => (
-    <View style={styles.heroSlide}>
-      <Image source={{ uri: item.image }} style={styles.heroImage} />
-      <LinearGradient
-        colors={['rgba(255, 107, 157, 0.1)', 'rgba(255, 107, 157, 0.9)']}
-        style={styles.heroOverlay}
-      >
-        <View style={styles.heroContent}>
-          <ThemedText style={styles.heroTitle}>{item.title}</ThemedText>
-          <ThemedText style={styles.heroSubtitle}>{item.subtitle}</ThemedText>
-          <LinearGradient
-            colors={['#FFFFFF', '#FFF8FA']}
-            style={styles.heroButton}
-          >
-            <ThemedText style={styles.heroButtonText}>{item.buttonText}</ThemedText>
-            <Feather name="arrow-right" size={18} color={Colors.light.primary} />
-          </LinearGradient>
-        </View>
-      </LinearGradient>
-    </View>
-  );
-
   return (
     <ScreenScrollView contentContainerStyle={styles.scrollContent}>
-      {/* Search Bar */}
-      <View style={styles.searchSection}>
-        <SearchBar onSearch={handleSearchPress} />
-      </View>
+      {/* Modern Header */}
+      <ModernHeader notificationCount={2} />
 
-      {/* Hero Slider */}
-      <View style={styles.heroSection} pointerEvents="none">
-        <FlatList
-          ref={heroScrollRef}
-          data={HERO_SLIDES}
-          renderItem={renderHeroSlide}
-          horizontal
-          pagingEnabled
-          showsHorizontalScrollIndicator={false}
-          onViewableItemsChanged={onViewableItemsChanged}
-          viewabilityConfig={{ itemVisiblePercentThreshold: 50 }}
-          snapToInterval={width}
-          decelerationRate="fast"
-        />
-        <View style={styles.pagination}>
-          {HERO_SLIDES.map((_, index) => (
-            <View
-              key={index}
-              style={[
-                styles.paginationDot,
-                activeSlide === index && styles.paginationDotActive,
-              ]}
-            />
-          ))}
-        </View>
-      </View>
+      {/* Modern Search Bar */}
+      <ModernSearchBar onSearch={handleSearchPress} />
+
+      {/* Modern Hero Section */}
+      <ModernHeroSection
+        onSlidePress={() => {}}
+        onButtonPress={() => navigation.navigate('FlashSale')}
+      />
 
       {/* Categories */}
       <View style={styles.section}>
@@ -176,7 +102,7 @@ export default function HomeScreen() {
         />
       </View>
 
-      {/* Flash Sale */}
+      {/* Flash Sale Section */}
       <Pressable style={styles.flashSaleBanner} onPress={() => navigation.navigate('FlashSale')}>
         <LinearGradient
           colors={['#FF6B9D', '#FFA8C5']}
@@ -190,7 +116,7 @@ export default function HomeScreen() {
             </View>
             <View>
               <ThemedText style={styles.flashTitle}>Flash Sale</ThemedText>
-              <ThemedText style={styles.flashSubtitle}>Up to 60% OFF</ThemedText>
+              <ThemedText style={styles.flashSubtitle}>Limited offers today</ThemedText>
             </View>
           </View>
           <Feather name="chevron-right" size={24} color="#FFFFFF" />
@@ -240,92 +166,6 @@ const styles = StyleSheet.create({
   scrollContent: {
     flexGrow: 1,
     paddingBottom: 120,
-  },
-  searchSection: {
-    paddingHorizontal: Spacing.lg,
-    paddingVertical: Spacing.md,
-    marginTop: Spacing.md,
-  },
-  heroSection: {
-    marginBottom: 24,
-    marginTop: 0,
-    marginHorizontal: 0,
-  },
-  heroSlide: {
-    width: width,
-    height: 280,
-    position: 'relative',
-  },
-  heroImage: {
-    width: '100%',
-    height: '100%',
-    resizeMode: 'cover',
-  },
-  heroOverlay: {
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
-    height: '100%',
-    justifyContent: 'flex-end',
-    paddingHorizontal: 24,
-    paddingBottom: 32,
-  },
-  heroContent: {
-    gap: 8,
-  },
-  heroTitle: {
-    fontSize: 32,
-    fontWeight: '800',
-    color: '#FFFFFF',
-    textShadowColor: 'rgba(0, 0, 0, 0.3)',
-    textShadowOffset: { width: 0, height: 2 },
-    textShadowRadius: 4,
-  },
-  heroSubtitle: {
-    fontSize: 16,
-    color: '#FFFFFF',
-    fontWeight: '500',
-    textShadowColor: 'rgba(0, 0, 0, 0.3)',
-    textShadowOffset: { width: 0, height: 1 },
-    textShadowRadius: 2,
-  },
-  heroButton: {
-    alignSelf: 'flex-start',
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-    paddingHorizontal: 24,
-    paddingVertical: 12,
-    borderRadius: 24,
-    marginTop: 12,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.2,
-    shadowRadius: 8,
-    elevation: 6,
-  },
-  heroButtonText: {
-    fontSize: 15,
-    fontWeight: '700',
-    color: Colors.light.primary,
-  },
-  pagination: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginTop: 12,
-    gap: 6,
-  },
-  paginationDot: {
-    width: 6,
-    height: 6,
-    borderRadius: 3,
-    backgroundColor: '#D1D5DB',
-  },
-  paginationDotActive: {
-    width: 20,
-    backgroundColor: Colors.light.primary,
   },
   section: {
     marginBottom: 24,
