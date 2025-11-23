@@ -47,7 +47,6 @@ export function ModernHeader({ onNotificationPress, notificationCount = 0 }: Mod
 
 const styles = StyleSheet.create({
   container: {
-    paddingHorizontal: Spacing.lg,
     paddingVertical: Spacing.md,
     borderBottomLeftRadius: 24,
     borderBottomRightRadius: 24,
@@ -56,6 +55,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
+    paddingHorizontal: Spacing.lg,
   },
   logo: {
     fontSize: 22,
