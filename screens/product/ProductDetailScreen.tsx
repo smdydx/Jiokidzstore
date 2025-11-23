@@ -210,7 +210,6 @@ export default function ProductDetailScreen() {
 
           <View style={{ height: 100 }} />
         </ScrollView>
-      </ScrollView>
 
       {/* Footer Buttons */}
       <View style={[styles.footer, { paddingBottom: insets.bottom + 12 }]}>
