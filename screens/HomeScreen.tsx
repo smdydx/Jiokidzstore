@@ -1,7 +1,8 @@
 import React, { useState, useCallback, useMemo } from 'react';
-import { View, StyleSheet, Pressable, Image, Dimensions, FlatList, Platform } from 'react-native';
+import { View, StyleSheet, Pressable, Image, Dimensions, FlatList, Platform, ScrollView } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Feather } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import { ScreenScrollView } from '@/components/ScreenScrollView';
@@ -20,6 +21,7 @@ import type { HomeStackParamList } from '@/navigation/HomeStackNavigator';
 
 export default function HomeScreen() {
   const navigation = useNavigation<NativeStackNavigationProp<HomeStackParamList>>();
+  const insets = useSafeAreaInsets();
   const [products, setProducts] = useState(PRODUCTS);
   const [wishlistedItems, setWishlistedItems] = useState<Set<string>>(new Set());
 
@@ -85,10 +87,13 @@ export default function HomeScreen() {
 
   return (
     <View style={styles.container}>
-      <ScreenScrollView contentContainerStyle={styles.scrollContent}>
-        {/* Search Bar */}
+      {/* Fixed Header */}
+      <View style={styles.fixedHeader}>
         <ModernSearchBar onSearch={handleSearchPress} />
+      </View>
 
+      {/* Scrollable Content */}
+      <ScreenScrollView contentContainerStyle={styles.scrollContent}>
         {/* Hero Section */}
         <View style={styles.heroContainer}>
           <ModernHeroSection
@@ -240,9 +245,17 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#FFFFFF',
   },
+  fixedHeader: {
+    position: 'relative',
+    zIndex: 100,
+    backgroundColor: '#FFFFFF',
+    borderBottomWidth: 1,
+    borderBottomColor: '#F0F0F0',
+  },
   scrollContent: {
     flexGrow: 1,
     paddingBottom: 20,
+    paddingTop: 0,
   },
   section: {
     marginBottom: 24,
