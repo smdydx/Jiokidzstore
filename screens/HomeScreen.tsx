@@ -72,12 +72,13 @@ export default function HomeScreen() {
   };
 
   return (
-    <ScreenScrollView contentContainerStyle={styles.scrollContent}>
-      {/* Modern Header */}
+    <View style={styles.container}>
+      {/* Modern Header - Outside Scroll */}
       <ModernHeader notificationCount={2} />
 
-      {/* Modern Search Bar */}
-      <ModernSearchBar onSearch={handleSearchPress} />
+      <ScreenScrollView contentContainerStyle={styles.scrollContent}>
+        {/* Modern Search Bar */}
+        <ModernSearchBar onSearch={handleSearchPress} />
 
       {/* Hero Section Container */}
       <View
