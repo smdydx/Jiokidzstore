@@ -7,12 +7,13 @@ import Animated, {
   useSharedValue,
   withSpring,
 } from "react-native-reanimated";
+import { LinearGradient } from 'expo-linear-gradient';
 
 import { ThemedText } from "@/components/ThemedText";
 import { useTheme } from "@/hooks/useTheme";
 import { useResponsive } from "@/hooks/useResponsive";
 import { Product } from "@/data/types";
-import { BorderRadius } from "@/constants/theme";
+import { BorderRadius, Colors } from "@/constants/theme";
 
 interface ProductCardProps {
   product: Product;
@@ -60,9 +61,23 @@ export function ProductCard({
       >
         <View style={[styles.imageContainer, { height: imageHeight }]}>
           <Image source={{ uri: product.image }} style={styles.image} />
+          <LinearGradient
+            colors={['transparent', 'rgba(0,0,0,0.15)']}
+            style={styles.imageGradient}
+          />
           {discount > 0 && (
             <View style={styles.discountBadge}>
               <ThemedText style={styles.discountText}>{discount}% OFF</ThemedText>
+            </View>
+          )}
+          {product.isNew && (
+            <View style={styles.newBadge}>
+              <ThemedText style={styles.newText}>NEW</ThemedText>
+            </View>
+          )}
+          {product.stock === 0 && (
+            <View style={styles.stockOverlay}>
+              <ThemedText style={styles.stockText}>Out of Stock</ThemedText>
             </View>
           )}
           {onWishlistPress && (
@@ -93,6 +108,11 @@ export function ProductCard({
               </ThemedText>
             )}
           </View>
+          {product.originalPrice > product.price && (
+            <ThemedText style={styles.savingsText}>
+              Save ₹{product.originalPrice - product.price}
+            </ThemedText>
+          )}
 
           <View style={styles.ratingRow}>
             <Feather name="star" size={12} color="#F59E0B" fill="#F59E0B" />
@@ -126,6 +146,13 @@ const styles = StyleSheet.create({
     height: '100%',
     resizeMode: 'cover',
   },
+  imageGradient: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    height: '40%',
+  },
   discountBadge: {
     position: 'absolute',
     top: 8,
@@ -139,6 +166,36 @@ const styles = StyleSheet.create({
     fontSize: 11,
     fontWeight: '700',
     color: '#FFFFFF',
+  },
+  newBadge: {
+    position: 'absolute',
+    top: 8,
+    right: 8,
+    backgroundColor: Colors.light.primary,
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 6,
+  },
+  newText: {
+    fontSize: 10,
+    fontWeight: '800',
+    color: '#FFFFFF',
+  },
+  stockOverlay: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: 'rgba(0,0,0,0.6)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  stockText: {
+    fontSize: 14,
+    fontWeight: '700',
+    color: '#FFFFFF',
+    textAlign: 'center',
   },
   wishlistButton: {
     position: 'absolute',
@@ -205,5 +262,11 @@ const styles = StyleSheet.create({
   reviewsText: {
     fontSize: 12,
     color: '#6B7280',
+  },
+  savingsText: {
+    fontSize: 11,
+    fontWeight: '600',
+    color: '#10B981',
+    marginTop: 2,
   },
 });
