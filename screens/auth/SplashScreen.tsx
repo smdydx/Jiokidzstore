@@ -7,10 +7,9 @@ import Animated, {
   useSharedValue,
   withTiming,
   Easing,
-  useAnimatedReaction,
-  withRepeat,
   interpolate,
-  Extrapolate,
+  withRepeat,
+  withSequence,
 } from 'react-native-reanimated';
 import { Feather } from '@expo/vector-icons';
 import { ThemedText } from '@/components/ThemedText';
@@ -29,97 +28,131 @@ interface SlideProps {
   currentSlide: number;
 }
 
-// Advanced floating element with pulse and orbit effect
-function AdvancedFloatingElement({ delay, position, size, icon, isActive }: any) {
-  const orbitAnim = useSharedValue(0);
-  const pulseAnim = useSharedValue(0);
-  const opacityAnim = useSharedValue(0);
-  const scaleAnim = useSharedValue(0.3);
+// Animated corner threads flowing to center with boom effect
+function CornerThreads({ isActive }: { isActive: boolean }) {
+  const threadAnim = useSharedValue(0);
+  const boomAnim = useSharedValue(0);
 
   useEffect(() => {
     if (isActive) {
-      // Fade in
-      opacityAnim.value = withTiming(0.4, { duration: 800, easing: Easing.ease });
-      scaleAnim.value = withTiming(1, { 
-        duration: 800, 
-        easing: Easing.bezier(0.34, 1.56, 0.64, 1) 
-      });
-
-      // Orbit animation
-      orbitAnim.value = withRepeat(
-        withTiming(360, {
-          duration: 8000 + delay,
-          easing: Easing.linear,
-        }),
-        -1,
-        false
+      threadAnim.value = withSequence(
+        withTiming(1, { duration: 2000, easing: Easing.inOut(Easing.ease) }),
+        withTiming(1, { duration: 500 })
       );
 
-      // Pulse animation
-      pulseAnim.value = withRepeat(
-        withTiming(1, {
-          duration: 1500,
-          easing: Easing.inOut(Easing.ease),
-        }),
-        -1,
-        true
-      );
+      setTimeout(() => {
+        boomAnim.value = withTiming(1, { duration: 800, easing: Easing.ease });
+      }, 2000);
     } else {
-      opacityAnim.value = 0;
-      scaleAnim.value = 0.3;
+      threadAnim.value = 0;
+      boomAnim.value = 0;
     }
   }, [isActive]);
 
-  const pulseScale = interpolate(
-    pulseAnim.value,
-    [0, 1],
-    [0.9, 1.1]
-  );
+  // Top-left thread
+  const topLeftAnimStyle = useAnimatedStyle(() => {
+    const progress = threadAnim.value;
+    const x = interpolate(progress, [0, 1], [-screenWidth / 2, 0]);
+    const y = interpolate(progress, [0, 1], [-screenHeight / 2, 0]);
+    const opacity = interpolate(progress, [0, 0.5, 1], [0, 1, 1]);
+    return {
+      transform: [{ translateX: x }, { translateY: y }],
+      opacity,
+    };
+  });
 
-  const orbitX = interpolate(
-    orbitAnim.value,
-    [0, 360],
-    [0, 360]
-  );
+  // Top-right thread
+  const topRightAnimStyle = useAnimatedStyle(() => {
+    const progress = threadAnim.value;
+    const x = interpolate(progress, [0, 1], [screenWidth / 2, 0]);
+    const y = interpolate(progress, [0, 1], [-screenHeight / 2, 0]);
+    const opacity = interpolate(progress, [0, 0.5, 1], [0, 1, 1]);
+    return {
+      transform: [{ translateX: x }, { translateY: y }],
+      opacity,
+    };
+  });
 
-  const animatedStyle = useAnimatedStyle(() => ({
-    opacity: opacityAnim.value,
-    transform: [
-      { scale: scaleAnim.value * pulseScale },
-      { rotateZ: `${orbitAnim.value}deg` },
-    ],
-  }));
+  // Bottom-left thread
+  const bottomLeftAnimStyle = useAnimatedStyle(() => {
+    const progress = threadAnim.value;
+    const x = interpolate(progress, [0, 1], [-screenWidth / 2, 0]);
+    const y = interpolate(progress, [0, 1], [screenHeight / 2, 0]);
+    const opacity = interpolate(progress, [0, 0.5, 1], [0, 1, 1]);
+    return {
+      transform: [{ translateX: x }, { translateY: y }],
+      opacity,
+    };
+  });
+
+  // Bottom-right thread
+  const bottomRightAnimStyle = useAnimatedStyle(() => {
+    const progress = threadAnim.value;
+    const x = interpolate(progress, [0, 1], [screenWidth / 2, 0]);
+    const y = interpolate(progress, [0, 1], [screenHeight / 2, 0]);
+    const opacity = interpolate(progress, [0, 0.5, 1], [0, 1, 1]);
+    return {
+      transform: [{ translateX: x }, { translateY: y }],
+      opacity,
+    };
+  });
+
+  // Boom/radiate effect
+  const boomStyle = useAnimatedStyle(() => {
+    const boom = boomAnim.value;
+    const scale = interpolate(boom, [0, 1], [0.3, 4]);
+    const opacity = interpolate(boom, [0, 0.3, 1], [0, 1, 0]);
+    return {
+      transform: [{ scale }],
+      opacity,
+    };
+  });
 
   return (
-    <Animated.View style={[styles.floatingElement, { ...position }, animatedStyle]}>
-      <View style={[styles.floatingElementContent, { width: size, height: size, borderRadius: size / 2 }]}>
-        <Feather name={icon} size={size / 2.5} color="#FFFFFF" />
-      </View>
-    </Animated.View>
-  );
-}
+    <View style={styles.threadContainer}>
+      {/* Boom effect - radiating burst */}
+      <Animated.View style={[styles.boomEffect, boomStyle]} />
 
-// Shimmer background effect
-function ShimmerBackground() {
-  const shimmerAnim = useSharedValue(0);
+      {/* Top-left thread */}
+      <Animated.View style={[styles.threadLine, styles.threadTopLeft, topLeftAnimStyle]}>
+        <LinearGradient
+          colors={['rgba(255, 255, 255, 0)', 'rgba(255, 255, 255, 0.8)']}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 1 }}
+          style={styles.threadGradient}
+        />
+      </Animated.View>
 
-  useEffect(() => {
-    shimmerAnim.value = withRepeat(
-      withTiming(1, {
-        duration: 2000,
-        easing: Easing.inOut(Easing.ease),
-      }),
-      -1,
-      true
-    );
-  }, []);
+      {/* Top-right thread */}
+      <Animated.View style={[styles.threadLine, styles.threadTopRight, topRightAnimStyle]}>
+        <LinearGradient
+          colors={['rgba(255, 255, 255, 0)', 'rgba(255, 255, 255, 0.8)']}
+          start={{ x: 1, y: 0 }}
+          end={{ x: 0, y: 1 }}
+          style={styles.threadGradient}
+        />
+      </Animated.View>
 
-  const animatedStyle = useAnimatedStyle(() => ({
-    opacity: interpolate(shimmerAnim.value, [0, 1], [0.3, 0.6]),
-  }));
+      {/* Bottom-left thread */}
+      <Animated.View style={[styles.threadLine, styles.threadBottomLeft, bottomLeftAnimStyle]}>
+        <LinearGradient
+          colors={['rgba(255, 255, 255, 0)', 'rgba(255, 255, 255, 0.8)']}
+          start={{ x: 0, y: 1 }}
+          end={{ x: 1, y: 0 }}
+          style={styles.threadGradient}
+        />
+      </Animated.View>
 
-  return (
-    <Animated.View style={[styles.shimmerOverlay, animatedStyle]} />
+      {/* Bottom-right thread */}
+      <Animated.View style={[styles.threadLine, styles.threadBottomRight, bottomRightAnimStyle]}>
+        <LinearGradient
+          colors={['rgba(255, 255, 255, 0)', 'rgba(255, 255, 255, 0.8)']}
+          start={{ x: 1, y: 1 }}
+          end={{ x: 0, y: 0 }}
+          style={styles.threadGradient}
+        />
+      </Animated.View>
+    </View>
   );
 }
 
@@ -127,36 +160,31 @@ function Slide({ title, subtitle, icon, logo, gradient, isFirstSlide, slideIndex
   const textFadeAnim = useSharedValue(0);
   const textTranslateAnim = useSharedValue(50);
   const logoFadeAnim = useSharedValue(0);
-  const logoScaleAnim = useSharedValue(0.5);
+  const logoScaleAnim = useSharedValue(0.6);
   const containerRotateAnim = useSharedValue(0);
-  const glowyAnim = useSharedValue(0);
 
   useEffect(() => {
     if (slideIndex === currentSlide && isFirstSlide) {
-      // Staggered animation sequence
-      textFadeAnim.value = withTiming(1, { duration: 600, easing: Easing.ease });
-      textTranslateAnim.value = withTiming(0, { duration: 600, easing: Easing.ease });
+      // Delay animations until threads finish
+      setTimeout(() => {
+        textFadeAnim.value = withTiming(1, { duration: 600, easing: Easing.ease });
+        textTranslateAnim.value = withTiming(0, { duration: 600, easing: Easing.ease });
+      }, 2200);
 
       setTimeout(() => {
         logoFadeAnim.value = withTiming(1, {
-          duration: 1000,
+          duration: 800,
           easing: Easing.bezier(0.34, 1.56, 0.64, 1),
         });
         logoScaleAnim.value = withTiming(1, {
-          duration: 1000,
+          duration: 800,
           easing: Easing.bezier(0.34, 1.56, 0.64, 1),
         });
         containerRotateAnim.value = withTiming(360, {
-          duration: 1200,
+          duration: 1000,
           easing: Easing.bezier(0.34, 1.56, 0.64, 1),
         });
-
-        glowyAnim.value = withRepeat(
-          withTiming(1, { duration: 2000, easing: Easing.inOut(Easing.ease) }),
-          -1,
-          true
-        );
-      }, 400);
+      }, 2600);
     } else if (slideIndex === currentSlide && !isFirstSlide) {
       textFadeAnim.value = withTiming(1, { duration: 600, easing: Easing.ease });
       logoFadeAnim.value = withTiming(1, { duration: 600, easing: Easing.ease });
@@ -164,7 +192,7 @@ function Slide({ title, subtitle, icon, logo, gradient, isFirstSlide, slideIndex
       textFadeAnim.value = 0;
       textTranslateAnim.value = 50;
       logoFadeAnim.value = 0;
-      logoScaleAnim.value = 0.5;
+      logoScaleAnim.value = 0.6;
       containerRotateAnim.value = 0;
     }
   }, [slideIndex, currentSlide]);
@@ -174,18 +202,12 @@ function Slide({ title, subtitle, icon, logo, gradient, isFirstSlide, slideIndex
     transform: [{ translateY: textTranslateAnim.value }],
   }));
 
-  const glowOpacity = interpolate(glowyAnim.value, [0, 1], [0, 0.3]);
-
   const logoAnimatedStyle = useAnimatedStyle(() => ({
     opacity: logoFadeAnim.value,
     transform: [
       { scale: logoScaleAnim.value },
       { rotateZ: `${containerRotateAnim.value}deg` },
     ],
-  }));
-
-  const glowyStyle = useAnimatedStyle(() => ({
-    opacity: glowOpacity,
   }));
 
   return (
@@ -195,60 +217,19 @@ function Slide({ title, subtitle, icon, logo, gradient, isFirstSlide, slideIndex
       end={{ x: 1, y: 1 }}
       style={styles.slide}
     >
-      <ShimmerBackground />
-      
+      {isFirstSlide && slideIndex === currentSlide && <CornerThreads isActive={true} />}
+
       <View style={styles.slideContent}>
         {isFirstSlide ? (
           <>
-            {/* Advanced animated floating elements */}
-            <AdvancedFloatingElement 
-              delay={0} 
-              position={{ top: 60, left: 20 }} 
-              size={56} 
-              icon="shopping-bag"
-              isActive={slideIndex === currentSlide}
-            />
-            <AdvancedFloatingElement 
-              delay={200} 
-              position={{ top: 150, right: 30 }} 
-              size={48} 
-              icon="gift"
-              isActive={slideIndex === currentSlide}
-            />
-            <AdvancedFloatingElement 
-              delay={400} 
-              position={{ bottom: 180, left: 40 }} 
-              size={52} 
-              icon="heart"
-              isActive={slideIndex === currentSlide}
-            />
-            <AdvancedFloatingElement 
-              delay={600} 
-              position={{ bottom: 140, right: 50 }} 
-              size={44} 
-              icon="star"
-              isActive={slideIndex === currentSlide}
-            />
-            <AdvancedFloatingElement 
-              delay={300} 
-              position={{ top: 300, left: 50 }} 
-              size={40} 
-              icon="zap"
-              isActive={slideIndex === currentSlide}
-            />
-
             <Animated.View style={[styles.textContainer, textAnimatedStyle]}>
               <ThemedText style={styles.slideTitle}>{title}</ThemedText>
             </Animated.View>
-            
-            {/* Logo with glow effect */}
-            <View style={styles.logoWrapperContainer}>
-              <Animated.View style={[styles.glowEffect, glowyStyle]} />
-              <Animated.View style={[styles.logoContainer, logoAnimatedStyle]}>
-                <Image source={logo} style={styles.logo} resizeMode="contain" />
-              </Animated.View>
-            </View>
-            
+
+            <Animated.View style={[styles.logoContainer, logoAnimatedStyle]}>
+              <Image source={logo} style={styles.logo} resizeMode="contain" />
+            </Animated.View>
+
             <Animated.View style={[{ opacity: textFadeAnim }, styles.subtitleContainer]}>
               <ThemedText style={styles.slideSubtitle}>{subtitle}</ThemedText>
             </Animated.View>
@@ -280,7 +261,7 @@ export default function SplashScreen() {
   const slides: SlideProps[] = [
     {
       title: 'Welcome to',
-      subtitle: 'Premium Kids E-Commerce Store',
+      subtitle: 'Premium Kids Store',
       logo: require('@/attached_assets/JioKidslogo_1763923777175.png'),
       gradient: ['#FFB6D9', '#FF6B9D'],
       isFirstSlide: true,
@@ -444,9 +425,50 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     overflow: 'hidden',
   },
-  shimmerOverlay: {
+  threadContainer: {
     ...StyleSheet.absoluteFillObject,
-    backgroundColor: 'rgba(255, 255, 255, 0.3)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  threadLine: {
+    position: 'absolute',
+    backgroundColor: 'transparent',
+  },
+  threadTopLeft: {
+    width: screenWidth,
+    height: 8,
+    left: -screenWidth / 2,
+    top: -screenHeight / 2,
+  },
+  threadTopRight: {
+    width: screenWidth,
+    height: 8,
+    right: -screenWidth / 2,
+    top: -screenHeight / 2,
+  },
+  threadBottomLeft: {
+    width: screenWidth,
+    height: 8,
+    left: -screenWidth / 2,
+    bottom: -screenHeight / 2,
+  },
+  threadBottomRight: {
+    width: screenWidth,
+    height: 8,
+    right: -screenWidth / 2,
+    bottom: -screenHeight / 2,
+  },
+  threadGradient: {
+    flex: 1,
+  },
+  boomEffect: {
+    position: 'absolute',
+    width: 100,
+    height: 100,
+    borderRadius: 50,
+    backgroundColor: 'rgba(255, 255, 255, 0.6)',
+    borderWidth: 3,
+    borderColor: 'rgba(255, 255, 255, 0.8)',
   },
   slideContent: {
     alignItems: 'center',
@@ -455,17 +477,6 @@ const styles = StyleSheet.create({
     position: 'relative',
     justifyContent: 'center',
   },
-  floatingElement: {
-    position: 'absolute',
-  },
-  floatingElementContent: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'rgba(255, 255, 255, 0.25)',
-    backdropFilter: 'blur(10px)',
-    borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.3)',
-  },
   textContainer: {
     marginBottom: Spacing.lg,
     zIndex: 10,
@@ -473,26 +484,13 @@ const styles = StyleSheet.create({
   textContainerOther: {
     marginTop: Spacing.lg,
   },
-  logoWrapperContainer: {
-    position: 'relative',
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginBottom: Spacing.xl,
-  },
-  glowEffect: {
-    position: 'absolute',
-    width: 240,
-    height: 240,
-    borderRadius: 120,
-    backgroundColor: 'rgba(255, 255, 255, 0.3)',
-    blur: 80,
-  },
   logoContainer: {
     width: 180,
     height: 180,
     justifyContent: 'center',
     alignItems: 'center',
     zIndex: 5,
+    marginBottom: Spacing.xl,
   },
   logo: {
     width: '100%',
