@@ -304,7 +304,6 @@ function Slide({ title, subtitle, icon, logo, gradient, isFirstSlide, slideIndex
     >
       {isFirstSlide && slideIndex === currentSlide && (
         <>
-          <RotatingShapes isActive={true} />
           <CornerThreads isActive={true} />
           
           {/* Sparkles */}
