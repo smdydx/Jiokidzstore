@@ -9,6 +9,7 @@ export function ScreenScrollView({
   contentContainerStyle,
   style,
   keyboardShouldPersistTaps,
+  scrollIndicatorInsets,
   ...scrollViewProps
 }: ScrollViewProps) {
   const { theme } = useTheme();
@@ -24,11 +25,11 @@ export function ScreenScrollView({
       contentContainerStyle={[
         {
           paddingTop,
-          paddingBottom,
+          paddingBottom: scrollIndicatorInsets?.bottom === 0 ? 0 : paddingBottom,
         },
         contentContainerStyle,
       ]}
-      scrollIndicatorInsets={{ bottom: scrollInsetBottom }}
+      scrollIndicatorInsets={scrollIndicatorInsets || { bottom: scrollInsetBottom }}
       keyboardShouldPersistTaps={keyboardShouldPersistTaps}
       showsVerticalScrollIndicator={false}
       {...scrollViewProps}
