@@ -1,20 +1,17 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { View, StyleSheet, TextInput, Pressable } from 'react-native';
+import { View, StyleSheet, TextInput, Pressable, Platform } from 'react-native';
 import { useNavigation, useRoute, RouteProp } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { ScreenScrollView } from '@/components/ScreenScrollView';
+import { LinearGradient } from 'expo-linear-gradient';
+import { Feather } from '@expo/vector-icons';
 import { ThemedText } from '@/components/ThemedText';
-import { Button } from '@/components/Button';
-import { useAuth } from '@/hooks/useAuth';
-import { useTheme } from '@/hooks/useTheme';
-import { Colors, Spacing, BorderRadius } from '@/constants/theme';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import type { RootStackParamList } from '@/navigation/RootNavigator';
 
 export default function OTPScreen() {
   const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const route = useRoute<RouteProp<RootStackParamList, 'OTP'>>();
-  const { signIn } = useAuth();
-  const { theme } = useTheme();
+  const insets = useSafeAreaInsets();
   const [otp, setOtp] = useState(['', '', '', '', '', '']);
   const [timer, setTimer] = useState(30);
   const inputRefs = useRef<Array<TextInput | null>>([]);
@@ -47,111 +44,277 @@ export default function OTPScreen() {
   const handleVerify = async () => {
     const otpValue = otp.join('');
     if (otpValue.length === 6) {
-      await signIn({
-        id: '1',
-        name: 'User',
-        phone: route.params.phone,
-      });
+      // Simulate successful verification
+      navigation.navigate('Home');
     }
   };
 
   const handleResend = () => {
     setTimer(30);
+    setOtp(['', '', '', '', '', '']);
+    inputRefs.current[0]?.focus();
   };
 
+  const allDigitsFilled = otp.join('').length === 6;
+
   return (
-    <ScreenScrollView>
-      <ThemedText type="h1" style={styles.title}>
-        Enter OTP
-      </ThemedText>
-      <ThemedText style={styles.subtitle}>
-        We've sent a 6-digit code to{'\n'}{route.params.phone}
-      </ThemedText>
-
-      <View style={styles.otpContainer}>
-        {otp.map((digit, index) => (
-          <TextInput
-            key={index}
-            ref={(ref) => {
-              if (ref) inputRefs.current[index] = ref;
-            }}
-            style={[
-              styles.otpInput,
-              {
-                borderColor: digit ? Colors.light.primary : Colors.light.border,
-                color: theme.text,
-              },
-            ]}
-            value={digit}
-            onChangeText={(value) => handleOtpChange(value, index)}
-            onKeyPress={({ nativeEvent }) => handleKeyPress(nativeEvent.key, index)}
-            keyboardType="number-pad"
-            maxLength={1}
-            autoFocus={index === 0}
-          />
-        ))}
-      </View>
-
-      {timer > 0 ? (
-        <ThemedText style={styles.timerText}>
-          Resend OTP in 0:{timer.toString().padStart(2, '0')}
-        </ThemedText>
-      ) : (
-        <Pressable onPress={handleResend}>
-          <ThemedText style={styles.resendText}>Resend OTP</ThemedText>
-        </Pressable>
-      )}
-
-      <Button
-        onPress={handleVerify}
-        style={styles.button}
-        disabled={otp.join('').length !== 6}
+    <View style={styles.rootContainer}>
+      {/* Top Pink Section */}
+      <LinearGradient
+        colors={['#FFD4E5', '#FFE5EE']}
+        style={[styles.pinkSection, { paddingTop: insets.top }]}
       >
-        Verify
-      </Button>
-    </ScreenScrollView>
+        <View style={styles.headerContent}>
+          <Pressable onPress={() => navigation.goBack()}>
+            <Feather name="arrow-left" size={24} color="#FF6B9D" />
+          </Pressable>
+          <ThemedText style={styles.headerTitle}>Verify OTP</ThemedText>
+          <View style={styles.spacer} />
+        </View>
+      </LinearGradient>
+
+      {/* Bottom White Section */}
+      <View style={[styles.whiteSection, { paddingBottom: insets.bottom }]}>
+        <View style={styles.contentContainer}>
+          <ThemedText style={styles.title}>
+            Enter 6-Digit Code
+          </ThemedText>
+          <ThemedText style={styles.subtitle}>
+            We've sent it to{'\n'}
+            <ThemedText style={styles.phoneNumber}>{route.params.phone}</ThemedText>
+          </ThemedText>
+
+          {/* OTP Boxes */}
+          <View style={styles.otpContainer}>
+            {otp.map((digit, index) => (
+              <View
+                key={index}
+                style={[
+                  styles.otpBoxWrapper,
+                  digit && styles.otpBoxFilled,
+                ]}
+              >
+                <TextInput
+                  ref={(ref) => {
+                    if (ref) inputRefs.current[index] = ref;
+                  }}
+                  style={styles.otpInput}
+                  value={digit}
+                  onChangeText={(value) => handleOtpChange(value, index)}
+                  onKeyPress={({ nativeEvent }) => handleKeyPress(nativeEvent.key, index)}
+                  keyboardType="number-pad"
+                  maxLength={1}
+                  autoFocus={index === 0}
+                  placeholderTextColor="#DDD"
+                />
+              </View>
+            ))}
+          </View>
+
+          {/* Timer or Resend */}
+          <View style={styles.timerContainer}>
+            {timer > 0 ? (
+              <>
+                <ThemedText style={styles.timerLabel}>Resend code in</ThemedText>
+                <ThemedText style={styles.timerValue}>
+                  00:{timer.toString().padStart(2, '0')}
+                </ThemedText>
+              </>
+            ) : (
+              <Pressable onPress={handleResend} style={styles.resendButton}>
+                <Feather name="refresh-cw" size={16} color="#FF6B9D" />
+                <ThemedText style={styles.resendText}>Resend Code</ThemedText>
+              </Pressable>
+            )}
+          </View>
+
+          {/* Verify Button */}
+          <Pressable
+            onPress={handleVerify}
+            disabled={!allDigitsFilled}
+            style={[
+              styles.verifyButton,
+              allDigitsFilled && styles.verifyButtonActive
+            ]}
+          >
+            <LinearGradient
+              colors={allDigitsFilled ? ['#FF6B9D', '#FF8FB3'] : ['#D0D0D0', '#B8B8B8']}
+              style={styles.verifyButtonGradient}
+              start={{ x: 0, y: 0 }}
+              end={{ x: 1, y: 0 }}
+            >
+              <ThemedText style={[
+                styles.verifyButtonText,
+                !allDigitsFilled && styles.verifyButtonTextDisabled
+              ]}>
+                Verify OTP
+              </ThemedText>
+            </LinearGradient>
+          </Pressable>
+
+          {/* Info Text */}
+          <ThemedText style={styles.infoText}>
+            Didn't receive the code?{'\n'}
+            Check your spam folder
+          </ThemedText>
+        </View>
+      </View>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    paddingHorizontal: Spacing.xl,
+  rootContainer: {
+    flex: 1,
+    backgroundColor: '#FFFFFF',
+  },
+  pinkSection: {
+    flex: 0.25,
+    borderBottomLeftRadius: 24,
+    borderBottomRightRadius: 24,
+    overflow: 'hidden',
+    paddingBottom: 16,
+  },
+  headerContent: {
+    flex: 1,
+    flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: 24,
+    paddingBottom: 12,
+  },
+  headerTitle: {
+    fontSize: 18,
+    fontWeight: '700',
+    color: '#FF6B9D',
+  },
+  spacer: {
+    width: 24,
+  },
+  whiteSection: {
+    flex: 0.75,
+    backgroundColor: '#FFFFFF',
+  },
+  contentContainer: {
+    flex: 1,
+    paddingHorizontal: 24,
+    paddingTop: 24,
+    justifyContent: 'flex-start',
   },
   title: {
-    marginTop: Spacing.xxl * 2,
-    marginBottom: Spacing.sm,
+    fontSize: 24,
+    fontWeight: '700',
+    color: '#1F2937',
+    marginBottom: 8,
+    letterSpacing: -0.5,
   },
   subtitle: {
-    color: Colors.light.textGray,
-    textAlign: 'center',
-    marginBottom: Spacing.xxl,
+    fontSize: 13,
+    color: '#6B7280',
+    marginBottom: 28,
+    lineHeight: 20,
+  },
+  phoneNumber: {
+    color: '#FF6B9D',
+    fontWeight: '700',
   },
   otpContainer: {
     flexDirection: 'row',
     justifyContent: 'center',
-    marginBottom: Spacing.xl,
-    gap: Spacing.md,
+    gap: 10,
+    marginBottom: 32,
+  },
+  otpBoxWrapper: {
+    width: 50,
+    height: 56,
+    borderRadius: 14,
+    borderWidth: 2,
+    borderColor: '#FFB6D9',
+    backgroundColor: 'rgba(255, 182, 217, 0.1)',
+    overflow: 'hidden',
+    justifyContent: 'center',
+    alignItems: 'center',
+    shadowColor: '#FF6B9D',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.08,
+    shadowRadius: 4,
+    elevation: 2,
+  },
+  otpBoxFilled: {
+    borderColor: '#FF6B9D',
+    backgroundColor: 'rgba(255, 107, 157, 0.05)',
+    shadowOpacity: 0.15,
+    elevation: 3,
   },
   otpInput: {
-    width: 48,
-    height: 56,
-    borderWidth: 2,
-    borderRadius: BorderRadius.xs,
-    textAlign: 'center',
+    width: '100%',
+    height: '100%',
     fontSize: 24,
-    fontWeight: '600',
+    fontWeight: '800',
+    textAlign: 'center',
+    color: '#1F2937',
   },
-  timerText: {
-    color: Colors.light.textGray,
-    marginBottom: Spacing.xxl,
+  timerContainer: {
+    alignItems: 'center',
+    marginBottom: 24,
+    paddingVertical: 12,
+    backgroundColor: 'rgba(255, 182, 217, 0.1)',
+    borderRadius: 12,
+  },
+  timerLabel: {
+    fontSize: 12,
+    color: '#6B7280',
+    fontWeight: '500',
+  },
+  timerValue: {
+    fontSize: 20,
+    fontWeight: '700',
+    color: '#FF6B9D',
+    marginTop: 4,
+  },
+  resendButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
   },
   resendText: {
-    color: Colors.light.primary,
-    fontWeight: '600',
-    marginBottom: Spacing.xxl,
+    fontSize: 14,
+    fontWeight: '700',
+    color: '#FF6B9D',
   },
-  button: {
+  verifyButton: {
     width: '100%',
+    borderRadius: 12,
+    overflow: 'hidden',
+    marginBottom: 20,
+    shadowColor: '#FF6B9D',
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.12,
+    shadowRadius: 6,
+    elevation: 3,
+  },
+  verifyButtonActive: {
+    shadowOpacity: 0.2,
+    elevation: 4,
+  },
+  verifyButtonGradient: {
+    height: 54,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  verifyButtonText: {
+    fontSize: 16,
+    fontWeight: '800',
+    color: '#FFFFFF',
+    letterSpacing: 0.5,
+  },
+  verifyButtonTextDisabled: {
+    color: '#6B7280',
+  },
+  infoText: {
+    fontSize: 12,
+    color: '#9CA3AF',
+    textAlign: 'center',
+    lineHeight: 18,
   },
 });
