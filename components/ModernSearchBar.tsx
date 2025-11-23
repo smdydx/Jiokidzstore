@@ -31,11 +31,17 @@ export function ModernSearchBar({
     >
       {/* Top Row: Logo and Notification Icon */}
       <View style={styles.topRow}>
-        <Image
-          source={require('@/attached_assets/JioKidslogo_1763923777175.png')}
-          style={styles.logo}
-          resizeMode="contain"
-        />
+        <View style={styles.logoSection}>
+          <Image
+            source={require('@/attached_assets/JioKidslogo_1763923777175.png')}
+            style={styles.logo}
+            resizeMode="contain"
+          />
+          <View style={styles.locationRow}>
+            <Feather name="map-pin" size={14} color="#FFFFFF" />
+            <Text style={styles.locationText}>Delhi, India</Text>
+          </View>
+        </View>
         <Pressable style={styles.notificationButton} onPress={onNotificationPress}>
           <Feather name="bell" size={20} color="#FFFFFF" />
         </Pressable>
@@ -111,9 +117,24 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: 16,
   },
+  logoSection: {
+    flexDirection: 'column',
+    justifyContent: 'flex-start',
+  },
   logo: {
     width: 90,
     height: 40,
+  },
+  locationRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+    marginTop: 2,
+  },
+  locationText: {
+    fontSize: 12,
+    fontWeight: '600',
+    color: '#FFFFFF',
   },
   notificationButton: {
     width: 40,
