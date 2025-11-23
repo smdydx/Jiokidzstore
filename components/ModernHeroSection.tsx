@@ -136,6 +136,8 @@ const styles = StyleSheet.create({
     marginBottom: Spacing.xl,
     borderTopLeftRadius: 24,
     borderTopRightRadius: 24,
+    borderBottomLeftRadius: 24,
+    borderBottomRightRadius: 24,
     overflow: 'hidden',
   },
   slide: {
