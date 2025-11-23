@@ -51,10 +51,15 @@ export default function LoginScreen() {
                 icon="phone"
                 value={phone}
                 onChangeText={setPhone}
-                placeholder="10 digit mobile number"
+                placeholder="Enter 10 digit number"
                 keyboardType="phone-pad"
                 maxLength={10}
               />
+              {phone.length > 0 && phone.length < 10 && (
+                <ThemedText style={styles.helperText}>
+                  {10 - phone.length} more digits needed
+                </ThemedText>
+              )}
             </View>
 
             <Pressable
@@ -62,12 +67,14 @@ export default function LoginScreen() {
               disabled={phone.length !== 10}
               style={[
                 styles.submitButton,
-                phone.length !== 10 && styles.submitButtonDisabled
+                phone.length === 10 && styles.submitButtonActive
               ]}
             >
               <LinearGradient
-                colors={phone.length === 10 ? ['#FF6B9D', '#FF8FB3'] : ['#F3F4F6', '#E5E7EB']}
+                colors={phone.length === 10 ? ['#FF6B9D', '#FF8FB3'] : ['#D0D0D0', '#B8B8B8']}
                 style={styles.submitButtonGradient}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 1, y: 0 }}
               >
                 <ThemedText style={[
                   styles.submitButtonText,
@@ -146,18 +153,25 @@ const styles = StyleSheet.create({
   },
   inputLabel: {
     fontSize: 14,
-    fontWeight: '600',
-    color: '#374151',
-    marginBottom: 8,
+    fontWeight: '700',
+    color: '#1F2937',
+    marginBottom: 12,
+    letterSpacing: 0.2,
+  },
+  helperText: {
+    fontSize: 12,
+    color: '#FF6B9D',
+    fontWeight: '500',
+    marginTop: 6,
   },
   phoneInputContainer: {
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: '#F9FAFB',
-    borderRadius: 12,
-    borderWidth: 1.5,
+    borderRadius: 14,
+    borderWidth: 2,
     borderColor: '#E5E7EB',
-    height: 56,
+    height: 60,
     overflow: 'hidden',
   },
   countryCodeBox: {
@@ -174,33 +188,40 @@ const styles = StyleSheet.create({
   },
   phoneInput: {
     flex: 1,
-    fontSize: 16,
-    fontWeight: '500',
+    fontSize: 18,
+    fontWeight: '600',
     paddingHorizontal: 16,
     height: '100%',
+    color: '#1F2937',
   },
   submitButton: {
     width: '100%',
-    marginTop: 8,
-    borderRadius: 12,
+    marginTop: 32,
+    borderRadius: 14,
     overflow: 'hidden',
+    shadowColor: '#FF6B9D',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.15,
+    shadowRadius: 8,
+    elevation: 5,
   },
-  submitButtonDisabled: {
-    opacity: 0.5,
+  submitButtonActive: {
+    shadowOpacity: 0.25,
+    elevation: 8,
   },
   submitButtonGradient: {
-    height: 56,
+    height: 60,
     justifyContent: 'center',
     alignItems: 'center',
   },
   submitButtonText: {
-    fontSize: 16,
-    fontWeight: '700',
+    fontSize: 18,
+    fontWeight: '800',
     color: '#FFFFFF',
-    letterSpacing: 0.3,
+    letterSpacing: 0.5,
   },
   submitButtonTextDisabled: {
-    color: '#9CA3AF',
+    color: '#6B7280',
   },
   dividerContainer: {
     flexDirection: 'row',
