@@ -45,6 +45,12 @@ export default function ProductDetailScreen() {
     }
   };
 
+  React.useLayoutEffect(() => {
+    navigation.setOptions({
+      tabBarStyle: { display: 'none' },
+    });
+  }, [navigation]);
+
   const handleWishlistToggle = async () => {
     if (isWishlisted) {
       await wishlistStorage.removeFromWishlist(product.id);

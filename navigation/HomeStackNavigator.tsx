@@ -51,7 +51,10 @@ export default function HomeStackNavigator() {
       <Stack.Screen
         name="ProductDetail"
         component={ProductDetailScreen}
-        options={{ headerShown: false }}
+        options={{ 
+          headerShown: false,
+          tabBarStyle: { display: 'none' },
+        }}
       />
       <Stack.Screen
         name="Search"
