@@ -79,11 +79,19 @@ export default function HomeScreen() {
       {/* Modern Search Bar */}
       <ModernSearchBar onSearch={handleSearchPress} />
 
-      {/* Modern Hero Section */}
-      <ModernHeroSection
-        onSlidePress={() => {}}
-        onButtonPress={() => navigation.navigate('FlashSale')}
-      />
+      {/* Hero Section Container */}
+      <LinearGradient
+        colors={['#FFB6D9', '#FFE5EE']}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 1 }}
+        style={styles.heroContainer}
+      >
+        {/* Modern Hero Section */}
+        <ModernHeroSection
+          onSlidePress={() => {}}
+          onButtonPress={() => navigation.navigate('FlashSale')}
+        />
+      </LinearGradient>
 
       {/* Two Column Promo Section */}
       <TwoColumnPromo 
@@ -250,6 +258,13 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     color: '#FFFFFF',
     marginTop: 8,
+  },
+  heroContainer: {
+    paddingHorizontal: Spacing.lg,
+    paddingVertical: Spacing.lg,
+    borderRadius: 24,
+    marginHorizontal: Spacing.lg,
+    marginBottom: Spacing.lg,
   },
   categoriesList: {
     paddingHorizontal: 16,
