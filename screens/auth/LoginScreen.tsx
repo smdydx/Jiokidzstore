@@ -1,6 +1,7 @@
 
 import React, { useState } from 'react';
 import { View, StyleSheet, TextInput, Image, Pressable, Platform } from 'react-native';
+import { Feather } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
@@ -47,14 +48,25 @@ export default function LoginScreen() {
           <View style={styles.formContainer}>
             <View style={styles.inputWrapper}>
               <ThemedText style={styles.inputLabel}>Mobile Number</ThemedText>
-              <ModernInput
-                icon="phone"
-                value={phone}
-                onChangeText={setPhone}
-                placeholder="Enter 10 digit number"
-                keyboardType="phone-pad"
-                maxLength={10}
-              />
+              <View style={[styles.modernInputContainer, phone.length > 0 && styles.modernInputActive]}>
+                <LinearGradient
+                  colors={['#FFB6D9', '#FFE5EE']}
+                  style={styles.modernInputGradient}
+                  start={{ x: 0, y: 0 }}
+                  end={{ x: 1, y: 1 }}
+                >
+                  <Feather name="phone" size={20} color="#FF6B9D" style={styles.inputIcon} />
+                  <TextInput
+                    value={phone}
+                    onChangeText={setPhone}
+                    placeholder="Enter 10 digit number"
+                    keyboardType="phone-pad"
+                    maxLength={10}
+                    style={styles.modernPhoneInput}
+                    placeholderTextColor="#999"
+                  />
+                </LinearGradient>
+              </View>
               {phone.length > 0 && phone.length < 10 && (
                 <ThemedText style={styles.helperText}>
                   {10 - phone.length} more digits needed
@@ -163,6 +175,39 @@ const styles = StyleSheet.create({
     color: '#FF6B9D',
     fontWeight: '500',
     marginTop: 6,
+  },
+  modernInputContainer: {
+    borderRadius: 16,
+    overflow: 'hidden',
+    borderWidth: 2,
+    borderColor: '#FFB6D9',
+    shadowColor: '#FF6B9D',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
+    elevation: 4,
+  },
+  modernInputActive: {
+    borderColor: '#FF6B9D',
+    shadowOpacity: 0.2,
+    elevation: 6,
+  },
+  modernInputGradient: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 18,
+    paddingVertical: 16,
+    height: 62,
+  },
+  inputIcon: {
+    marginRight: 12,
+  },
+  modernPhoneInput: {
+    flex: 1,
+    fontSize: 18,
+    fontWeight: '700',
+    color: '#1F2937',
+    paddingVertical: 4,
   },
   phoneInputContainer: {
     flexDirection: 'row',
