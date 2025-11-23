@@ -99,7 +99,8 @@ const styles = StyleSheet.create({
     zIndex: 10,
     justifyContent: 'space-between',
     minHeight: 140,
-    borderRadius: 28,
+    borderBottomLeftRadius: 28,
+    borderBottomRightRadius: 28,
     overflow: 'hidden',
   },
   topRow: {
