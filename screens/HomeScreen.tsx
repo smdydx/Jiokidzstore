@@ -1,6 +1,6 @@
 
 import React, { useState, useRef } from 'react';
-import { View, StyleSheet, ScrollView, Pressable, Image, Dimensions, FlatList } from 'react-native';
+import { View, StyleSheet, Pressable, Image, Dimensions, FlatList, Platform } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { Feather } from '@expo/vector-icons';
@@ -20,22 +20,22 @@ const { width } = Dimensions.get('window');
 const HERO_SLIDES = [
   {
     id: '1',
-    title: 'Big Sale! 🎉',
+    title: 'Big Sale',
     subtitle: 'Up to 60% OFF on Kids Fashion',
     image: 'https://images.unsplash.com/photo-1503944583220-79d8926ad5e2?w=800',
     buttonText: 'Shop Now',
   },
   {
     id: '2',
-    title: 'New Arrivals 🌟',
-    subtitle: 'Latest Toys Collection for Your Kids',
+    title: 'New Arrivals',
+    subtitle: 'Latest Toys Collection',
     image: 'https://images.unsplash.com/photo-1515488042361-ee00e0ddd4e4?w=800',
     buttonText: 'Explore',
   },
   {
     id: '3',
-    title: 'Baby Essentials 👶',
-    subtitle: 'Everything You Need for Your Little One',
+    title: 'Baby Essentials',
+    subtitle: 'Everything for Your Little One',
     image: 'https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?w=800',
     buttonText: 'Shop Baby',
   },
@@ -91,23 +91,17 @@ export default function HomeScreen() {
   }).current;
 
   const renderHeroSlide = ({ item }: any) => (
-    <View style={[styles.heroSlide, { width: width - Spacing.lg * 2 }]}>
+    <View style={styles.heroSlide}>
+      <Image source={{ uri: item.image }} style={styles.heroImage} />
       <LinearGradient
-        colors={['rgba(255, 107, 157, 0.9)', 'rgba(255, 143, 179, 0.8)']}
+        colors={['transparent', 'rgba(0,0,0,0.7)']}
         style={styles.heroOverlay}
       >
-        <Image source={{ uri: item.image }} style={styles.heroImage} />
         <View style={styles.heroContent}>
           <ThemedText style={styles.heroTitle}>{item.title}</ThemedText>
           <ThemedText style={styles.heroSubtitle}>{item.subtitle}</ThemedText>
           <Pressable style={styles.heroButton}>
-            <LinearGradient
-              colors={['#FFFFFF', '#FFF5F8']}
-              style={styles.heroButtonGradient}
-            >
-              <ThemedText style={styles.heroButtonText}>{item.buttonText}</ThemedText>
-              <Feather name="arrow-right" size={18} color={Colors.light.primary} />
-            </LinearGradient>
+            <ThemedText style={styles.heroButtonText}>{item.buttonText}</ThemedText>
           </Pressable>
         </View>
       </LinearGradient>
@@ -115,33 +109,32 @@ export default function HomeScreen() {
   );
 
   return (
-    <ScreenScrollView>
-      <LinearGradient
-        colors={['#FF6B9D', '#FFE5EE']}
-        style={styles.header}
-      >
+    <ScreenScrollView contentContainerStyle={styles.scrollContent}>
+      {/* Header */}
+      <View style={styles.header}>
         <View style={styles.headerTop}>
           <View style={styles.locationContainer}>
-            <Feather name="map-pin" size={16} color="#FFFFFF" />
-            <ThemedText style={styles.locationText}>Deliver to Mumbai</ThemedText>
-            <Feather name="chevron-down" size={16} color="#FFFFFF" />
+            <Feather name="map-pin" size={16} color={Colors.light.primary} />
+            <ThemedText style={styles.locationText}>Mumbai</ThemedText>
+            <Feather name="chevron-down" size={14} color={Colors.light.textGray} />
           </View>
-          <Pressable style={styles.notificationButton}>
-            <Feather name="bell" size={24} color="#FFFFFF" />
-            <View style={styles.badge} />
-          </Pressable>
+          <View style={styles.headerActions}>
+            <Pressable style={styles.iconButton}>
+              <Feather name="bell" size={22} color={Colors.light.text} />
+              <View style={styles.notificationDot} />
+            </Pressable>
+          </View>
         </View>
 
         <Pressable style={styles.searchBar} onPress={handleSearchPress}>
-          <Feather name="search" size={20} color={Colors.light.primary} />
+          <Feather name="search" size={20} color={Colors.light.textGray} />
           <ThemedText style={styles.searchPlaceholder}>
-            Search toys, clothes, diapers...
+            Search for toys, clothes, diapers...
           </ThemedText>
-          <Feather name="mic" size={20} color={Colors.light.primary} />
         </Pressable>
-      </LinearGradient>
+      </View>
 
-      {/* Hero Slider Section */}
+      {/* Hero Slider */}
       <View style={styles.heroSection}>
         <FlatList
           ref={heroScrollRef}
@@ -151,86 +144,88 @@ export default function HomeScreen() {
           pagingEnabled
           showsHorizontalScrollIndicator={false}
           onViewableItemsChanged={onViewableItemsChanged}
-          viewabilityConfig={{
-            itemVisiblePercentThreshold: 50,
-          }}
-          snapToInterval={width - Spacing.lg * 2 + Spacing.md}
+          viewabilityConfig={{ itemVisiblePercentThreshold: 50 }}
+          snapToInterval={width}
           decelerationRate="fast"
-          contentContainerStyle={styles.heroContainer}
         />
-        <View style={styles.heroPagination}>
+        <View style={styles.pagination}>
           {HERO_SLIDES.map((_, index) => (
             <View
               key={index}
               style={[
-                styles.heroDot,
-                activeSlide === index && styles.heroDotActive,
+                styles.paginationDot,
+                activeSlide === index && styles.paginationDotActive,
               ]}
             />
           ))}
         </View>
       </View>
 
-      <View style={styles.categoriesSection}>
+      {/* Categories */}
+      <View style={styles.section}>
         <View style={styles.sectionHeader}>
-          <ThemedText type="h3" style={styles.sectionTitle}>Shop by Category</ThemedText>
+          <ThemedText style={styles.sectionTitle}>Categories</ThemedText>
           <Pressable onPress={() => navigation.navigate('HomeTab', { screen: 'CategoriesTab' } as any)}>
-            <ThemedText style={styles.seeAll}>See All →</ThemedText>
+            <ThemedText style={styles.seeAllText}>See All</ThemedText>
           </Pressable>
         </View>
-        <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.categoriesScroll}>
-          {CATEGORIES.map(category => (
+        <FlatList
+          data={CATEGORIES}
+          renderItem={({ item }) => (
             <CategoryCircle
-              key={category.id}
-              category={category}
-              onPress={() => handleCategoryPress(category.id, category.name)}
+              category={item}
+              onPress={() => handleCategoryPress(item.id, item.name)}
             />
-          ))}
-        </ScrollView>
+          )}
+          keyExtractor={(item) => item.id}
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={styles.categoriesList}
+        />
       </View>
 
+      {/* Flash Sale */}
       <Pressable style={styles.flashSaleBanner} onPress={() => navigation.navigate('FlashSale')}>
         <LinearGradient
           colors={['#FF6B9D', '#FFA8C5']}
           start={{ x: 0, y: 0 }}
-          end={{ x: 1, y: 1 }}
+          end={{ x: 1, y: 0 }}
           style={styles.flashGradient}
         >
-          <View style={styles.flashContent}>
-            <View style={styles.flashIconContainer}>
-              <Feather name="zap" size={28} color="#FFFFFF" />
+          <View style={styles.flashLeft}>
+            <View style={styles.flashIcon}>
+              <Feather name="zap" size={24} color="#FFFFFF" />
             </View>
-            <View style={styles.flashText}>
-              <ThemedText style={styles.flashTitle}>⚡ Flash Sale</ThemedText>
-              <ThemedText style={styles.flashSubtitle}>
-                Up to 60% OFF • Limited Time Only!
-              </ThemedText>
+            <View>
+              <ThemedText style={styles.flashTitle}>Flash Sale</ThemedText>
+              <ThemedText style={styles.flashSubtitle}>Up to 60% OFF</ThemedText>
             </View>
           </View>
-          <Feather name="chevron-right" size={28} color="#FFFFFF" />
+          <Feather name="chevron-right" size={24} color="#FFFFFF" />
         </LinearGradient>
       </Pressable>
 
+      {/* Trending Products */}
       <View style={styles.section}>
         <View style={styles.sectionHeader}>
-          <ThemedText type="h3" style={styles.sectionTitle}>🔥 Trending Now</ThemedText>
+          <ThemedText style={styles.sectionTitle}>Trending Now</ThemedText>
           <Pressable>
-            <ThemedText style={styles.seeAll}>View All →</ThemedText>
+            <ThemedText style={styles.seeAllText}>View All</ThemedText>
           </Pressable>
         </View>
         <View style={styles.productsGrid}>
           {products.map(product => (
-            <View key={product.id} style={styles.productItem}>
-              <ProductCard
-                product={product}
-                onPress={() => handleProductPress(product.id)}
-                onWishlistPress={() => handleWishlistToggle(product.id)}
-              />
-            </View>
+            <ProductCard
+              key={product.id}
+              product={product}
+              onPress={() => handleProductPress(product.id)}
+              onWishlistPress={() => handleWishlistToggle(product.id)}
+            />
           ))}
         </View>
       </View>
 
+      {/* Floating Cart */}
       <Pressable
         style={styles.cartFAB}
         onPress={() => navigation.navigate('Cart')}
@@ -250,224 +245,211 @@ export default function HomeScreen() {
 }
 
 const styles = StyleSheet.create({
+  scrollContent: {
+    flexGrow: 1,
+    paddingBottom: 100,
+  },
   header: {
-    paddingHorizontal: Spacing.lg,
-    paddingTop: Spacing.lg,
-    paddingBottom: Spacing.lg,
+    backgroundColor: '#FFFFFF',
+    paddingHorizontal: 16,
+    paddingTop: 12,
+    paddingBottom: 16,
+    borderBottomWidth: 1,
+    borderBottomColor: '#F3F4F6',
   },
   headerTop: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: Spacing.md,
+    marginBottom: 12,
   },
   locationContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 6,
+    gap: 4,
   },
   locationText: {
-    color: '#FFFFFF',
+    fontSize: 15,
     fontWeight: '600',
-    fontSize: 14,
+    color: '#1F2937',
   },
-  notificationButton: {
+  headerActions: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 16,
+  },
+  iconButton: {
     position: 'relative',
     padding: 4,
   },
-  badge: {
+  notificationDot: {
     position: 'absolute',
-    top: 2,
-    right: 2,
-    width: 8,
-    height: 8,
-    borderRadius: 4,
-    backgroundColor: '#FF3B30',
-    borderWidth: 1.5,
-    borderColor: '#FFFFFF',
+    top: 4,
+    right: 4,
+    width: 6,
+    height: 6,
+    borderRadius: 3,
+    backgroundColor: '#EF4444',
   },
   searchBar: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#FFFFFF',
-    borderRadius: BorderRadius.md,
-    paddingHorizontal: Spacing.md,
+    backgroundColor: '#F9FAFB',
+    borderRadius: 12,
+    paddingHorizontal: 16,
     height: 44,
-    gap: Spacing.sm,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.08,
-    shadowRadius: 2,
-    elevation: 2,
+    gap: 12,
   },
   searchPlaceholder: {
     flex: 1,
-    color: Colors.light.textGray,
-    fontSize: 14,
+    fontSize: 15,
+    color: '#9CA3AF',
   },
   heroSection: {
-    marginTop: Spacing.md,
-    marginBottom: Spacing.lg,
-  },
-  heroContainer: {
-    paddingHorizontal: 0,
+    marginTop: 16,
+    marginBottom: 24,
   },
   heroSlide: {
-    height: 200,
-    borderRadius: 0,
-    overflow: 'hidden',
+    width: width,
+    height: 220,
+    position: 'relative',
   },
   heroImage: {
     width: '100%',
     height: '100%',
-    position: 'absolute',
+    resizeMode: 'cover',
   },
   heroOverlay: {
-    flex: 1,
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    height: '100%',
     justifyContent: 'flex-end',
-    paddingHorizontal: Spacing.lg,
-    paddingVertical: Spacing.lg,
+    paddingHorizontal: 20,
+    paddingBottom: 24,
   },
   heroContent: {
-    gap: 4,
+    gap: 6,
   },
   heroTitle: {
     fontSize: 24,
     fontWeight: '700',
     color: '#FFFFFF',
-    textShadowColor: 'rgba(0, 0, 0, 0.3)',
-    textShadowOffset: { width: 0, height: 1 },
-    textShadowRadius: 3,
   },
   heroSubtitle: {
     fontSize: 14,
     color: '#FFFFFF',
-    fontWeight: '500',
-    textShadowColor: 'rgba(0, 0, 0, 0.3)',
-    textShadowOffset: { width: 0, height: 1 },
-    textShadowRadius: 2,
+    opacity: 0.95,
   },
   heroButton: {
-    marginTop: Spacing.sm,
     alignSelf: 'flex-start',
-    borderRadius: BorderRadius.sm,
-    overflow: 'hidden',
-  },
-  heroButtonGradient: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingVertical: 8,
-    paddingHorizontal: Spacing.lg,
-    gap: 4,
+    backgroundColor: '#FFFFFF',
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    borderRadius: 8,
+    marginTop: 8,
   },
   heroButtonText: {
     fontSize: 14,
-    fontWeight: '600',
+    fontWeight: '700',
     color: Colors.light.primary,
   },
-  heroPagination: {
+  pagination: {
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: Spacing.md,
+    marginTop: 12,
     gap: 6,
   },
-  heroDot: {
+  paginationDot: {
     width: 6,
     height: 6,
     borderRadius: 3,
     backgroundColor: '#D1D5DB',
   },
-  heroDotActive: {
+  paginationDotActive: {
     width: 20,
     backgroundColor: Colors.light.primary,
   },
-  categoriesSection: {
-    marginBottom: Spacing.lg,
+  section: {
+    marginBottom: 24,
   },
   sectionHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingHorizontal: Spacing.lg,
-    marginBottom: Spacing.md,
+    paddingHorizontal: 16,
+    marginBottom: 16,
   },
   sectionTitle: {
     fontSize: 18,
     fontWeight: '700',
     color: '#1F2937',
   },
-  seeAll: {
-    color: Colors.light.primary,
-    fontWeight: '600',
+  seeAllText: {
     fontSize: 14,
+    fontWeight: '600',
+    color: Colors.light.primary,
   },
-  categoriesScroll: {
-    paddingLeft: Spacing.lg,
+  categoriesList: {
+    paddingHorizontal: 16,
   },
   flashSaleBanner: {
-    marginBottom: Spacing.lg,
-    borderRadius: 0,
+    marginHorizontal: 16,
+    marginBottom: 24,
+    borderRadius: 16,
     overflow: 'hidden',
-    shadowColor: Colors.light.primary,
+    shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.2,
-    shadowRadius: 4,
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
     elevation: 4,
   },
   flashGradient: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingHorizontal: Spacing.lg,
-    paddingVertical: Spacing.lg,
+    paddingHorizontal: 20,
+    paddingVertical: 20,
   },
-  flashContent: {
+  flashLeft: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: Spacing.md,
+    gap: 16,
   },
-  flashIconContainer: {
-    width: 44,
-    height: 44,
-    borderRadius: 22,
-    backgroundColor: 'rgba(255, 255, 255, 0.25)',
+  flashIcon: {
+    width: 48,
+    height: 48,
+    borderRadius: 24,
+    backgroundColor: 'rgba(255, 255, 255, 0.2)',
     justifyContent: 'center',
     alignItems: 'center',
   },
-  flashText: {
-    gap: 2,
-  },
   flashTitle: {
-    color: '#FFFFFF',
     fontSize: 18,
     fontWeight: '700',
+    color: '#FFFFFF',
   },
   flashSubtitle: {
+    fontSize: 13,
     color: '#FFFFFF',
-    fontSize: 12,
-    fontWeight: '500',
-    opacity: 0.95,
-  },
-  section: {
-    marginBottom: Spacing.lg,
+    opacity: 0.9,
+    marginTop: 2,
   },
   productsGrid: {
     flexDirection: 'row',
     flexWrap: 'wrap',
   },
-  productItem: {
-    width: '50%',
-  },
   cartFAB: {
     position: 'absolute',
-    bottom: 90,
-    right: Spacing.lg,
+    bottom: 24,
+    right: 16,
     width: 56,
     height: 56,
     borderRadius: 28,
     overflow: 'hidden',
-    shadowColor: Colors.light.primary,
+    shadowColor: '#000',
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.3,
     shadowRadius: 8,
@@ -486,16 +468,16 @@ const styles = StyleSheet.create({
     minWidth: 20,
     height: 20,
     borderRadius: 10,
-    backgroundColor: '#FF3B30',
+    backgroundColor: '#EF4444',
     justifyContent: 'center',
     alignItems: 'center',
-    paddingHorizontal: 4,
+    paddingHorizontal: 6,
     borderWidth: 2,
     borderColor: '#FFFFFF',
   },
   cartBadgeText: {
-    color: '#FFFFFF',
     fontSize: 11,
     fontWeight: '700',
+    color: '#FFFFFF',
   },
 });

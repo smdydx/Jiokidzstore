@@ -1,13 +1,13 @@
+
 import React, { useState } from 'react';
-import { View, StyleSheet, TextInput, Image, Pressable } from 'react-native';
+import { View, StyleSheet, TextInput, Image, Pressable, Platform } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { ScreenScrollView } from '@/components/ScreenScrollView';
 import { ThemedText } from '@/components/ThemedText';
-import { Button } from '@/components/Button';
 import { useTheme } from '@/hooks/useTheme';
-import { Colors, Spacing, BorderRadius, Typography, Shadows } from '@/constants/theme';
+import { Colors, Spacing, BorderRadius, Typography } from '@/constants/theme';
 import type { RootStackParamList } from '@/navigation/RootNavigator';
 
 export default function LoginScreen() {
@@ -24,97 +24,85 @@ export default function LoginScreen() {
   return (
     <ScreenScrollView contentContainerStyle={styles.scrollContent}>
       <LinearGradient
-        colors={['#FFFFFF', '#FFE5EE', '#FFF0F5', '#FFFFFF']}
-        start={{ x: 0, y: 0 }}
-        end={{ x: 1, y: 1 }}
-        style={styles.gradientBackground}
+        colors={['#FFFFFF', '#FFF8FA']}
+        style={styles.container}
       >
-        <View style={styles.logoContainer}>
-          <View style={styles.logoShadow}>
-            <Image
-              source={require('@/attached_assets/JioKidslogo_1763910976445.png')}
-              style={styles.logo}
-              resizeMode="contain"
-            />
-          </View>
+        <View style={styles.logoSection}>
+          <Image
+            source={require('@/attached_assets/JioKidslogo_1763910976445.png')}
+            style={styles.logo}
+            resizeMode="contain"
+          />
         </View>
 
-        <View style={styles.contentCard}>
-          <LinearGradient
-            colors={['#FFFFFF', '#FFF5F8']}
-            style={styles.cardGradient}
-          >
-            <ThemedText type="h1" style={styles.title}>
-              Welcome Back! 👋
-            </ThemedText>
-            <ThemedText style={styles.subtitle}>
-              Login to continue shopping amazing kids products
-            </ThemedText>
+        <View style={styles.contentSection}>
+          <ThemedText style={styles.title}>
+            Welcome Back
+          </ThemedText>
+          <ThemedText style={styles.subtitle}>
+            Login to continue shopping for kids
+          </ThemedText>
 
-            <View style={styles.inputContainer}>
-              <ThemedText type="small" style={styles.label}>
-                📱 Phone Number
-              </ThemedText>
-              <LinearGradient
-                colors={['#FFE5EE', '#FFF0F5']}
-                start={{ x: 0, y: 0 }}
-                end={{ x: 1, y: 0 }}
-                style={styles.phoneInputGradient}
-              >
-                <View style={styles.phoneInputContainer}>
-                  <LinearGradient
-                    colors={['#FF6B9D', '#FF8FB3']}
-                    style={styles.countryCode}
-                  >
-                    <ThemedText style={styles.countryCodeText}>+91</ThemedText>
-                  </LinearGradient>
-                  <TextInput
-                    style={[styles.input, { color: theme.text }]}
-                    value={phone}
-                    onChangeText={setPhone}
-                    placeholder="Enter mobile number"
-                    placeholderTextColor={theme.textGray}
-                    keyboardType="phone-pad"
-                    maxLength={10}
-                  />
+          <View style={styles.formContainer}>
+            <View style={styles.inputWrapper}>
+              <ThemedText style={styles.inputLabel}>Mobile Number</ThemedText>
+              <View style={styles.phoneInputContainer}>
+                <View style={styles.countryCodeBox}>
+                  <ThemedText style={styles.countryCodeText}>+91</ThemedText>
                 </View>
-              </LinearGradient>
+                <TextInput
+                  style={[styles.phoneInput, { color: theme.text }]}
+                  value={phone}
+                  onChangeText={setPhone}
+                  placeholder="Enter 10 digit mobile number"
+                  placeholderTextColor="#9CA3AF"
+                  keyboardType="phone-pad"
+                  maxLength={10}
+                  autoFocus={false}
+                />
+              </View>
             </View>
 
-            <LinearGradient
-              colors={phone.length === 10 ? ['#FF6B9D', '#FF8FB3', '#FFA8C5'] : ['#E0E0E0', '#F0F0F0']}
-              start={{ x: 0, y: 0 }}
-              end={{ x: 1, y: 0 }}
-              style={styles.buttonGradient}
+            <Pressable
+              onPress={handleSendOTP}
+              disabled={phone.length !== 10}
+              style={[
+                styles.submitButton,
+                phone.length !== 10 && styles.submitButtonDisabled
+              ]}
             >
-              <Pressable
-                onPress={handleSendOTP}
-                disabled={phone.length !== 10}
-                style={styles.button}
+              <LinearGradient
+                colors={phone.length === 10 ? ['#FF6B9D', '#FF8FB3'] : ['#F3F4F6', '#E5E7EB']}
+                style={styles.submitButtonGradient}
               >
-                <ThemedText style={styles.buttonText}>
-                  Send OTP 🚀
+                <ThemedText style={[
+                  styles.submitButtonText,
+                  phone.length !== 10 && styles.submitButtonTextDisabled
+                ]}>
+                  Continue
                 </ThemedText>
-              </Pressable>
-            </LinearGradient>
+              </LinearGradient>
+            </Pressable>
+          </View>
 
-            <View style={styles.decorativeElements}>
-              <View style={[styles.circle, styles.circle1]} />
-              <View style={[styles.circle, styles.circle2]} />
-              <View style={[styles.circle, styles.circle3]} />
-            </View>
+          <View style={styles.dividerContainer}>
+            <View style={styles.dividerLine} />
+            <ThemedText style={styles.dividerText}>OR</ThemedText>
+            <View style={styles.dividerLine} />
+          </View>
 
-            <ThemedText type="small" style={styles.termsText}>
-              🔒 By continuing, you agree to our{' '}
-              <ThemedText type="small" style={styles.linkText}>
-                Terms of Service
-              </ThemedText>
-              {' '}and{' '}
-              <ThemedText type="small" style={styles.linkText}>
-                Privacy Policy
-              </ThemedText>
+          <Pressable style={styles.socialButton}>
+            <ThemedText style={styles.socialButtonText}>
+              Continue with Google
             </ThemedText>
-          </LinearGradient>
+          </Pressable>
+
+          <ThemedText style={styles.termsText}>
+            By continuing, you agree to our{'\n'}
+            <ThemedText style={styles.termsLink}>Terms of Service</ThemedText>
+            {' and '}
+            <ThemedText style={styles.termsLink}>Privacy Policy</ThemedText>
+          </ThemedText>
         </View>
       </LinearGradient>
     </ScreenScrollView>
@@ -125,146 +113,140 @@ const styles = StyleSheet.create({
   scrollContent: {
     flexGrow: 1,
   },
-  gradientBackground: {
+  container: {
     flex: 1,
-    minHeight: '100%',
-    paddingHorizontal: Spacing.lg,
+    minHeight: Platform.select({ web: '100vh', default: '100%' }),
   },
-  logoContainer: {
+  logoSection: {
     alignItems: 'center',
-    marginTop: Spacing.xxl * 2,
-    marginBottom: Spacing.xl,
-  },
-  logoShadow: {
-    ...Shadows.large,
-    borderRadius: BorderRadius.xl,
-    backgroundColor: '#FFFFFF',
-    padding: Spacing.md,
+    justifyContent: 'center',
+    paddingTop: 60,
+    paddingBottom: 40,
   },
   logo: {
-    width: 220,
-    height: 110,
+    width: 180,
+    height: 90,
   },
-  contentCard: {
-    borderRadius: BorderRadius['2xl'],
-    overflow: 'hidden',
-    ...Shadows.medium,
-    marginBottom: Spacing.xxl,
-  },
-  cardGradient: {
-    padding: Spacing.xl,
-    paddingTop: Spacing.xxl,
-    paddingBottom: Spacing.xxl,
+  contentSection: {
+    flex: 1,
+    paddingHorizontal: 24,
   },
   title: {
-    marginBottom: Spacing.sm,
-    textAlign: 'center',
-    color: Colors.light.primary,
+    fontSize: 28,
+    fontWeight: '700',
+    color: '#1F2937',
+    marginBottom: 8,
+    letterSpacing: -0.5,
   },
   subtitle: {
-    color: Colors.light.textGray,
-    marginBottom: Spacing.xxl,
-    textAlign: 'center',
-    paddingHorizontal: Spacing.md,
-  },
-  inputContainer: {
-    width: '100%',
-    marginBottom: Spacing.xl,
-  },
-  label: {
-    marginBottom: Spacing.md,
-    fontWeight: '700',
-    color: Colors.light.text,
     fontSize: 15,
+    color: '#6B7280',
+    marginBottom: 40,
+    lineHeight: 22,
   },
-  phoneInputGradient: {
-    borderRadius: BorderRadius.md,
-    padding: 2,
-    ...Shadows.small,
+  formContainer: {
+    width: '100%',
+  },
+  inputWrapper: {
+    marginBottom: 24,
+  },
+  inputLabel: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: '#374151',
+    marginBottom: 8,
   },
   phoneInputContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#FFFFFF',
-    borderRadius: BorderRadius.md,
+    backgroundColor: '#F9FAFB',
+    borderRadius: 12,
+    borderWidth: 1.5,
+    borderColor: '#E5E7EB',
+    height: 56,
     overflow: 'hidden',
   },
-  countryCode: {
-    height: Spacing.inputHeight,
-    paddingHorizontal: Spacing.lg,
+  countryCodeBox: {
+    paddingHorizontal: 16,
+    paddingVertical: 16,
+    borderRightWidth: 1.5,
+    borderRightColor: '#E5E7EB',
     justifyContent: 'center',
-    borderTopLeftRadius: BorderRadius.md,
-    borderBottomLeftRadius: BorderRadius.md,
   },
   countryCodeText: {
-    fontWeight: '700',
-    color: '#FFFFFF',
     fontSize: 16,
+    fontWeight: '600',
+    color: '#1F2937',
   },
-  input: {
+  phoneInput: {
     flex: 1,
-    height: Spacing.inputHeight,
-    backgroundColor: '#FFFFFF',
-    paddingHorizontal: Spacing.lg,
-    fontSize: Typography.body.fontSize,
+    fontSize: 16,
     fontWeight: '500',
+    paddingHorizontal: 16,
+    height: '100%',
   },
-  buttonGradient: {
-    borderRadius: BorderRadius.md,
-    ...Shadows.medium,
-    marginBottom: Spacing.xl,
+  submitButton: {
+    width: '100%',
+    marginTop: 8,
+    borderRadius: 12,
+    overflow: 'hidden',
   },
-  button: {
-    height: Spacing.buttonHeight + 4,
+  submitButtonDisabled: {
+    opacity: 0.5,
+  },
+  submitButtonGradient: {
+    height: 56,
     justifyContent: 'center',
     alignItems: 'center',
   },
-  buttonText: {
-    color: '#FFFFFF',
-    fontSize: 18,
+  submitButtonText: {
+    fontSize: 16,
     fontWeight: '700',
+    color: '#FFFFFF',
+    letterSpacing: 0.3,
   },
-  decorativeElements: {
-    position: 'absolute',
-    top: 0,
-    right: 0,
-    width: '100%',
-    height: '100%',
-    zIndex: -1,
+  submitButtonTextDisabled: {
+    color: '#9CA3AF',
   },
-  circle: {
-    position: 'absolute',
-    borderRadius: 9999,
-    opacity: 0.1,
+  dividerContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginVertical: 32,
   },
-  circle1: {
-    width: 120,
-    height: 120,
-    backgroundColor: '#FF6B9D',
-    top: -40,
-    right: -30,
+  dividerLine: {
+    flex: 1,
+    height: 1,
+    backgroundColor: '#E5E7EB',
   },
-  circle2: {
-    width: 80,
-    height: 80,
-    backgroundColor: '#9B59B6',
-    bottom: 100,
-    left: -20,
+  dividerText: {
+    fontSize: 13,
+    color: '#9CA3AF',
+    fontWeight: '500',
+    marginHorizontal: 16,
   },
-  circle3: {
-    width: 60,
-    height: 60,
-    backgroundColor: '#FFE5EE',
-    top: '50%',
-    right: 20,
+  socialButton: {
+    height: 56,
+    backgroundColor: '#FFFFFF',
+    borderRadius: 12,
+    borderWidth: 1.5,
+    borderColor: '#E5E7EB',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 24,
+  },
+  socialButtonText: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#374151',
   },
   termsText: {
+    fontSize: 13,
+    color: '#9CA3AF',
     textAlign: 'center',
-    color: Colors.light.textGray,
     lineHeight: 20,
   },
-  linkText: {
-    color: Colors.light.primary,
+  termsLink: {
+    color: '#FF6B9D',
     fontWeight: '600',
   },
 });

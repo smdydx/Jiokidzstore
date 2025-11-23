@@ -1,3 +1,4 @@
+
 import React from "react";
 import { StyleSheet, Pressable, Image, View } from "react-native";
 import { Feather } from "@expo/vector-icons";
@@ -11,23 +12,23 @@ import { ThemedText } from "@/components/ThemedText";
 import { useTheme } from "@/hooks/useTheme";
 import { useResponsive } from "@/hooks/useResponsive";
 import { Product } from "@/data/types";
-import { BorderRadius, Shadows } from "@/constants/theme";
+import { BorderRadius } from "@/constants/theme";
 
 interface ProductCardProps {
   product: Product;
   onPress: () => void;
-  onWishlistToggle?: () => void;
+  onWishlistPress?: () => void;
   isWishlisted?: boolean;
 }
 
 export function ProductCard({
   product,
   onPress,
-  onWishlistToggle,
+  onWishlistPress,
   isWishlisted = false,
 }: ProductCardProps) {
   const { theme } = useTheme();
-  const { width, columns, spacing, fontSize, iconSize } = useResponsive();
+  const { width } = useResponsive();
   const scale = useSharedValue(1);
 
   const animatedStyle = useAnimatedStyle(() => ({
@@ -35,16 +36,15 @@ export function ProductCard({
   }));
 
   const handlePressIn = () => {
-    scale.value = withSpring(0.95);
+    scale.value = withSpring(0.97);
   };
 
   const handlePressOut = () => {
     scale.value = withSpring(1);
   };
 
-  // Calculate card width based on columns - exactly 50% with no gaps
   const cardWidth = width / 2;
-  const imageHeight = cardWidth; // 1:1 aspect ratio
+  const imageHeight = cardWidth;
 
   const discount = Math.round(
     ((product.originalPrice - product.price) / product.originalPrice) * 100
@@ -56,81 +56,51 @@ export function ProductCard({
         onPress={onPress}
         onPressIn={handlePressIn}
         onPressOut={handlePressOut}
-        style={[
-          styles.container,
-          {
-            backgroundColor: theme.backgroundRoot,
-            borderRadius: 0,
-            padding: 8,
-          },
-        ]}
+        style={styles.container}
       >
-        <View style={[styles.imageContainer, { height: imageHeight, borderRadius: BorderRadius.sm }]}>
+        <View style={[styles.imageContainer, { height: imageHeight }]}>
           <Image source={{ uri: product.image }} style={styles.image} />
           {discount > 0 && (
-            <View
-              style={[
-                styles.discountBadge,
-                { backgroundColor: theme.success, borderRadius: BorderRadius.xs },
-              ]}
-            >
-              <ThemedText style={[styles.discountText, { fontSize: fontSize.xs }]}>
-                {discount}% OFF
-              </ThemedText>
+            <View style={styles.discountBadge}>
+              <ThemedText style={styles.discountText}>{discount}% OFF</ThemedText>
             </View>
           )}
-          {onWishlistToggle && (
-            <Pressable
-              onPress={onWishlistToggle}
-              style={[
-                styles.wishlistButton,
-                { backgroundColor: theme.backgroundRoot, borderRadius: BorderRadius.full },
-              ]}
-            >
+          {onWishlistPress && (
+            <Pressable onPress={onWishlistPress} style={styles.wishlistButton}>
               <Feather
-                name={isWishlisted ? "heart" : "heart"}
-                size={iconSize * 0.7}
-                color={isWishlisted ? theme.error : theme.textGray}
-                fill={isWishlisted ? theme.error : "transparent"}
+                name="heart"
+                size={18}
+                color={isWishlisted ? "#EF4444" : "#6B7280"}
+                fill={isWishlisted ? "#EF4444" : "transparent"}
               />
             </Pressable>
           )}
         </View>
 
-        <View style={{ marginTop: spacing.sm }}>
-          <ThemedText
-            type="caption"
-            style={[styles.brand, { color: theme.textGray, fontSize: fontSize.xs }]}
-          >
+        <View style={styles.infoContainer}>
+          <ThemedText style={styles.brandText} numberOfLines={1}>
             {product.brand}
           </ThemedText>
-          <ThemedText
-            numberOfLines={2}
-            style={[styles.name, { fontSize: fontSize.sm, marginTop: spacing.xs }]}
-          >
+          <ThemedText style={styles.nameText} numberOfLines={2}>
             {product.name}
           </ThemedText>
 
-          <View style={[styles.priceRow, { marginTop: spacing.xs }]}>
-            <ThemedText style={[styles.price, { color: theme.primary, fontSize: fontSize.md }]}>
-              ₹{product.price}
-            </ThemedText>
+          <View style={styles.priceRow}>
+            <ThemedText style={styles.priceText}>₹{product.price}</ThemedText>
             {product.originalPrice > product.price && (
-              <ThemedText
-                style={[
-                  styles.originalPrice,
-                  { color: theme.textGray, fontSize: fontSize.xs },
-                ]}
-              >
+              <ThemedText style={styles.originalPriceText}>
                 ₹{product.originalPrice}
               </ThemedText>
             )}
           </View>
 
-          <View style={[styles.rating, { marginTop: spacing.xs }]}>
-            <Feather name="star" size={iconSize * 0.6} color={theme.warning} fill={theme.warning} />
-            <ThemedText style={[styles.ratingText, { fontSize: fontSize.xs }]}>
-              {product.rating} ({product.reviews})
+          <View style={styles.ratingRow}>
+            <Feather name="star" size={12} color="#F59E0B" fill="#F59E0B" />
+            <ThemedText style={styles.ratingText}>
+              {product.rating}
+            </ThemedText>
+            <ThemedText style={styles.reviewsText}>
+              ({product.reviews})
             </ThemedText>
           </View>
         </View>
@@ -141,70 +111,99 @@ export function ProductCard({
 
 const styles = StyleSheet.create({
   container: {
-    marginBottom: 1,
+    backgroundColor: '#FFFFFF',
+    padding: 8,
   },
   imageContainer: {
-    width: "100%",
-    overflow: "hidden",
-    backgroundColor: "#F3F4F6",
+    width: '100%',
+    backgroundColor: '#F9FAFB',
+    borderRadius: 12,
+    overflow: 'hidden',
+    position: 'relative',
   },
   image: {
-    width: "100%",
-    height: "100%",
-    resizeMode: "cover",
+    width: '100%',
+    height: '100%',
+    resizeMode: 'cover',
   },
   discountBadge: {
-    position: "absolute",
-    top: 6,
-    left: 6,
-    paddingHorizontal: 6,
-    paddingVertical: 3,
+    position: 'absolute',
+    top: 8,
+    left: 8,
+    backgroundColor: '#10B981',
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 6,
   },
   discountText: {
-    color: "#FFFFFF",
-    fontWeight: "600",
-    fontSize: 10,
+    fontSize: 11,
+    fontWeight: '700',
+    color: '#FFFFFF',
   },
   wishlistButton: {
-    position: "absolute",
-    top: 6,
-    right: 6,
-    width: 28,
-    height: 28,
-    alignItems: "center",
-    justifyContent: "center",
+    position: 'absolute',
+    top: 8,
+    right: 8,
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    backgroundColor: 'rgba(255, 255, 255, 0.95)',
+    justifyContent: 'center',
+    alignItems: 'center',
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.1,
     shadowRadius: 2,
     elevation: 2,
   },
-  brand: {
-    textTransform: "uppercase",
-    fontSize: 10,
-    letterSpacing: 0.5,
+  infoContainer: {
+    paddingTop: 8,
+    paddingHorizontal: 4,
   },
-  name: {
-    fontWeight: "500",
+  brandText: {
+    fontSize: 11,
+    fontWeight: '600',
+    color: '#6B7280',
+    textTransform: 'uppercase',
+    letterSpacing: 0.5,
+    marginBottom: 4,
+  },
+  nameText: {
+    fontSize: 14,
+    fontWeight: '500',
+    color: '#1F2937',
     lineHeight: 18,
+    marginBottom: 6,
   },
   priceRow: {
-    flexDirection: "row",
-    alignItems: "center",
+    flexDirection: 'row',
+    alignItems: 'center',
     gap: 6,
+    marginBottom: 4,
   },
-  price: {
-    fontWeight: "700",
+  priceText: {
+    fontSize: 16,
+    fontWeight: '700',
+    color: '#1F2937',
   },
-  originalPrice: {
-    textDecorationLine: "line-through",
+  originalPriceText: {
+    fontSize: 13,
+    fontWeight: '500',
+    color: '#9CA3AF',
+    textDecorationLine: 'line-through',
   },
-  rating: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 2,
+  ratingRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
   },
   ratingText: {
-    marginLeft: 2,
+    fontSize: 12,
+    fontWeight: '600',
+    color: '#1F2937',
+  },
+  reviewsText: {
+    fontSize: 12,
+    color: '#6B7280',
   },
 });
