@@ -88,12 +88,7 @@ export default function LoginScreen() {
             <View style={styles.inputWrapper}>
               <ThemedText style={styles.inputLabel}>Mobile Number</ThemedText>
               <View style={[styles.modernInputContainer, phone.length > 0 && styles.modernInputActive]}>
-                <LinearGradient
-                  colors={['rgba(255, 182, 217, 0.3)', 'rgba(255, 229, 238, 0.3)']}
-                  style={styles.modernInputGradient}
-                  start={{ x: 0, y: 0 }}
-                  end={{ x: 1, y: 1 }}
-                >
+                <View style={styles.modernInputGradient}>
                   <Feather name="phone" size={20} color="#FF6B9D" style={styles.inputIcon} />
                   <TextInput
                     value={phone}
@@ -104,7 +99,7 @@ export default function LoginScreen() {
                     style={styles.modernPhoneInput}
                     placeholderTextColor="#999"
                   />
-                </LinearGradient>
+                </View>
               </View>
               {phone.length > 0 && phone.length < 10 && (
                 <ThemedText style={styles.helperText}>
@@ -170,12 +165,7 @@ export default function LoginScreen() {
             <View style={styles.inputWrapper}>
               <ThemedText style={styles.inputLabel}>Full Name</ThemedText>
               <View style={[styles.modernInputContainer, name.length > 0 && styles.modernInputActive]}>
-                <LinearGradient
-                  colors={['rgba(255, 182, 217, 0.3)', 'rgba(255, 229, 238, 0.3)']}
-                  style={styles.modernInputGradient}
-                  start={{ x: 0, y: 0 }}
-                  end={{ x: 1, y: 1 }}
-                >
+                <View style={styles.modernInputGradient}>
                   <Feather name="user" size={20} color="#FF6B9D" style={styles.inputIcon} />
                   <TextInput
                     value={name}
@@ -184,7 +174,7 @@ export default function LoginScreen() {
                     style={styles.modernPhoneInput}
                     placeholderTextColor="#999"
                   />
-                </LinearGradient>
+                </View>
               </View>
             </View>
 
@@ -192,12 +182,7 @@ export default function LoginScreen() {
             <View style={styles.inputWrapper}>
               <ThemedText style={styles.inputLabel}>Mobile Number</ThemedText>
               <View style={[styles.modernInputContainer, phone.length > 0 && styles.modernInputActive]}>
-                <LinearGradient
-                  colors={['rgba(255, 182, 217, 0.3)', 'rgba(255, 229, 238, 0.3)']}
-                  style={styles.modernInputGradient}
-                  start={{ x: 0, y: 0 }}
-                  end={{ x: 1, y: 1 }}
-                >
+                <View style={styles.modernInputGradient}>
                   <Feather name="phone" size={20} color="#FF6B9D" style={styles.inputIcon} />
                   <TextInput
                     value={phone}
@@ -208,7 +193,7 @@ export default function LoginScreen() {
                     style={styles.modernPhoneInput}
                     placeholderTextColor="#999"
                   />
-                </LinearGradient>
+                </View>
               </View>
               {phone.length > 0 && phone.length < 10 && (
                 <ThemedText style={styles.helperText}>
@@ -384,6 +369,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 14,
     paddingVertical: 12,
     height: 54,
+    backgroundColor: 'transparent',
   },
   inputIcon: {
     marginRight: 10,
