@@ -24,7 +24,7 @@ export function ModernSearchBar({
 
   return (
     <LinearGradient
-      colors={['#FFB6D9', '#FFE5EE']}
+      colors={['#FFB6D9', '#FF6B9D']}
       start={{ x: 0, y: 0 }}
       end={{ x: 1, y: 1 }}
       style={styles.container}
