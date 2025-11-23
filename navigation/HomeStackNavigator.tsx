@@ -26,7 +26,7 @@ export type HomeStackParamList = {
   AddEditAddress: { addressId?: string };
   CheckoutPayment: undefined;
   OrderSummary: undefined;
-  OrderConfirmation: { orderId: string };
+  OrderConfirmation: { orderId?: string };
 };
 
 const Stack = createNativeStackNavigator<HomeStackParamList>();

@@ -12,7 +12,8 @@ export default function OrderSummaryScreen() {
   const navigation = useNavigation<NativeStackNavigationProp<HomeStackParamList>>();
 
   const handlePlaceOrder = () => {
-    navigation.navigate('OrderConfirmation');
+    const orderId = Math.floor(10000 + Math.random() * 90000).toString();
+    navigation.navigate('OrderConfirmation', { orderId });
   };
 
   return (
