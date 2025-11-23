@@ -49,6 +49,7 @@ export function ScreenKeyboardAwareScrollView({
       ]}
       scrollIndicatorInsets={{ bottom: scrollInsetBottom }}
       keyboardShouldPersistTaps={keyboardShouldPersistTaps}
+      showsVerticalScrollIndicator={false}
       {...scrollViewProps}
     >
       {children}

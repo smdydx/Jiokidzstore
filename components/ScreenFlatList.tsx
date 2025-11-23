@@ -12,7 +12,6 @@ export function ScreenFlatList<T>({
 }: FlatListProps<T>) {
   const { theme } = useTheme();
   const { paddingTop, paddingBottom, scrollInsetBottom } = useScreenInsets();
-  const { padding } = useResponsive();
 
   return (
     <FlatList
@@ -29,6 +28,7 @@ export function ScreenFlatList<T>({
         contentContainerStyle,
       ]}
       scrollIndicatorInsets={{ bottom: scrollInsetBottom }}
+      showsVerticalScrollIndicator={false}
       {...flatListProps}
     />
   );

@@ -8,12 +8,11 @@ export function ScreenScrollView({
   children,
   contentContainerStyle,
   style,
-  keyboardShouldPersistTaps, // Added this prop based on the changes snippet
+  keyboardShouldPersistTaps,
   ...scrollViewProps
 }: ScrollViewProps) {
   const { theme } = useTheme();
   const { paddingTop, paddingBottom, scrollInsetBottom } = useScreenInsets();
-  const { padding } = useResponsive();
 
   return (
     <ScrollView
@@ -31,6 +30,7 @@ export function ScreenScrollView({
       ]}
       scrollIndicatorInsets={{ bottom: scrollInsetBottom }}
       keyboardShouldPersistTaps={keyboardShouldPersistTaps}
+      showsVerticalScrollIndicator={false}
       {...scrollViewProps}
     >
       {children}

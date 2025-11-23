@@ -42,9 +42,9 @@ export function ProductCard({
     scale.value = withSpring(1);
   };
 
-  // Calculate card width based on columns - full width
-  const cardWidth = (width - spacing.xs * (columns + 1)) / columns;
-  const imageHeight = cardWidth * 1.0; // 1:1 aspect ratio
+  // Calculate card width based on columns - exactly 50% with no gaps
+  const cardWidth = width / 2;
+  const imageHeight = cardWidth; // 1:1 aspect ratio
 
   const discount = Math.round(
     ((product.originalPrice - product.price) / product.originalPrice) * 100
@@ -61,10 +61,8 @@ export function ProductCard({
           {
             backgroundColor: theme.backgroundRoot,
             borderRadius: 0,
-            padding: spacing.xs,
-            marginHorizontal: spacing.xs / 2,
+            padding: 8,
           },
-          Shadows.small,
         ]}
       >
         <View style={[styles.imageContainer, { height: imageHeight, borderRadius: BorderRadius.sm }]}>
@@ -143,11 +141,12 @@ export function ProductCard({
 
 const styles = StyleSheet.create({
   container: {
-    marginBottom: 16,
+    marginBottom: 1,
   },
   imageContainer: {
     width: "100%",
     overflow: "hidden",
+    backgroundColor: "#F3F4F6",
   },
   image: {
     width: "100%",
@@ -156,34 +155,43 @@ const styles = StyleSheet.create({
   },
   discountBadge: {
     position: "absolute",
-    top: 8,
-    left: 8,
-    paddingHorizontal: 8,
-    paddingVertical: 4,
+    top: 6,
+    left: 6,
+    paddingHorizontal: 6,
+    paddingVertical: 3,
   },
   discountText: {
     color: "#FFFFFF",
     fontWeight: "600",
+    fontSize: 10,
   },
   wishlistButton: {
     position: "absolute",
-    top: 8,
-    right: 8,
-    width: 32,
-    height: 32,
+    top: 6,
+    right: 6,
+    width: 28,
+    height: 28,
     alignItems: "center",
     justifyContent: "center",
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.1,
+    shadowRadius: 2,
+    elevation: 2,
   },
   brand: {
     textTransform: "uppercase",
+    fontSize: 10,
+    letterSpacing: 0.5,
   },
   name: {
     fontWeight: "500",
+    lineHeight: 18,
   },
   priceRow: {
     flexDirection: "row",
     alignItems: "center",
-    gap: 8,
+    gap: 6,
   },
   price: {
     fontWeight: "700",
@@ -194,9 +202,9 @@ const styles = StyleSheet.create({
   rating: {
     flexDirection: "row",
     alignItems: "center",
-    gap: 4,
+    gap: 2,
   },
   ratingText: {
-    marginLeft: 4,
+    marginLeft: 2,
   },
 });
