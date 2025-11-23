@@ -50,6 +50,8 @@ const styles = StyleSheet.create({
     paddingVertical: Spacing.md,
     borderBottomLeftRadius: 24,
     borderBottomRightRadius: 24,
+    zIndex: 100,
+    elevation: 10,
   },
   content: {
     flexDirection: 'row',

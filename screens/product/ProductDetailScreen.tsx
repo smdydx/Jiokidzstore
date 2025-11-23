@@ -56,6 +56,7 @@ export default function ProductDetailScreen() {
 
   return (
     <View style={styles.container}>
+      <ScreenScrollView>
       <View style={styles.header}>
         <Pressable style={styles.headerButton} onPress={() => navigation.goBack()}>
           <Feather name="arrow-left" size={24} color={Colors.light.text} />
@@ -69,8 +70,6 @@ export default function ProductDetailScreen() {
           />
         </Pressable>
       </View>
-
-      <ScreenScrollView>
         <View style={styles.imageContainer}>
           <View style={styles.imagePlaceholder} />
         </View>
@@ -163,7 +162,7 @@ export default function ProductDetailScreen() {
         </View>
       </ScreenScrollView>
 
-      <View style={styles.footer}>
+      <View style={styles.footer} pointerEvents="box-none">
         <Button onPress={handleAddToCart} style={styles.addToCartButton}>
           Add to Cart
         </Button>

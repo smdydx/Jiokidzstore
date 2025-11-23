@@ -73,9 +73,10 @@ export default function HomeScreen() {
 
   return (
     <View style={styles.container}>
-      {/* Modern Header - Outside Scroll */}
+      {/* Modern Header - Fixed at Top */}
       <ModernHeader notificationCount={2} />
 
+      <View style={styles.scrollWrapper}>
       <ScreenScrollView contentContainerStyle={styles.scrollContent}>
         {/* Modern Search Bar */}
         <ModernSearchBar onSearch={handleSearchPress} />
@@ -204,12 +205,17 @@ export default function HomeScreen() {
         </LinearGradient>
       </Pressable>
       </ScreenScrollView>
+      </View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
+    backgroundColor: '#FFFFFF',
+  },
+  scrollWrapper: {
     flex: 1,
   },
   scrollContent: {
