@@ -16,7 +16,7 @@ export function HeaderTitle({ title }: HeaderTitleProps) {
       style={styles.container}
     >
       <Image
-        source={require("../attached_assets/jiokidz_logo.png")}
+        source={require("@/attached_assets/JioKidslogo_1763915300717.png")}
         style={styles.logo}
         resizeMode="contain"
       />
