@@ -105,11 +105,12 @@ export default function NotificationsScreen() {
 
 const styles = StyleSheet.create({
   scrollContent: {
-    paddingTop: Spacing.sm,
+    paddingTop: 0,
   },
   container: { 
-    padding: Spacing.md,
-    paddingTop: Spacing.sm,
+    paddingHorizontal: Spacing.lg,
+    paddingTop: Spacing.xxl,
+    paddingBottom: Spacing.xl,
   },
   header: {
     marginBottom: Spacing.lg,

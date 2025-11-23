@@ -35,8 +35,8 @@ export default function HelpSupportScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: { padding: Spacing.md, paddingTop: Spacing.sm },
-  title: { marginBottom: Spacing.lg },
+  container: { paddingHorizontal: Spacing.lg, paddingTop: Spacing.xxl, paddingBottom: Spacing.xl },
+  title: { marginBottom: Spacing.xl },
   helpCard: {
     flexDirection: 'row',
     alignItems: 'center',
