@@ -29,7 +29,10 @@ export default function DealsStackNavigator() {
       <Stack.Screen
         name="DealDetail"
         component={ProductDetailScreen}
-        options={{ headerShown: false }}
+        options={{ 
+          headerShown: false,
+          tabBarStyle: { display: 'none' },
+        }}
       />
     </Stack.Navigator>
   );

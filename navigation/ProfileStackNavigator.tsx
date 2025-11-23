@@ -8,6 +8,7 @@ import NotificationsScreen from "@/screens/account/NotificationsScreen";
 import SavedAddressesScreen from "@/screens/account/SavedAddressesScreen";
 import HelpSupportScreen from "@/screens/account/HelpSupportScreen";
 import SettingsScreen from "@/screens/account/SettingsScreen";
+import ProductDetailScreen from "@/screens/product/ProductDetailScreen";
 import CrashScreen from "@/screens/CrashScreen";
 import { useTheme } from "@/hooks/useTheme";
 import { getCommonScreenOptions } from "@/navigation/screenOptions";
@@ -20,6 +21,7 @@ export type ProfileStackParamList = {
   SavedAddresses: undefined;
   HelpSupport: undefined;
   Settings: undefined;
+  ProductDetail: { productId: string };
   Crash: undefined;
 };
 
@@ -38,32 +40,58 @@ export default function ProfileStackNavigator() {
       <Stack.Screen
         name="OrderHistory"
         component={OrderHistoryScreen}
-        options={{ title: "My Orders" }}
+        options={{ 
+          title: "My Orders",
+          tabBarStyle: { display: 'none' },
+        }}
       />
       <Stack.Screen
         name="OrderTracking"
         component={OrderTrackingScreen}
-        options={{ title: "Track Order" }}
+        options={{ 
+          title: "Track Order",
+          tabBarStyle: { display: 'none' },
+        }}
       />
       <Stack.Screen
         name="Notifications"
         component={NotificationsScreen}
-        options={{ title: "Notifications" }}
+        options={{ 
+          title: "Notifications",
+          tabBarStyle: { display: 'none' },
+        }}
       />
       <Stack.Screen
         name="SavedAddresses"
         component={SavedAddressesScreen}
-        options={{ title: "My Addresses" }}
+        options={{ 
+          title: "My Addresses",
+          tabBarStyle: { display: 'none' },
+        }}
       />
       <Stack.Screen
         name="HelpSupport"
         component={HelpSupportScreen}
-        options={{ title: "Help & Support" }}
+        options={{ 
+          title: "Help & Support",
+          tabBarStyle: { display: 'none' },
+        }}
       />
       <Stack.Screen
         name="Settings"
         component={SettingsScreen}
-        options={{ title: "Settings" }}
+        options={{ 
+          title: "Settings",
+          tabBarStyle: { display: 'none' },
+        }}
+      />
+      <Stack.Screen
+        name="ProductDetail"
+        component={ProductDetailScreen}
+        options={{ 
+          headerShown: false,
+          tabBarStyle: { display: 'none' },
+        }}
       />
       <Stack.Screen
         name="Crash"

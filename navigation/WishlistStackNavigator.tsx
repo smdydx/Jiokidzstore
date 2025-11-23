@@ -1,11 +1,13 @@
 import React from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import WishlistScreen from "@/screens/main/WishlistScreen";
+import ProductDetailScreen from "@/screens/product/ProductDetailScreen";
 import { useTheme } from "@/hooks/useTheme";
 import { getCommonScreenOptions } from "@/navigation/screenOptions";
 
 export type WishlistStackParamList = {
   Wishlist: undefined;
+  ProductDetail: { productId: string };
 };
 
 const Stack = createNativeStackNavigator<WishlistStackParamList>();
@@ -23,6 +25,14 @@ export default function WishlistStackNavigator() {
         name="Wishlist"
         component={WishlistScreen}
         options={{ headerTitle: "My Wishlist" }}
+      />
+      <Stack.Screen
+        name="ProductDetail"
+        component={ProductDetailScreen}
+        options={{ 
+          headerShown: false,
+          tabBarStyle: { display: 'none' },
+        }}
       />
     </Stack.Navigator>
   );
