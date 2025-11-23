@@ -5,6 +5,7 @@ import { Feather } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import { ScreenKeyboardAwareScrollView } from '@/components/ScreenKeyboardAwareScrollView';
 import { ThemedText } from '@/components/ThemedText';
+import { Toast } from '@/components/Toast';
 import { useAuth } from '@/hooks/useAuth';
 import { Colors, Spacing, BorderRadius } from '@/constants/theme';
 
@@ -15,6 +16,7 @@ export default function EditProfileScreen() {
   const [email, setEmail] = useState(user?.email || '');
   const [gender, setGender] = useState<'male' | 'female' | 'other'>(user?.gender || 'male');
   const [loading, setLoading] = useState(false);
+  const [showSuccessToast, setShowSuccessToast] = useState(false);
 
   const handleSave = async () => {
     if (!email.trim()) {
@@ -32,9 +34,11 @@ export default function EditProfileScreen() {
     try {
       // Save profile changes here
       setTimeout(() => {
-        Alert.alert('Success', 'Profile updated successfully');
+        setShowSuccessToast(true);
         setLoading(false);
-        navigation.goBack();
+        setTimeout(() => {
+          navigation.goBack();
+        }, 1500);
       }, 1000);
     } catch (error) {
       Alert.alert('Error', 'Failed to update profile');
@@ -49,8 +53,9 @@ export default function EditProfileScreen() {
   ] as const;
 
   return (
-    <ScreenKeyboardAwareScrollView>
-      <View style={styles.container}>
+    <View style={styles.wrapper}>
+      <ScreenKeyboardAwareScrollView>
+        <View style={styles.container}>
         {/* User Info Header */}
         <View style={styles.header}>
           <View style={styles.avatarContainer}>
@@ -135,11 +140,24 @@ export default function EditProfileScreen() {
           </Pressable>
         </View>
       </View>
-    </ScreenKeyboardAwareScrollView>
+      </ScreenKeyboardAwareScrollView>
+      {showSuccessToast && (
+        <Toast 
+          message="Profile updated successfully" 
+          type="success" 
+          duration={2000}
+          onDismiss={() => setShowSuccessToast(false)}
+        />
+      )}
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
+  wrapper: {
+    flex: 1,
+    backgroundColor: '#FFFFFF',
+  },
   container: {
     flex: 1,
     backgroundColor: '#FFFFFF',

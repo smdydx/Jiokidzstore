@@ -144,12 +144,11 @@ export default function ProfileScreen() {
 const styles = StyleSheet.create({
   contentContainer: {
     flexGrow: 1,
-    paddingBottom: Spacing.xxl,
+    paddingBottom: Spacing.xl,
   },
   header: {
     alignItems: 'center',
-    paddingVertical: Spacing.xl,
-    paddingTop: Spacing.xl,
+    paddingVertical: Spacing.lg,
     borderBottomWidth: 1,
     borderBottomColor: Colors.light.border,
   },
