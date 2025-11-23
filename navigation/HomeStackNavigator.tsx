@@ -1,5 +1,6 @@
 import React from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { LinearGradient } from "expo-linear-gradient";
 import HomeScreen from "@/screens/HomeScreen";
 import ProductDetailScreen from "@/screens/product/ProductDetailScreen";
 import SearchScreen from "@/screens/product/SearchScreen";
@@ -44,7 +45,18 @@ export default function HomeStackNavigator() {
         name="Home"
         component={HomeScreen}
         options={{
-          headerTitle: () => <HeaderTitle title="JioKidz" />,
+          headerTitle: () => <HeaderTitle />,
+          headerStyle: {
+            backgroundColor: 'transparent',
+          },
+          headerBackground: () => (
+            <LinearGradient
+              colors={['#FFB6D9', '#FFE5EE']}
+              start={{ x: 0, y: 0 }}
+              end={{ x: 1, y: 0 }}
+              style={{ flex: 1 }}
+            />
+          ),
         }}
       />
       <Stack.Screen

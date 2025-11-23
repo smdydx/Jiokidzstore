@@ -1,39 +1,39 @@
 import React from "react";
 import { View, StyleSheet, Image } from "react-native";
-
-import { ThemedText } from "@/components/ThemedText";
+import { LinearGradient } from "expo-linear-gradient";
 import { Spacing } from "@/constants/theme";
 
 interface HeaderTitleProps {
-  title: string;
+  title?: string;
 }
 
 export function HeaderTitle({ title }: HeaderTitleProps) {
   return (
-    <View style={styles.container}>
+    <LinearGradient
+      colors={['#FFB6D9', '#FFE5EE']}
+      start={{ x: 0, y: 0 }}
+      end={{ x: 1, y: 0 }}
+      style={styles.container}
+    >
       <Image
-        source={require("../assets/images/icon.png")}
-        style={styles.icon}
+        source={require("../attached_assets/jiokidz_logo.png")}
+        style={styles.logo}
         resizeMode="contain"
       />
-      <ThemedText style={styles.title}>{title}</ThemedText>
-    </View>
+    </LinearGradient>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "flex-start",
+    width: '100%',
+    paddingHorizontal: Spacing.lg,
+    paddingVertical: Spacing.sm,
+    alignItems: 'flex-start',
+    justifyContent: 'center',
   },
-  icon: {
-    width: 28,
-    height: 28,
-    marginRight: Spacing.sm,
-  },
-  title: {
-    fontSize: 17,
-    fontWeight: "600",
+  logo: {
+    width: 120,
+    height: 36,
   },
 });
