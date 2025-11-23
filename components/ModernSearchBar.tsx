@@ -9,9 +9,16 @@ const TRENDING_SEARCHES = ['Toys', 'Girl Clothes', 'Baby Diapers', 'Boy Shoes'];
 interface ModernSearchBarProps {
   onSearch?: (text: string) => void;
   onMicPress?: () => void;
+  onLocationPress?: () => void;
+  onNotificationPress?: () => void;
 }
 
-export function ModernSearchBar({ onSearch, onMicPress }: ModernSearchBarProps) {
+export function ModernSearchBar({ 
+  onSearch, 
+  onMicPress,
+  onLocationPress,
+  onNotificationPress
+}: ModernSearchBarProps) {
   const [text, setText] = useState('');
   const [isFocused, setIsFocused] = useState(false);
 
@@ -22,6 +29,17 @@ export function ModernSearchBar({ onSearch, onMicPress }: ModernSearchBarProps) 
       end={{ x: 1, y: 1 }}
       style={styles.container}
     >
+      {/* Top Row: Location and Notification Icons */}
+      <View style={styles.topRow}>
+        <Pressable style={styles.iconButton} onPress={onLocationPress}>
+          <Feather name="map-pin" size={20} color="#FFFFFF" />
+        </Pressable>
+        <Pressable style={styles.iconButton} onPress={onNotificationPress}>
+          <Feather name="bell" size={20} color="#FFFFFF" />
+        </Pressable>
+      </View>
+
+      {/* Search Box */}
       <View
         style={[styles.searchBox, isFocused && styles.searchBoxFocused]}
       >
@@ -77,8 +95,24 @@ export function ModernSearchBar({ onSearch, onMicPress }: ModernSearchBarProps) 
 const styles = StyleSheet.create({
   container: {
     paddingHorizontal: Spacing.lg,
-    paddingVertical: 32,
+    paddingVertical: 20,
     zIndex: 10,
+    justifyContent: 'space-between',
+    minHeight: 140,
+  },
+  topRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 16,
+  },
+  iconButton: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: 'rgba(255, 255, 255, 0.25)',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   searchBox: {
     borderRadius: 20,
