@@ -112,8 +112,8 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   logo: {
-    width: 70,
-    height: 30,
+    width: 90,
+    height: 40,
   },
   notificationButton: {
     width: 40,
