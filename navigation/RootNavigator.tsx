@@ -11,7 +11,7 @@ export type RootStackParamList = {
   Splash: undefined;
   Onboarding: undefined;
   Login: undefined;
-  OTP: { phone: string };
+  OTP: { phone: string; name?: string };
   Main: undefined;
 };
 

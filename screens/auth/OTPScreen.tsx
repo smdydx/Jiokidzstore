@@ -6,11 +6,13 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { Feather } from '@expo/vector-icons';
 import { ThemedText } from '@/components/ThemedText';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useAuth } from '@/hooks/useAuth';
 import type { RootStackParamList } from '@/navigation/RootNavigator';
 
 export default function OTPScreen() {
   const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const route = useRoute<RouteProp<RootStackParamList, 'OTP'>>();
+  const { signIn } = useAuth();
   const insets = useSafeAreaInsets();
   const [otp, setOtp] = useState(['', '', '', '', '', '']);
   const [timer, setTimer] = useState(30);
@@ -44,8 +46,12 @@ export default function OTPScreen() {
   const handleVerify = async () => {
     const otpValue = otp.join('');
     if (otpValue.length === 6) {
-      // Simulate successful verification
-      navigation.navigate('Home');
+      // Sign in the user
+      await signIn({
+        id: '1',
+        name: route.params.name || 'User',
+        phone: route.params.phone,
+      });
     }
   };
 
@@ -65,7 +71,11 @@ export default function OTPScreen() {
         style={[styles.pinkSection, { paddingTop: insets.top }]}
       >
         <View style={styles.headerContent}>
-          <Pressable onPress={() => navigation.goBack()}>
+          <Pressable 
+            onPress={() => navigation.goBack()}
+            style={styles.backButton}
+            hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}
+          >
             <Feather name="arrow-left" size={24} color="#FF6B9D" />
           </Pressable>
           <ThemedText style={styles.headerTitle}>Verify OTP</ThemedText>
@@ -175,18 +185,23 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
     paddingBottom: 16,
   },
+  backButton: {
+    padding: 12,
+    marginLeft: -12,
+  },
   headerContent: {
     flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingHorizontal: 24,
     paddingBottom: 12,
   },
   headerTitle: {
     fontSize: 18,
     fontWeight: '700',
     color: '#FF6B9D',
+    flex: 1,
+    textAlign: 'center',
   },
   spacer: {
     width: 24,

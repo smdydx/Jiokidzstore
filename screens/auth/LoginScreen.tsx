@@ -18,7 +18,7 @@ export default function LoginScreen() {
 
   const handleSendOTP = () => {
     if (isLogin && phone.length === 10) {
-      navigation.navigate('OTP', { phone: `+91${phone}` });
+      navigation.navigate('OTP', { phone: `+91${phone}`, name: 'User' });
     } else if (!isLogin && phone.length === 10 && name.length > 0) {
       navigation.navigate('OTP', { phone: `+91${phone}`, name });
     }
