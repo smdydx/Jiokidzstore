@@ -212,7 +212,7 @@ export default function ProductDetailScreen() {
             <ThemedText style={styles.description}>{product.description}</ThemedText>
           </View>
 
-          <View style={{ height: 200 }} />
+          <View style={{ height: 20 }} />
         </View>
       </ScrollView>
 
@@ -258,7 +258,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   scrollViewContent: {
-    paddingBottom: 120,
+    paddingBottom: 16,
   },
   imageSection: {
     width: '100%',
@@ -457,10 +457,6 @@ const styles = StyleSheet.create({
     lineHeight: 20,
   },
   footer: {
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
     flexDirection: 'row',
     gap: 12,
     padding: 12,
