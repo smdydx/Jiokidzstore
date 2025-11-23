@@ -1,7 +1,8 @@
 import React from 'react';
-import { View, StyleSheet, Pressable, Image } from 'react-native';
+import { View, StyleSheet, Pressable, Image, Dimensions } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Feather } from '@expo/vector-icons';
 import { ScreenScrollView } from '@/components/ScreenScrollView';
 import { ThemedText } from '@/components/ThemedText';
@@ -9,6 +10,8 @@ import { useAuth } from '@/hooks/useAuth';
 import { useTheme } from '@/hooks/useTheme';
 import { Colors, Spacing, BorderRadius, Shadows } from '@/constants/theme';
 import type { ProfileStackParamList } from '@/navigation/ProfileStackNavigator';
+
+const { height: screenHeight } = Dimensions.get('window');
 
 interface MenuItemProps {
   icon: string;
@@ -51,23 +54,34 @@ export default function ProfileScreen() {
   const navigation = useNavigation<NativeStackNavigationProp<ProfileStackParamList>>();
   const { user, signOut } = useAuth();
   const { theme } = useTheme();
+  const insets = useSafeAreaInsets();
+  
+  // Responsive sizing based on screen height
+  const isSmallDevice = screenHeight < 700;
+  const avatarSize = isSmallDevice ? 80 : 100;
+  const headerPadding = isSmallDevice ? Spacing.lg : Spacing.xxl;
 
   const handleLogout = async () => {
     await signOut();
   };
 
   return (
-    <ScreenScrollView>
-      <View style={styles.header}>
+    <ScreenScrollView 
+      contentContainerStyle={[
+        styles.contentContainer,
+        { paddingTop: Spacing.md, paddingHorizontal: 0 }
+      ]}
+    >
+      <View style={[styles.header, { paddingVertical: headerPadding }]}>
         <View style={styles.avatarContainer}>
-          <View style={styles.avatar}>
-            <Feather name="user" size={40} color={Colors.light.primary} />
+          <View style={[styles.avatar, { width: avatarSize, height: avatarSize, borderRadius: avatarSize / 2 }]}>
+            <Feather name="user" size={avatarSize * 0.4} color={Colors.light.primary} />
           </View>
         </View>
-        <ThemedText type="h2" style={styles.userName}>
+        <ThemedText type="h2" style={[styles.userName, { fontSize: isSmallDevice ? 18 : 20 }]}>
           {user?.name || 'User'}
         </ThemedText>
-        <ThemedText style={styles.userPhone}>
+        <ThemedText style={[styles.userPhone, { fontSize: isSmallDevice ? 13 : 14 }]}>
           {user?.phone || user?.email || ''}
         </ThemedText>
       </View>
@@ -128,17 +142,20 @@ export default function ProfileScreen() {
 }
 
 const styles = StyleSheet.create({
+  contentContainer: {
+    flexGrow: 1,
+    paddingBottom: Spacing.xxl,
+  },
   header: {
     alignItems: 'center',
     paddingVertical: Spacing.xxl,
+    borderBottomWidth: 1,
+    borderBottomColor: Colors.light.border,
   },
   avatarContainer: {
-    marginBottom: Spacing.lg,
+    marginBottom: Spacing.md,
   },
   avatar: {
-    width: 100,
-    height: 100,
-    borderRadius: 50,
     backgroundColor: Colors.light.backgroundSecondary,
     justifyContent: 'center',
     alignItems: 'center',
@@ -146,21 +163,27 @@ const styles = StyleSheet.create({
   },
   userName: {
     marginBottom: Spacing.xs,
+    fontWeight: '600',
   },
   userPhone: {
     color: Colors.light.textGray,
+    fontSize: 14,
   },
   section: {
-    marginBottom: Spacing.xl,
+    marginBottom: Spacing.lg,
     paddingHorizontal: Spacing.lg,
+    marginTop: Spacing.lg,
   },
   menuItem: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingVertical: Spacing.lg,
+    paddingVertical: Spacing.md,
+    paddingHorizontal: Spacing.md,
     borderBottomWidth: 1,
     borderBottomColor: Colors.light.border,
+    borderRadius: BorderRadius.md,
+    marginBottom: Spacing.xs,
   },
   menuItemPressed: {
     opacity: 0.7,
@@ -168,6 +191,7 @@ const styles = StyleSheet.create({
   menuItemLeft: {
     flexDirection: 'row',
     alignItems: 'center',
+    flex: 1,
   },
   iconContainer: {
     width: 40,
@@ -177,13 +201,15 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     marginRight: Spacing.md,
+    flexShrink: 0,
   },
   iconContainerDanger: {
     backgroundColor: `${Colors.light.error}15`,
   },
   menuItemText: {
-    fontSize: 16,
+    fontSize: 15,
     fontWeight: '500',
+    flex: 1,
   },
   menuItemTextDanger: {
     color: Colors.light.error,
