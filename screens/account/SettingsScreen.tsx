@@ -41,7 +41,7 @@ export default function SettingsScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: { paddingHorizontal: Spacing.lg, paddingTop: Spacing.xxl, paddingBottom: Spacing.xl },
+  container: { paddingHorizontal: Spacing.lg },
   sectionTitle: { marginTop: Spacing.xl, marginBottom: Spacing.lg },
   setting: {
     flexDirection: 'row',
