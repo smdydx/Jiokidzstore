@@ -77,6 +77,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: Spacing.lg,
     paddingVertical: Spacing.md,
     zIndex: 10,
+    backgroundColor: '#FFE5EE',
   },
   searchBox: {
     borderRadius: BorderRadius.lg,
