@@ -17,6 +17,7 @@ import { EnhancedButton } from '@/components/EnhancedButton';
 import { BestSellersCarousel } from '@/components/BestSellersCarousel';
 import { PersonalizedSection } from '@/components/PersonalizedSection';
 import { TestimonialsSection } from '@/components/TestimonialsSection';
+import { TwoColumnPromo } from '@/components/TwoColumnPromo';
 import { useTheme } from '@/hooks/useTheme';
 import { Colors, Spacing, BorderRadius } from '@/constants/theme';
 import { PRODUCTS, CATEGORIES } from '@/data/mockData';
@@ -82,6 +83,12 @@ export default function HomeScreen() {
       <ModernHeroSection
         onSlidePress={() => {}}
         onButtonPress={() => navigation.navigate('FlashSale')}
+      />
+
+      {/* Two Column Promo Section */}
+      <TwoColumnPromo 
+        onLeftPress={() => navigation.navigate('DealsTab' as any)}
+        onRightPress={() => navigation.navigate('DealsTab' as any)}
       />
 
       {/* Promotional Banner */}
@@ -198,6 +205,7 @@ const styles = StyleSheet.create({
   scrollContent: {
     flexGrow: 1,
     paddingBottom: 120,
+    paddingTop: 0,
   },
   section: {
     marginBottom: 24,

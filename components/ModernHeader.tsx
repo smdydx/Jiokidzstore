@@ -18,9 +18,6 @@ export function ModernHeader({ onNotificationPress, notificationCount = 0 }: Mod
       style={styles.container}
     >
       <View style={styles.content}>
-        {/* JioKidz Logo - Left aligned, no border */}
-        <Text style={styles.logo}>JioKidz</Text>
-
         {/* Right Icons */}
         <View style={styles.rightSection}>
           {/* Notification */}
@@ -54,12 +51,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-  },
-  logo: {
-    fontSize: 22,
-    fontWeight: '800',
-    color: Colors.light.primary,
-    letterSpacing: 1,
   },
   rightSection: {
     flexDirection: 'row',
