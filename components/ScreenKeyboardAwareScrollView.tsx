@@ -1,4 +1,5 @@
-import { Platform, StyleSheet } from "react-native";
+
+import { Platform, StyleSheet, useWindowDimensions } from "react-native";
 import {
   KeyboardAwareScrollView,
   KeyboardAwareScrollViewProps,
@@ -18,6 +19,10 @@ export function ScreenKeyboardAwareScrollView({
 }: KeyboardAwareScrollViewProps) {
   const { theme } = useTheme();
   const { paddingTop, paddingBottom, scrollInsetBottom } = useScreenInsets();
+  const { width } = useWindowDimensions();
+  
+  // Responsive horizontal padding based on screen width
+  const horizontalPadding = width < 375 ? Spacing.md : Spacing.xl;
 
   /**
    * KeyboardAwareScrollView isn't compatible with web (it relies on native APIs), so the code falls back to ScreenScrollView on web to avoid runtime errors.
@@ -46,8 +51,8 @@ export function ScreenKeyboardAwareScrollView({
         {
           paddingTop,
           paddingBottom,
+          paddingHorizontal: horizontalPadding,
         },
-        styles.contentContainer,
         contentContainerStyle,
       ]}
       scrollIndicatorInsets={{ bottom: scrollInsetBottom }}
@@ -62,8 +67,5 @@ export function ScreenKeyboardAwareScrollView({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-  },
-  contentContainer: {
-    paddingHorizontal: Spacing.xl,
   },
 });

@@ -21,7 +21,7 @@ export default function App() {
                 <RootNavigator />
               </NavigationContainer>
             </AuthProvider>
-            <StatusBar style="auto" />
+            <StatusBar style="dark" />
           </KeyboardProvider>
         </GestureHandlerRootView>
       </SafeAreaProvider>

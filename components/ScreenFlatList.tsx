@@ -1,5 +1,6 @@
+
 import React from "react";
-import { FlatList, FlatListProps, StyleSheet } from "react-native";
+import { FlatList, FlatListProps, StyleSheet, useWindowDimensions } from "react-native";
 
 import { useTheme } from "@/hooks/useTheme";
 import { useScreenInsets } from "@/hooks/useScreenInsets";
@@ -12,6 +13,10 @@ export function ScreenFlatList<T>({
 }: FlatListProps<T>) {
   const { theme } = useTheme();
   const { paddingTop, paddingBottom, scrollInsetBottom } = useScreenInsets();
+  const { width } = useWindowDimensions();
+  
+  // Responsive horizontal padding based on screen width
+  const horizontalPadding = width < 375 ? Spacing.md : Spacing.xl;
 
   return (
     <FlatList
@@ -24,8 +29,8 @@ export function ScreenFlatList<T>({
         {
           paddingTop,
           paddingBottom,
+          paddingHorizontal: horizontalPadding,
         },
-        styles.contentContainer,
         contentContainerStyle,
       ]}
       scrollIndicatorInsets={{ bottom: scrollInsetBottom }}
@@ -37,8 +42,5 @@ export function ScreenFlatList<T>({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-  },
-  contentContainer: {
-    paddingHorizontal: Spacing.xl,
   },
 });
