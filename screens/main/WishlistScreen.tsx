@@ -48,7 +48,9 @@ export default function WishlistScreen() {
   if (!loading && wishlist.length === 0) {
     return (
       <View style={styles.emptyContainer}>
-        <Feather name="heart" size={80} color={Colors.light.textGray} />
+        <View style={styles.iconBox}>
+          <Feather name="heart" size={50} color={Colors.light.primary} />
+        </View>
         <ThemedText type="h2" style={styles.emptyTitle}>
           Your wishlist is empty
         </ThemedText>
@@ -93,6 +95,15 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     padding: Spacing.xxl,
+  },
+  iconBox: {
+    width: 120,
+    height: 120,
+    borderRadius: 60,
+    backgroundColor: `${Colors.light.primary}15`,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: Spacing.xl,
   },
   emptyTitle: {
     marginTop: Spacing.xl,

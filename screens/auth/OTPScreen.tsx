@@ -107,7 +107,7 @@ export default function OTPScreen() {
         style={styles.button}
         disabled={otp.join('').length !== 6}
       >
-        Verify & Continue
+        Verify
       </Button>
     </ScreenScrollView>
   );
