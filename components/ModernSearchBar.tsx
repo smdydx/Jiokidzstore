@@ -18,7 +18,7 @@ export function ModernSearchBar({ onSearch, onMicPress }: ModernSearchBarProps) 
   return (
     <View style={styles.container}>
       <LinearGradient
-        colors={['rgba(255,255,255,0.95)', 'rgba(255,255,255,0.9)']}
+        colors={['#FFE5EE', '#FFF0F5']}
         start={{ x: 0, y: 0 }}
         end={{ x: 1, y: 1 }}
         style={[styles.searchBox, isFocused && styles.searchBoxFocused]}
