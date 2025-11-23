@@ -58,7 +58,11 @@ export default function ProductDetailScreen() {
 
   return (
     <View style={styles.container}>
-      <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
+      <ScrollView 
+        style={styles.scrollView} 
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={styles.scrollViewContent}
+      >
         {/* Product Image */}
         <View style={styles.imageSection}>
           <Image 
@@ -208,7 +212,7 @@ export default function ProductDetailScreen() {
             <ThemedText style={styles.description}>{product.description}</ThemedText>
           </View>
 
-          <View style={{ height: 100 }} />
+          <View style={{ height: 200 }} />
         </View>
       </ScrollView>
 
@@ -252,6 +256,9 @@ const styles = StyleSheet.create({
   },
   scrollView: {
     flex: 1,
+  },
+  scrollViewContent: {
+    paddingBottom: 120,
   },
   imageSection: {
     width: '100%',
@@ -450,6 +457,10 @@ const styles = StyleSheet.create({
     lineHeight: 20,
   },
   footer: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
     flexDirection: 'row',
     gap: 12,
     padding: 12,
