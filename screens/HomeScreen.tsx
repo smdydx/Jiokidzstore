@@ -278,12 +278,12 @@ const styles = StyleSheet.create({
   productsGrid: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    paddingHorizontal: 8,
-    gap: 8,
+    paddingHorizontal: 0,
+    marginHorizontal: 0,
   },
   productGridItem: {
     width: '50%',
-    paddingHorizontal: 8,
+    paddingHorizontal: 4,
   },
   cartFAB: {
     position: 'absolute',
