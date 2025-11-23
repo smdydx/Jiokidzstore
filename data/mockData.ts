@@ -13,6 +13,18 @@ const images = {
   summer1: require('../public/images/summer_collection_ki_28364bf6.jpg'),
 };
 
+// Category Images
+const categoryImages = {
+  'Boy Fashion': require('../attached_assets/generated_images/boys_casual_fashion_clothing.png'),
+  'Girl Fashion': require('../attached_assets/generated_images/girls_fashion_clothing.png'),
+  'Footwear': require('../attached_assets/generated_images/kids_footwear_shoes.png'),
+  'Toys': require('../attached_assets/generated_images/colorful_kids_toys.png'),
+  'Diapers': require('../attached_assets/generated_images/baby_diapers_products.png'),
+  'Books': require('../attached_assets/generated_images/colorful_children_books.png'),
+  'Accessories': require('../attached_assets/generated_images/kids_accessories_collection.png'),
+  'Baby Care': require('../attached_assets/generated_images/baby_care_products.png'),
+};
+
 export const CATEGORIES: Category[] = [
   {
     id: '1',
