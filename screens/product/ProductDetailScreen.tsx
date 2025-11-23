@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, StyleSheet, ScrollView, Pressable, Dimensions, Image, Platform } from 'react-native';
-import { useNavigation, useRoute, RouteProp } from '@react-navigation/native';
+import { useNavigation, useRoute, RouteProp, useIsFocused } from '@react-navigation/native';
 import { Feather } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import { ThemedText } from '@/components/ThemedText';
@@ -15,6 +15,7 @@ export default function ProductDetailScreen() {
   const navigation = useNavigation();
   const route = useRoute<RouteProp<HomeStackParamList, 'ProductDetail'>>();
   const insets = useSafeAreaInsets();
+  const isFocused = useIsFocused();
   const [selectedSize, setSelectedSize] = useState<string | null>(null);
   const [selectedColor, setSelectedColor] = useState<string | null>(null);
   const [quantity, setQuantity] = useState(1);
@@ -45,11 +46,31 @@ export default function ProductDetailScreen() {
     }
   };
 
-  React.useLayoutEffect(() => {
-    navigation.setOptions({
-      tabBarStyle: { display: 'none' },
-    });
-  }, [navigation]);
+  useEffect(() => {
+    if (isFocused) {
+      // Hide tab bar by accessing parent navigator
+      const parent = navigation.getParent();
+      parent?.setOptions({
+        tabBarStyle: { display: 'none' },
+      });
+    }
+    
+    return () => {
+      // Show tab bar when leaving screen
+      const parent = navigation.getParent();
+      parent?.setOptions({
+        tabBarStyle: {
+          position: "absolute",
+          backgroundColor: Platform.select({
+            ios: "transparent",
+            android: "#FFFFFF",
+          }),
+          borderTopWidth: 0,
+          elevation: 0,
+        },
+      });
+    };
+  }, [isFocused, navigation]);
 
   const handleWishlistToggle = async () => {
     if (isWishlisted) {
