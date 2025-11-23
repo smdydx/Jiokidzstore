@@ -12,7 +12,7 @@ const HERO_SLIDES = [
     id: '1',
     title: 'Big Sale',
     subtitle: 'Up to 60% OFF on Kids Fashion',
-    image: 'https://images.unsplash.com/photo-1519457073601-92326e7e3c65?w=800&q=80',
+    image: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&q=80',
     badge: 'Limited Time',
     buttonText: 'Shop Now',
   },
