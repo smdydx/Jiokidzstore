@@ -6,6 +6,7 @@ import { ScreenScrollView } from '@/components/ScreenScrollView';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { Button } from '@/components/Button';
+import { ReviewsForm } from './ReviewsForm';
 import { useTheme } from '@/hooks/useTheme';
 import { Colors, Spacing, BorderRadius, Shadows } from '@/constants/theme';
 import { PRODUCTS } from '@/data/mockData';
@@ -153,6 +154,11 @@ export default function ProductDetailScreen() {
           <View style={styles.section}>
             <ThemedText type="h3" style={styles.sectionTitle}>Description</ThemedText>
             <ThemedText style={styles.description}>{product.description}</ThemedText>
+          </View>
+
+          {/* Reviews Section */}
+          <View style={styles.section}>
+            <ReviewsForm productId={product.id} />
           </View>
         </View>
       </ScreenScrollView>

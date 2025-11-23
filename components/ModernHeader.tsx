@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, View, Pressable, Text } from 'react-native';
+import { StyleSheet, View, Pressable, Text, Image } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Feather } from '@expo/vector-icons';
 import { Colors, Spacing, BorderRadius } from '@/constants/theme';
@@ -18,11 +18,8 @@ export function ModernHeader({ onNotificationPress, notificationCount = 0 }: Mod
       style={styles.container}
     >
       <View style={styles.content}>
-        {/* Location Section */}
-        <Pressable style={styles.locationSection}>
-          <Feather name="map-pin" size={16} color={Colors.light.primary} />
-          <Text style={styles.locationText}>Delhi NCR</Text>
-        </Pressable>
+        {/* JioKidz Logo - Left aligned, no border */}
+        <Text style={styles.logo}>JioKidz</Text>
 
         {/* Right Icons */}
         <View style={styles.rightSection}>
@@ -58,19 +55,11 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
   },
-  locationSection: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: Spacing.sm,
-    backgroundColor: 'rgba(255,255,255,0.7)',
-    paddingHorizontal: Spacing.md,
-    paddingVertical: Spacing.sm,
-    borderRadius: BorderRadius.md,
-  },
-  locationText: {
-    fontSize: 13,
-    fontWeight: '600',
-    color: Colors.light.text,
+  logo: {
+    fontSize: 22,
+    fontWeight: '800',
+    color: Colors.light.primary,
+    letterSpacing: 1,
   },
   rightSection: {
     flexDirection: 'row',
