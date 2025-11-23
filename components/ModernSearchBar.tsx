@@ -48,7 +48,7 @@ export function ModernSearchBar({ onSearch, onMicPress }: ModernSearchBarProps) 
             <Feather name="mic" size={18} color={Colors.light.primary} />
           </Pressable>
         </View>
-      </LinearGradient>
+      </View>
 
       {/* Trending Searches */}
       {isFocused && text.length === 0 && (
