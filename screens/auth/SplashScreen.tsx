@@ -438,7 +438,7 @@ export default function SplashScreen() {
     if (autoScrollTimer.current) {
       clearTimeout(autoScrollTimer.current);
     }
-    // Don't navigate - just stay on splash screen
+    navigation.navigate('Login');
   };
 
   const handleDotPress = (index: number) => {
