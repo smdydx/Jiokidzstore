@@ -149,7 +149,7 @@ export default function HomeScreen() {
         {/* Personalized Section */}
         <PersonalizedSection onItemPress={() => navigation.navigate('DealsTab' as any)} />
 
-        {/* Trending Products */}
+        {/* Trending Products - 2x2 Grid */}
         <View style={styles.section}>
           <View style={styles.sectionHeader}>
             <ThemedText style={styles.sectionTitle}>Trending Now</ThemedText>
@@ -158,7 +158,49 @@ export default function HomeScreen() {
             </Pressable>
           </View>
           <View style={styles.productsGrid}>
-            {updatedProducts.slice(0, 6).map(product => (
+            {updatedProducts.slice(0, 4).map(product => (
+              <View key={product.id} style={styles.productGridItem}>
+                <ProductCard
+                  product={product}
+                  onPress={() => handleProductPress(product.id)}
+                  onWishlistPress={() => handleWishlistToggle(product.id)}
+                />
+              </View>
+            ))}
+          </View>
+        </View>
+
+        {/* Winter Sales - 2x2 Grid */}
+        <View style={styles.section}>
+          <View style={styles.sectionHeader}>
+            <ThemedText style={styles.sectionTitle}>Winter Sales</ThemedText>
+            <Pressable onPress={() => navigation.navigate('AllProducts')}>
+              <ThemedText style={styles.seeAllText}>View All</ThemedText>
+            </Pressable>
+          </View>
+          <View style={styles.productsGrid}>
+            {updatedProducts.slice(4, 8).map(product => (
+              <View key={product.id} style={styles.productGridItem}>
+                <ProductCard
+                  product={product}
+                  onPress={() => handleProductPress(product.id)}
+                  onWishlistPress={() => handleWishlistToggle(product.id)}
+                />
+              </View>
+            ))}
+          </View>
+        </View>
+
+        {/* Best For You - 2x2 Grid */}
+        <View style={styles.section}>
+          <View style={styles.sectionHeader}>
+            <ThemedText style={styles.sectionTitle}>Best For You</ThemedText>
+            <Pressable onPress={() => navigation.navigate('AllProducts')}>
+              <ThemedText style={styles.seeAllText}>View All</ThemedText>
+            </Pressable>
+          </View>
+          <View style={styles.productsGrid}>
+            {updatedProducts.slice(8, 12).map(product => (
               <View key={product.id} style={styles.productGridItem}>
                 <ProductCard
                   product={product}
