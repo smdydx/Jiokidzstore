@@ -92,111 +92,110 @@ export default function HomeScreen() {
         <ModernSearchBar onSearch={handleSearchPress} />
 
         {/* Hero Section */}
-          <View style={styles.heroContainer}>
-            <ModernHeroSection
-              onSlidePress={() => {}}
-              onButtonPress={() => navigation.navigate('FlashSale')}
-            />
-          </View>
-
-          {/* Two Column Promo */}
-          <TwoColumnPromo 
-            onLeftPress={() => navigation.navigate('DealsTab' as any)}
-            onRightPress={() => navigation.navigate('DealsTab' as any)}
+        <View style={styles.heroContainer}>
+          <ModernHeroSection
+            onSlidePress={() => {}}
+            onButtonPress={() => navigation.navigate('FlashSale')}
           />
+        </View>
 
-          {/* Promotional Banner */}
-          <View style={styles.promoBanner}>
-            <LinearGradient
-              colors={['#FFB6D9', '#FF8FB3']}
-              start={{ x: 0, y: 0 }}
-              end={{ x: 1, y: 1 }}
-              style={styles.promoBannerGradient}
-            >
+        {/* Two Column Promo */}
+        <TwoColumnPromo 
+          onLeftPress={() => navigation.navigate('DealsTab' as any)}
+          onRightPress={() => navigation.navigate('DealsTab' as any)}
+        />
+
+        {/* Promotional Banner */}
+        <View style={styles.promoBanner}>
+          <LinearGradient
+            colors={['#FFB6D9', '#FF8FB3']}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 1 }}
+            style={styles.promoBannerGradient}
+          >
+            <View>
+              <BadgeLabel label="Limited Time Offer" type="hot" />
+              <ThemedText style={styles.promoBannerText}>Free Shipping on Orders Above ₹499</ThemedText>
+            </View>
+            <Pressable>
+              <Feather name="arrow-right" size={24} color="#FFFFFF" />
+            </Pressable>
+          </LinearGradient>
+        </View>
+
+        {/* Categories */}
+        <View style={styles.section}>
+          <View style={styles.sectionHeader}>
+            <ThemedText style={styles.sectionTitle}>Shop by Category</ThemedText>
+            <Pressable onPress={() => navigation.navigate('DealsTab' as any)}>
+              <ThemedText style={styles.seeAllText}>View All</ThemedText>
+            </Pressable>
+          </View>
+          <FlatList
+            data={CATEGORIES}
+            renderItem={({ item }) => (
+              <ModernCategory
+                category={item}
+                onPress={() => handleCategoryPress(item.id, item.name)}
+              />
+            )}
+            keyExtractor={(item) => item.id}
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={styles.categoriesList}
+            scrollEventThrottle={16}
+          />
+        </View>
+
+        {/* Flash Sale Section */}
+        <Pressable style={styles.flashSaleBanner} onPress={() => navigation.navigate('FlashSale')}>
+          <LinearGradient
+            colors={['#FF6B9D', '#FFA8C5']}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 0 }}
+            style={styles.flashGradient}
+          >
+            <View style={styles.flashLeft}>
+              <View style={styles.flashIcon}>
+                <Feather name="zap" size={24} color="#FFFFFF" />
+              </View>
               <View>
-                <BadgeLabel label="Limited Time Offer" type="hot" />
-                <ThemedText style={styles.promoBannerText}>Free Shipping on Orders Above ₹499</ThemedText>
+                <ThemedText style={styles.flashTitle}>Flash Sale</ThemedText>
+                <ThemedText style={styles.flashSubtitle}>Limited offers today</ThemedText>
               </View>
-              <Pressable>
-                <Feather name="arrow-right" size={24} color="#FFFFFF" />
-              </Pressable>
-            </LinearGradient>
-          </View>
-
-          {/* Categories */}
-          <View style={styles.section}>
-            <View style={styles.sectionHeader}>
-              <ThemedText style={styles.sectionTitle}>Shop by Category</ThemedText>
-              <Pressable onPress={() => navigation.navigate('DealsTab' as any)}>
-                <ThemedText style={styles.seeAllText}>View All</ThemedText>
-              </Pressable>
             </View>
-            <FlatList
-              data={CATEGORIES}
-              renderItem={({ item }) => (
-                <ModernCategory
-                  category={item}
-                  onPress={() => handleCategoryPress(item.id, item.name)}
-                />
-              )}
-              keyExtractor={(item) => item.id}
-              horizontal
-              showsHorizontalScrollIndicator={false}
-              contentContainerStyle={styles.categoriesList}
-              scrollEventThrottle={16}
-            />
+            <Feather name="chevron-right" size={24} color="#FFFFFF" />
+          </LinearGradient>
+        </Pressable>
+
+        {/* Best Sellers */}
+        <BestSellersCarousel onProductPress={handleProductPress} />
+
+        {/* Personalized Section */}
+        <PersonalizedSection onItemPress={() => navigation.navigate('DealsTab' as any)} />
+
+        {/* Testimonials */}
+        <TestimonialsSection />
+
+        {/* Trending Products */}
+        <View style={styles.section}>
+          <View style={styles.sectionHeader}>
+            <ThemedText style={styles.sectionTitle}>Trending Now</ThemedText>
+            <Pressable>
+              <ThemedText style={styles.seeAllText}>View All</ThemedText>
+            </Pressable>
           </View>
-
-          {/* Flash Sale Section */}
-          <Pressable style={styles.flashSaleBanner} onPress={() => navigation.navigate('FlashSale')}>
-            <LinearGradient
-              colors={['#FF6B9D', '#FFA8C5']}
-              start={{ x: 0, y: 0 }}
-              end={{ x: 1, y: 0 }}
-              style={styles.flashGradient}
-            >
-              <View style={styles.flashLeft}>
-                <View style={styles.flashIcon}>
-                  <Feather name="zap" size={24} color="#FFFFFF" />
-                </View>
-                <View>
-                  <ThemedText style={styles.flashTitle}>Flash Sale</ThemedText>
-                  <ThemedText style={styles.flashSubtitle}>Limited offers today</ThemedText>
-                </View>
-              </View>
-              <Feather name="chevron-right" size={24} color="#FFFFFF" />
-            </LinearGradient>
-          </Pressable>
-
-          {/* Best Sellers */}
-          <BestSellersCarousel onProductPress={handleProductPress} />
-
-          {/* Personalized Section */}
-          <PersonalizedSection onItemPress={() => navigation.navigate('DealsTab' as any)} />
-
-          {/* Testimonials */}
-          <TestimonialsSection />
-
-          {/* Trending Products */}
-          <View style={styles.section}>
-            <View style={styles.sectionHeader}>
-              <ThemedText style={styles.sectionTitle}>Trending Now</ThemedText>
-              <Pressable>
-                <ThemedText style={styles.seeAllText}>View All</ThemedText>
-              </Pressable>
-            </View>
-            <View style={styles.productsGrid}>
-              {updatedProducts.slice(0, 6).map(product => (
-                <ProductCard
-                  key={product.id}
-                  product={product}
-                  onPress={() => handleProductPress(product.id)}
-                  onWishlistPress={() => handleWishlistToggle(product.id)}
-                />
-              ))}
-            </View>
+          <View style={styles.productsGrid}>
+            {updatedProducts.slice(0, 6).map(product => (
+              <ProductCard
+                key={product.id}
+                product={product}
+                onPress={() => handleProductPress(product.id)}
+                onWishlistPress={() => handleWishlistToggle(product.id)}
+              />
+            ))}
           </View>
-
+        </View>
       </ScreenScrollView>
 
       {/* Floating Cart Button */}
