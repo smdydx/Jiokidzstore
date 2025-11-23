@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, Pressable } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import { View, StyleSheet, Pressable, Alert } from 'react-native';
+import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { Feather } from '@expo/vector-icons';
 import { ScreenFlatList } from '@/components/ScreenFlatList';
@@ -16,6 +16,13 @@ export default function CartScreen() {
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
   const [loading, setLoading] = useState(true);
 
+  // Reload cart when screen comes into focus
+  useFocusEffect(
+    React.useCallback(() => {
+      loadCart();
+    }, [])
+  );
+
   useEffect(() => {
     loadCart();
   }, []);
@@ -27,13 +34,36 @@ export default function CartScreen() {
   };
 
   const handleQuantityChange = async (itemId: string, newQuantity: number) => {
-    await cartStorage.updateQuantity(itemId, newQuantity);
-    loadCart();
+    if (newQuantity <= 0) {
+      Alert.alert('Remove Item', 'Remove this item from cart?', [
+        { text: 'Cancel', style: 'cancel' },
+        {
+          text: 'Remove',
+          onPress: async () => {
+            await cartStorage.removeFromCart(itemId);
+            loadCart();
+          },
+          style: 'destructive',
+        },
+      ]);
+    } else {
+      await cartStorage.updateQuantity(itemId, newQuantity);
+      loadCart();
+    }
   };
 
   const handleRemoveItem = async (itemId: string) => {
-    await cartStorage.removeFromCart(itemId);
-    loadCart();
+    Alert.alert('Remove Item', 'Are you sure?', [
+      { text: 'Cancel', style: 'cancel' },
+      {
+        text: 'Remove',
+        onPress: async () => {
+          await cartStorage.removeFromCart(itemId);
+          loadCart();
+        },
+        style: 'destructive',
+      },
+    ]);
   };
 
   const total = cartItems.reduce((sum, item) => sum + item.product.price * item.quantity, 0);

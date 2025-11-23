@@ -35,14 +35,20 @@ export default function ProductDetailScreen() {
   }
 
   const handleAddToCart = async () => {
-    await cartStorage.addToCart({
-      id: Date.now().toString(),
-      product,
-      quantity,
-      selectedSize: selectedSize || undefined,
-      selectedColor: selectedColor || undefined,
-    });
-    navigation.navigate('Cart');
+    try {
+      await cartStorage.addToCart({
+        id: Date.now().toString(),
+        product,
+        quantity,
+        selectedSize: selectedSize || undefined,
+        selectedColor: selectedColor || undefined,
+      });
+      // Navigate to cart with refresh
+      navigation.navigate('Cart');
+    } catch (error) {
+      console.error('Error adding to cart:', error);
+      alert('Failed to add to cart. Please try again.');
+    }
   };
 
   const handleWishlistToggle = async () => {
