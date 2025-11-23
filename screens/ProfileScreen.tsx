@@ -74,6 +74,11 @@ export default function ProfileScreen() {
 
       <View style={styles.section}>
         <MenuItem
+          icon="edit-2"
+          title="Edit Profile"
+          onPress={() => navigation.navigate('EditProfile')}
+        />
+        <MenuItem
           icon="package"
           title="My Orders"
           onPress={() => navigation.navigate('OrderHistory')}

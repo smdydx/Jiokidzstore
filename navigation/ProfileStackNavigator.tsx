@@ -2,6 +2,7 @@ import React from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
 import ProfileScreen from "@/screens/ProfileScreen";
+import EditProfileScreen from "@/screens/account/EditProfileScreen";
 import OrderHistoryScreen from "@/screens/account/OrderHistoryScreen";
 import OrderTrackingScreen from "@/screens/account/OrderTrackingScreen";
 import NotificationsScreen from "@/screens/account/NotificationsScreen";
@@ -15,6 +16,7 @@ import { getCommonScreenOptions } from "@/navigation/screenOptions";
 
 export type ProfileStackParamList = {
   Profile: undefined;
+  EditProfile: undefined;
   OrderHistory: undefined;
   OrderTracking: { orderId: string };
   Notifications: undefined;
@@ -36,6 +38,14 @@ export default function ProfileStackNavigator() {
         name="Profile"
         component={ProfileScreen}
         options={{ title: "My Profile" }}
+      />
+      <Stack.Screen
+        name="EditProfile"
+        component={EditProfileScreen}
+        options={{ 
+          title: "Edit Profile",
+          tabBarStyle: { display: 'none' },
+        }}
       />
       <Stack.Screen
         name="OrderHistory"
