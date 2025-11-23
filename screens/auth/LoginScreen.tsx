@@ -15,13 +15,21 @@ import type { RootStackParamList } from '@/navigation/RootNavigator';
 export default function LoginScreen() {
   const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const { theme } = useTheme();
+  const [isLogin, setIsLogin] = useState(true);
   const [phone, setPhone] = useState('');
+  const [name, setName] = useState('');
 
   const handleSendOTP = () => {
-    if (phone.length === 10) {
+    if (isLogin && phone.length === 10) {
       navigation.navigate('OTP', { phone: `+91${phone}` });
+    } else if (!isLogin && phone.length === 10 && name.length > 0) {
+      navigation.navigate('OTP', { phone: `+91${phone}`, name });
     }
   };
+
+  const isFormValid = isLogin 
+    ? phone.length === 10 
+    : phone.length === 10 && name.length > 2;
 
   return (
     <ScreenScrollView contentContainerStyle={styles.scrollContent}>
@@ -37,15 +45,69 @@ export default function LoginScreen() {
           />
         </View>
 
+        {/* Tab Switcher */}
+        <View style={styles.tabContainer}>
+          <Pressable 
+            style={[styles.tab, isLogin && styles.tabActive]}
+            onPress={() => {
+              setIsLogin(true);
+              setName('');
+            }}
+          >
+            <ThemedText style={[styles.tabText, isLogin && styles.tabTextActive]}>
+              Login
+            </ThemedText>
+            {isLogin && <View style={styles.tabIndicator} />}
+          </Pressable>
+          
+          <Pressable 
+            style={[styles.tab, !isLogin && styles.tabActive]}
+            onPress={() => {
+              setIsLogin(false);
+              setPhone('');
+            }}
+          >
+            <ThemedText style={[styles.tabText, !isLogin && styles.tabTextActive]}>
+              Register
+            </ThemedText>
+            {!isLogin && <View style={styles.tabIndicator} />}
+          </Pressable>
+        </View>
+
         <View style={styles.contentSection}>
           <ThemedText style={styles.title}>
-            Welcome Back
+            {isLogin ? 'Welcome Back' : 'Create Account'}
           </ThemedText>
           <ThemedText style={styles.subtitle}>
-            Login to continue shopping for kids
+            {isLogin ? 'Login to continue shopping for kids' : 'Register to start shopping'}
           </ThemedText>
 
           <View style={styles.formContainer}>
+            {/* Name Field for Register */}
+            {!isLogin && (
+              <View style={styles.inputWrapper}>
+                <ThemedText style={styles.inputLabel}>Full Name</ThemedText>
+                <View style={[styles.modernInputContainer, name.length > 0 && styles.modernInputActive]}>
+                  <LinearGradient
+                    colors={['#FFB6D9', '#FFE5EE']}
+                    style={styles.modernInputGradient}
+                    start={{ x: 0, y: 0 }}
+                    end={{ x: 1, y: 1 }}
+                  >
+                    <Feather name="user" size={20} color="#FF6B9D" style={styles.inputIcon} />
+                    <TextInput
+                      value={name}
+                      onChangeText={setName}
+                      placeholder="Enter your full name"
+                      style={styles.modernPhoneInput}
+                      placeholderTextColor="#999"
+                    />
+                  </LinearGradient>
+                </View>
+              </View>
+            )}
+
+            {/* Phone Field */}
             <View style={styles.inputWrapper}>
               <ThemedText style={styles.inputLabel}>Mobile Number</ThemedText>
               <View style={[styles.modernInputContainer, phone.length > 0 && styles.modernInputActive]}>
@@ -76,23 +138,23 @@ export default function LoginScreen() {
 
             <Pressable
               onPress={handleSendOTP}
-              disabled={phone.length !== 10}
+              disabled={!isFormValid}
               style={[
                 styles.submitButton,
-                phone.length === 10 && styles.submitButtonActive
+                isFormValid && styles.submitButtonActive
               ]}
             >
               <LinearGradient
-                colors={phone.length === 10 ? ['#FF6B9D', '#FF8FB3'] : ['#D0D0D0', '#B8B8B8']}
+                colors={isFormValid ? ['#FF6B9D', '#FF8FB3'] : ['#D0D0D0', '#B8B8B8']}
                 style={styles.submitButtonGradient}
                 start={{ x: 0, y: 0 }}
                 end={{ x: 1, y: 0 }}
               >
                 <ThemedText style={[
                   styles.submitButtonText,
-                  phone.length !== 10 && styles.submitButtonTextDisabled
+                  !isFormValid && styles.submitButtonTextDisabled
                 ]}>
-                  Continue
+                  {isLogin ? 'Continue' : 'Register'}
                 </ThemedText>
               </LinearGradient>
             </Pressable>
@@ -139,6 +201,42 @@ const styles = StyleSheet.create({
   logo: {
     width: 180,
     height: 90,
+  },
+  tabContainer: {
+    flexDirection: 'row',
+    marginHorizontal: 24,
+    marginBottom: 32,
+    borderBottomWidth: 2,
+    borderBottomColor: '#E5E7EB',
+  },
+  tab: {
+    flex: 1,
+    paddingVertical: 12,
+    paddingHorizontal: 16,
+    alignItems: 'center',
+  },
+  tabActive: {
+    borderBottomWidth: 0,
+  },
+  tabText: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#9CA3AF',
+  },
+  tabTextActive: {
+    color: '#FF6B9D',
+    fontSize: 18,
+    fontWeight: '700',
+  },
+  tabIndicator: {
+    position: 'absolute',
+    bottom: -2,
+    left: 0,
+    right: 0,
+    height: 4,
+    backgroundColor: '#FF6B9D',
+    borderTopLeftRadius: 2,
+    borderTopRightRadius: 2,
   },
   contentSection: {
     flex: 1,
@@ -208,36 +306,6 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     color: '#1F2937',
     paddingVertical: 4,
-  },
-  phoneInputContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#F9FAFB',
-    borderRadius: 14,
-    borderWidth: 2,
-    borderColor: '#E5E7EB',
-    height: 60,
-    overflow: 'hidden',
-  },
-  countryCodeBox: {
-    paddingHorizontal: 16,
-    paddingVertical: 16,
-    borderRightWidth: 1.5,
-    borderRightColor: '#E5E7EB',
-    justifyContent: 'center',
-  },
-  countryCodeText: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: '#1F2937',
-  },
-  phoneInput: {
-    flex: 1,
-    fontSize: 18,
-    fontWeight: '600',
-    paddingHorizontal: 16,
-    height: '100%',
-    color: '#1F2937',
   },
   submitButton: {
     width: '100%',
