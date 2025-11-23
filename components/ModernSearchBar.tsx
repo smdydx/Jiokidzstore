@@ -29,12 +29,10 @@ export function ModernSearchBar({
       end={{ x: 1, y: 1 }}
       style={styles.container}
     >
-      {/* Top Row: Location and Notification Icons */}
+      {/* Top Row: Notification Icon */}
       <View style={styles.topRow}>
-        <Pressable style={styles.iconButton} onPress={onLocationPress}>
-          <Feather name="map-pin" size={20} color="#FFFFFF" />
-        </Pressable>
-        <Pressable style={styles.iconButton} onPress={onNotificationPress}>
+        <View />
+        <Pressable style={styles.notificationButton} onPress={onNotificationPress}>
           <Feather name="bell" size={20} color="#FFFFFF" />
         </Pressable>
       </View>
@@ -109,11 +107,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: 16,
   },
-  iconButton: {
+  notificationButton: {
     width: 40,
     height: 40,
     borderRadius: 20,
-    backgroundColor: '#D64A7F',
+    backgroundColor: '#FFB6D9',
     justifyContent: 'center',
     alignItems: 'center',
   },
