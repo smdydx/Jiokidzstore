@@ -5,6 +5,7 @@ import HomeScreen from "@/screens/HomeScreen";
 import ProductDetailScreen from "@/screens/product/ProductDetailScreen";
 import SearchScreen from "@/screens/product/SearchScreen";
 import FlashSaleScreen from "@/screens/product/FlashSaleScreen";
+import AllProductsScreen from "@/screens/product/AllProductsScreen";
 import ReviewsScreen from "@/screens/product/ReviewsScreen";
 import CartScreen from "@/screens/cart/CartScreen";
 import CheckoutAddressScreen from "@/screens/cart/CheckoutAddressScreen";
@@ -21,6 +22,7 @@ export type HomeStackParamList = {
   ProductDetail: { productId: string };
   Search: undefined;
   FlashSale: undefined;
+  AllProducts: undefined;
   Reviews: { productId: string };
   Cart: undefined;
   CheckoutAddress: undefined;
@@ -65,6 +67,11 @@ export default function HomeStackNavigator() {
         name="FlashSale"
         component={FlashSaleScreen}
         options={{ title: "Flash Sale" }}
+      />
+      <Stack.Screen
+        name="AllProducts"
+        component={AllProductsScreen}
+        options={{ title: "All Products" }}
       />
       <Stack.Screen
         name="Reviews"

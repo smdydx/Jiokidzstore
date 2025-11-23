@@ -153,7 +153,7 @@ export default function HomeScreen() {
         <View style={styles.section}>
           <View style={styles.sectionHeader}>
             <ThemedText style={styles.sectionTitle}>Trending Now</ThemedText>
-            <Pressable>
+            <Pressable onPress={() => navigation.navigate('AllProducts')}>
               <ThemedText style={styles.seeAllText}>View All</ThemedText>
             </Pressable>
           </View>
