@@ -89,7 +89,7 @@ export default function LoginScreen() {
                 <ThemedText style={styles.inputLabel}>Full Name</ThemedText>
                 <View style={[styles.modernInputContainer, name.length > 0 && styles.modernInputActive]}>
                   <LinearGradient
-                    colors={['#FFB6D9', '#FFE5EE']}
+                    colors={['rgba(255, 182, 217, 0.3)', 'rgba(255, 229, 238, 0.3)']}
                     style={styles.modernInputGradient}
                     start={{ x: 0, y: 0 }}
                     end={{ x: 1, y: 1 }}
@@ -112,7 +112,7 @@ export default function LoginScreen() {
               <ThemedText style={styles.inputLabel}>Mobile Number</ThemedText>
               <View style={[styles.modernInputContainer, phone.length > 0 && styles.modernInputActive]}>
                 <LinearGradient
-                  colors={['#FFB6D9', '#FFE5EE']}
+                  colors={['rgba(255, 182, 217, 0.3)', 'rgba(255, 229, 238, 0.3)']}
                   style={styles.modernInputGradient}
                   start={{ x: 0, y: 0 }}
                   end={{ x: 1, y: 1 }}
@@ -306,6 +306,7 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     color: '#1F2937',
     paddingVertical: 4,
+    backgroundColor: 'transparent',
   },
   submitButton: {
     width: '100%',
