@@ -10,11 +10,9 @@ import { ProductCard } from '@/components/ProductCard';
 import { ModernCategory } from '@/components/ModernCategory';
 import { ModernSearchBar } from '@/components/ModernSearchBar';
 import { ModernHeroSection } from '@/components/ModernHeroSection';
-import { BadgeLabel } from '@/components/BadgeLabel';
 import { BestSellersCarousel } from '@/components/BestSellersCarousel';
 import { PersonalizedSection } from '@/components/PersonalizedSection';
 import { TestimonialsSection } from '@/components/TestimonialsSection';
-import { TwoColumnPromo } from '@/components/TwoColumnPromo';
 import { Colors, Spacing, BorderRadius } from '@/constants/theme';
 import { PRODUCTS, CATEGORIES } from '@/data/mockData';
 import { wishlistStorage } from '@/utils/storage';
@@ -99,29 +97,6 @@ export default function HomeScreen() {
           />
         </View>
 
-        {/* Two Column Promo */}
-        <TwoColumnPromo 
-          onLeftPress={() => navigation.navigate('DealsTab' as any)}
-          onRightPress={() => navigation.navigate('DealsTab' as any)}
-        />
-
-        {/* Promotional Banner */}
-        <View style={styles.promoBanner}>
-          <LinearGradient
-            colors={['#FFB6D9', '#FF8FB3']}
-            start={{ x: 0, y: 0 }}
-            end={{ x: 1, y: 1 }}
-            style={styles.promoBannerGradient}
-          >
-            <View>
-              <BadgeLabel label="Limited Time Offer" type="hot" />
-              <ThemedText style={styles.promoBannerText}>Free Shipping on Orders Above ₹499</ThemedText>
-            </View>
-            <Pressable>
-              <Feather name="arrow-right" size={24} color="#FFFFFF" />
-            </Pressable>
-          </LinearGradient>
-        </View>
 
         {/* Categories */}
         <View style={styles.section}>
@@ -246,30 +221,6 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: '600',
     color: Colors.light.primary,
-  },
-  promoBanner: {
-    marginHorizontal: 16,
-    marginBottom: 24,
-    borderRadius: 16,
-    overflow: 'hidden',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.15,
-    shadowRadius: 8,
-    elevation: 5,
-  },
-  promoBannerGradient: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingHorizontal: 20,
-    paddingVertical: 16,
-  },
-  promoBannerText: {
-    fontSize: 15,
-    fontWeight: '700',
-    color: '#FFFFFF',
-    marginTop: 8,
   },
   heroContainer: {
     paddingVertical: Spacing.lg,
