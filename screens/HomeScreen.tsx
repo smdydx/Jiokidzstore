@@ -149,9 +149,6 @@ export default function HomeScreen() {
         {/* Personalized Section */}
         <PersonalizedSection onItemPress={() => navigation.navigate('DealsTab' as any)} />
 
-        {/* Testimonials */}
-        <TestimonialsSection />
-
         {/* Trending Products */}
         <View style={styles.section}>
           <View style={styles.sectionHeader}>
@@ -171,6 +168,9 @@ export default function HomeScreen() {
             ))}
           </View>
         </View>
+
+        {/* Testimonials */}
+        <TestimonialsSection />
       </ScreenScrollView>
 
       {/* Floating Cart Button */}
