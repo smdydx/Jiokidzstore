@@ -159,12 +159,13 @@ export default function HomeScreen() {
           </View>
           <View style={styles.productsGrid}>
             {updatedProducts.slice(0, 6).map(product => (
-              <ProductCard
-                key={product.id}
-                product={product}
-                onPress={() => handleProductPress(product.id)}
-                onWishlistPress={() => handleWishlistToggle(product.id)}
-              />
+              <View key={product.id} style={styles.productGridItem}>
+                <ProductCard
+                  product={product}
+                  onPress={() => handleProductPress(product.id)}
+                  onWishlistPress={() => handleWishlistToggle(product.id)}
+                />
+              </View>
             ))}
           </View>
         </View>
@@ -277,6 +278,12 @@ const styles = StyleSheet.create({
   productsGrid: {
     flexDirection: 'row',
     flexWrap: 'wrap',
+    paddingHorizontal: 8,
+    gap: 8,
+  },
+  productGridItem: {
+    width: '50%',
+    paddingHorizontal: 8,
   },
   cartFAB: {
     position: 'absolute',
