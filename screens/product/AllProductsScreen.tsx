@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useCallback } from 'react';
-import { View, StyleSheet, Pressable, Platform, FlatList, ScrollView } from 'react-native';
+import { View, StyleSheet, Pressable, FlatList, Dimensions } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { Feather } from '@expo/vector-icons';
 import { ScreenFlatList } from '@/components/ScreenFlatList';
@@ -8,11 +8,6 @@ import { ThemedText } from '@/components/ThemedText';
 import { Colors, Spacing } from '@/constants/theme';
 import { PRODUCTS } from '@/data/mockData';
 import { wishlistStorage } from '@/utils/storage';
-
-type FilterOption = {
-  id: string;
-  label: string;
-};
 
 const PRICE_RANGES = [
   { id: '0-500', label: '₹0 - ₹500' },
@@ -37,7 +32,6 @@ export default function AllProductsScreen() {
   const filteredProducts = useMemo(() => {
     let filtered = [...products];
 
-    // Filter by price range
     if (selectedPriceRange) {
       filtered = filtered.filter(p => {
         if (selectedPriceRange === '0-500') return p.price <= 500;
@@ -48,7 +42,6 @@ export default function AllProductsScreen() {
       });
     }
 
-    // Filter by rating
     if (selectedRating) {
       filtered = filtered.filter(p => {
         if (selectedRating === '4plus') return p.rating >= 4;
@@ -57,7 +50,6 @@ export default function AllProductsScreen() {
       });
     }
 
-    // Sort
     if (sortBy === 'price-low') {
       filtered.sort((a, b) => a.price - b.price);
     } else if (sortBy === 'price-high') {
@@ -100,29 +92,29 @@ export default function AllProductsScreen() {
     setSelectedPriceRange(null);
     setSelectedRating(null);
     setSortBy('popularity');
+    setShowFilters(false);
   };
 
   const hasActiveFilters = selectedPriceRange || selectedRating || sortBy !== 'popularity';
 
-  return (
-    <View style={styles.container}>
-      {/* Header with Filter Toggle */}
+  // Header component for FlatList
+  const renderHeader = () => (
+    <>
+      {/* Filter Header */}
       <View style={styles.header}>
         <ThemedText style={styles.headerTitle}>All Products</ThemedText>
-        <View style={styles.headerActions}>
-          <Pressable
-            style={styles.sortButton}
-            onPress={() => setShowFilters(!showFilters)}
-          >
-            <Feather name={showFilters ? 'chevron-up' : 'filter'} size={20} color={Colors.light.primary} />
-            <ThemedText style={styles.sortLabel}>Filter</ThemedText>
-          </Pressable>
-        </View>
+        <Pressable
+          style={styles.sortButton}
+          onPress={() => setShowFilters(!showFilters)}
+        >
+          <Feather name={showFilters ? 'chevron-up' : 'filter'} size={20} color={Colors.light.primary} />
+          <ThemedText style={styles.sortLabel}>Filter</ThemedText>
+        </Pressable>
       </View>
 
-      {/* Filters Panel */}
+      {/* Filter Panel - Collapsible */}
       {showFilters && (
-        <ScrollView style={styles.filterPanel} showsVerticalScrollIndicator={false}>
+        <View style={styles.filterPanel}>
           {/* Sort Options */}
           <View style={styles.filterSection}>
             <ThemedText style={styles.filterTitle}>Sort By</ThemedText>
@@ -183,53 +175,54 @@ export default function AllProductsScreen() {
               <ThemedText style={styles.clearButtonText}>Clear All Filters</ThemedText>
             </Pressable>
           )}
-        </ScrollView>
+        </View>
       )}
 
       {/* Results Count */}
       {filteredProducts.length > 0 && (
         <View style={styles.resultInfo}>
-          <ThemedText style={styles.resultText}>{filteredProducts.length} products</ThemedText>
+          <ThemedText style={styles.resultText}>{filteredProducts.length} products found</ThemedText>
         </View>
       )}
+    </>
+  );
 
-      {/* Products Grid */}
-      {filteredProducts.length > 0 ? (
-        <ScreenFlatList
-          data={filteredProducts}
-          numColumns={2}
-          keyExtractor={(item) => item.id}
-          contentContainerStyle={styles.grid}
-          columnWrapperStyle={styles.columnWrapper}
-          renderItem={({ item }) => (
-            <View style={styles.productItem}>
-              <ProductCard
-                product={item}
-                onPress={() => handleProductPress(item.id)}
-                onWishlistPress={() => handleWishlistToggle(item.id)}
-                isWishlisted={item.isWishlisted}
-              />
-            </View>
-          )}
-        />
-      ) : (
-        <View style={styles.emptyState}>
-          <Feather name="inbox" size={48} color={Colors.light.textSecondary} />
-          <ThemedText style={styles.emptyStateText}>No products found</ThemedText>
-          <Pressable style={styles.resetButton} onPress={clearFilters}>
-            <ThemedText style={styles.resetButtonText}>Reset Filters</ThemedText>
-          </Pressable>
+  // Empty state component
+  const renderEmpty = () => (
+    <View style={styles.emptyState}>
+      <Feather name="inbox" size={48} color={Colors.light.textSecondary} />
+      <ThemedText style={styles.emptyStateText}>No products found</ThemedText>
+      <Pressable style={styles.resetButton} onPress={clearFilters}>
+        <ThemedText style={styles.resetButtonText}>Reset Filters</ThemedText>
+      </Pressable>
+    </View>
+  );
+
+  return (
+    <ScreenFlatList
+      data={filteredProducts}
+      numColumns={2}
+      keyExtractor={(item) => item.id}
+      contentContainerStyle={styles.grid}
+      columnWrapperStyle={styles.columnWrapper}
+      ListHeaderComponent={renderHeader}
+      ListEmptyComponent={renderEmpty}
+      renderItem={({ item }) => (
+        <View style={styles.productItem}>
+          <ProductCard
+            product={item}
+            onPress={() => handleProductPress(item.id)}
+            onWishlistPress={() => handleWishlistToggle(item.id)}
+            isWishlisted={item.isWishlisted}
+          />
         </View>
       )}
-    </View>
+      scrollEventThrottle={16}
+    />
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#FFFFFF',
-  },
   header: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -238,15 +231,12 @@ const styles = StyleSheet.create({
     paddingVertical: Spacing.md,
     borderBottomWidth: 1,
     borderBottomColor: '#EEEEEE',
+    backgroundColor: '#FFFFFF',
   },
   headerTitle: {
     fontSize: 18,
     fontWeight: '700',
     color: '#1F2937',
-  },
-  headerActions: {
-    flexDirection: 'row',
-    gap: Spacing.sm,
   },
   sortButton: {
     flexDirection: 'row',
@@ -264,11 +254,11 @@ const styles = StyleSheet.create({
     color: Colors.light.primary,
   },
   filterPanel: {
-    maxHeight: 300,
     paddingHorizontal: Spacing.md,
     paddingVertical: Spacing.md,
     borderBottomWidth: 1,
     borderBottomColor: '#EEEEEE',
+    backgroundColor: '#FFFFFF',
   },
   filterSection: {
     marginBottom: Spacing.lg,
@@ -321,6 +311,7 @@ const styles = StyleSheet.create({
   resultInfo: {
     paddingHorizontal: Spacing.md,
     paddingVertical: Spacing.sm,
+    backgroundColor: '#FFFFFF',
   },
   resultText: {
     fontSize: 12,
@@ -341,6 +332,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     paddingHorizontal: Spacing.md,
+    minHeight: 400,
   },
   emptyStateText: {
     fontSize: 16,
