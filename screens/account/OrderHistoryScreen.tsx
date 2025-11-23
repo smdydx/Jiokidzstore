@@ -1,21 +1,34 @@
 import React from 'react';
 import { View, StyleSheet, Pressable } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { Feather } from '@expo/vector-icons';
 import { ScreenScrollView } from '@/components/ScreenScrollView';
 import { ThemedText } from '@/components/ThemedText';
 import { Colors, Spacing, BorderRadius, Shadows } from '@/constants/theme';
+import type { ProfileStackParamList } from '@/navigation/ProfileStackNavigator';
 
 export default function OrderHistoryScreen() {
+  const navigation = useNavigation<NativeStackNavigationProp<ProfileStackParamList>>();
+  
   const orders = [
     { id: '12345', status: 'Delivered', date: '2 days ago', total: 1398, items: 2 },
     { id: '12344', status: 'In Transit', date: '5 days ago', total: 899, items: 1 },
   ];
 
+  const handleTrackOrder = (orderId: string) => {
+    navigation.navigate('OrderTracking', { orderId });
+  };
+
   return (
     <ScreenScrollView contentContainerStyle={{ paddingTop: Spacing.lg, paddingBottom: Spacing.xl }}>
       <View style={[styles.container, { paddingTop: Spacing.lg }]}>
         {orders.map((order) => (
-          <Pressable key={order.id} style={styles.orderCard}>
+          <Pressable 
+            key={order.id} 
+            style={({ pressed }) => [styles.orderCard, pressed && styles.orderCardPressed]}
+            onPress={() => handleTrackOrder(order.id)}
+          >
             <View style={styles.orderHeader}>
               <ThemedText style={styles.orderId}>Order #{order.id}</ThemedText>
               <View style={[styles.statusBadge, order.status === 'Delivered' && styles.delivered]}>
@@ -42,6 +55,10 @@ const styles = StyleSheet.create({
     borderRadius: BorderRadius.sm,
     marginBottom: Spacing.md,
     ...Shadows.small,
+  },
+  orderCardPressed: {
+    opacity: 0.7,
+    backgroundColor: 'rgba(255, 107, 157, 0.05)',
   },
   orderHeader: { flexDirection: 'row', justifyContent: 'space-between', marginBottom: 4 },
   orderId: { fontWeight: '700' },
