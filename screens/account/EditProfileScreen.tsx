@@ -54,8 +54,8 @@ export default function EditProfileScreen() {
 
   return (
     <View style={styles.wrapper}>
-      <ScreenKeyboardAwareScrollView>
-        <View style={styles.container}>
+      <ScreenKeyboardAwareScrollView contentContainerStyle={{ paddingTop: Spacing.lg, paddingBottom: Spacing.xl }}>
+        <View style={[styles.container, { paddingTop: Spacing.lg }]}>
         {/* User Info Header */}
         <View style={styles.header}>
           <View style={styles.avatarContainer}>

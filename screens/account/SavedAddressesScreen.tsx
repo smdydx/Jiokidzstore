@@ -8,8 +8,8 @@ import { Colors, Spacing, BorderRadius, Shadows } from '@/constants/theme';
 
 export default function SavedAddressesScreen() {
   return (
-    <ScreenScrollView>
-      <View style={styles.container}>
+    <ScreenScrollView contentContainerStyle={{ paddingTop: Spacing.lg, paddingBottom: Spacing.xl }}>
+      <View style={[styles.container, { paddingTop: Spacing.lg }]}>
         <Button style={styles.addButton}>
           <Feather name="plus" size={20} color="#FFFFFF" style={{ marginRight: 8 }} />
           Add New Address

@@ -12,8 +12,8 @@ export default function OrderHistoryScreen() {
   ];
 
   return (
-    <ScreenScrollView>
-      <View style={styles.container}>
+    <ScreenScrollView contentContainerStyle={{ paddingTop: Spacing.lg, paddingBottom: Spacing.xl }}>
+      <View style={[styles.container, { paddingTop: Spacing.lg }]}>
         {orders.map((order) => (
           <Pressable key={order.id} style={styles.orderCard}>
             <View style={styles.orderHeader}>
