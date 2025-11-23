@@ -47,7 +47,8 @@ const styles = StyleSheet.create({
   container: {
     paddingHorizontal: Spacing.lg,
     paddingVertical: Spacing.md,
-    borderRadius: 24,
+    borderBottomLeftRadius: 24,
+    borderBottomRightRadius: 24,
   },
   content: {
     flexDirection: 'row',

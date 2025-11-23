@@ -82,8 +82,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: Spacing.lg,
     paddingVertical: Spacing.md,
     zIndex: 10,
-    borderTopLeftRadius: 24,
-    borderTopRightRadius: 24,
   },
   searchBox: {
     borderRadius: 20,
