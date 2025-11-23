@@ -1,23 +1,32 @@
 import React, { useState } from 'react';
 import { View, StyleSheet, Pressable } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { Feather } from '@expo/vector-icons';
 import { ScreenScrollView } from '@/components/ScreenScrollView';
 import { ThemedText } from '@/components/ThemedText';
 import { Button } from '@/components/Button';
 import { Colors, Spacing, BorderRadius } from '@/constants/theme';
+import type { HomeStackParamList } from '@/navigation/HomeStackNavigator';
 
 export default function CheckoutPaymentScreen() {
+  const navigation = useNavigation<NativeStackNavigationProp<HomeStackParamList>>();
   const [selectedMethod, setSelectedMethod] = useState('upi');
   const methods = [
-    { id: 'upi', name: 'UPI', icon: 'smartphone' },
+    { id: 'upi', name: 'UPI Payment', icon: 'smartphone' },
     { id: 'card', name: 'Credit/Debit Card', icon: 'credit-card' },
     { id: 'netbanking', name: 'Net Banking', icon: 'globe' },
     { id: 'cod', name: 'Cash on Delivery', icon: 'package' },
   ];
 
+  const handleContinue = () => {
+    navigation.navigate('OrderSummary');
+  };
+
   return (
     <ScreenScrollView>
       <View style={styles.container}>
+        <ThemedText type="h3" style={styles.title}>Select Payment Method</ThemedText>
         {methods.map((method) => (
           <Pressable
             key={method.id}
@@ -33,7 +42,9 @@ export default function CheckoutPaymentScreen() {
             </View>
           </Pressable>
         ))}
-        <Button style={styles.button}>Continue to Payment</Button>
+        <Button onPress={handleContinue} style={styles.button}>
+          Proceed to Order Summary
+        </Button>
       </View>
     </ScreenScrollView>
   );
@@ -41,6 +52,10 @@ export default function CheckoutPaymentScreen() {
 
 const styles = StyleSheet.create({
   container: { padding: Spacing.lg },
+  title: {
+    marginBottom: Spacing.lg,
+    color: '#1F2937',
+  },
   methodCard: {
     flexDirection: 'row',
     justifyContent: 'space-between',

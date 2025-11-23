@@ -49,7 +49,13 @@ export default function HomeScreen() {
   const heroScrollRef = useRef<FlatList>(null);
 
   const handleProductPress = (productId: string) => {
-    navigation.navigate('ProductDetail', { productId });
+    navigation.navigate('HomeTab', {
+      screen: 'HomeStack',
+      params: {
+        screen: 'ProductDetail',
+        params: { productId }
+      }
+    } as any);
   };
 
   const handleWishlistToggle = async (productId: string) => {
@@ -94,15 +100,19 @@ export default function HomeScreen() {
     <View style={styles.heroSlide}>
       <Image source={{ uri: item.image }} style={styles.heroImage} />
       <LinearGradient
-        colors={['transparent', 'rgba(0,0,0,0.7)']}
+        colors={['rgba(255, 107, 157, 0.1)', 'rgba(255, 107, 157, 0.9)']}
         style={styles.heroOverlay}
       >
         <View style={styles.heroContent}>
           <ThemedText style={styles.heroTitle}>{item.title}</ThemedText>
           <ThemedText style={styles.heroSubtitle}>{item.subtitle}</ThemedText>
-          <Pressable style={styles.heroButton}>
+          <LinearGradient
+            colors={['#FFFFFF', '#FFF8FA']}
+            style={styles.heroButton}
+          >
             <ThemedText style={styles.heroButtonText}>{item.buttonText}</ThemedText>
-          </Pressable>
+            <Feather name="arrow-right" size={18} color={Colors.light.primary} />
+          </LinearGradient>
         </View>
       </LinearGradient>
     </View>
@@ -110,30 +120,6 @@ export default function HomeScreen() {
 
   return (
     <ScreenScrollView contentContainerStyle={styles.scrollContent}>
-      {/* Header */}
-      <View style={styles.header}>
-        <View style={styles.headerTop}>
-          <View style={styles.locationContainer}>
-            <Feather name="map-pin" size={16} color={Colors.light.primary} />
-            <ThemedText style={styles.locationText}>Mumbai</ThemedText>
-            <Feather name="chevron-down" size={14} color={Colors.light.textGray} />
-          </View>
-          <View style={styles.headerActions}>
-            <Pressable style={styles.iconButton}>
-              <Feather name="bell" size={22} color={Colors.light.text} />
-              <View style={styles.notificationDot} />
-            </Pressable>
-          </View>
-        </View>
-
-        <Pressable style={styles.searchBar} onPress={handleSearchPress}>
-          <Feather name="search" size={20} color={Colors.light.textGray} />
-          <ThemedText style={styles.searchPlaceholder}>
-            Search for toys, clothes, diapers...
-          </ThemedText>
-        </Pressable>
-      </View>
-
       {/* Hero Slider */}
       <View style={styles.heroSection}>
         <FlatList
@@ -249,69 +235,12 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     paddingBottom: 100,
   },
-  header: {
-    backgroundColor: '#FFFFFF',
-    paddingHorizontal: 16,
-    paddingTop: 12,
-    paddingBottom: 16,
-    borderBottomWidth: 1,
-    borderBottomColor: '#F3F4F6',
-  },
-  headerTop: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: 12,
-  },
-  locationContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 4,
-  },
-  locationText: {
-    fontSize: 15,
-    fontWeight: '600',
-    color: '#1F2937',
-  },
-  headerActions: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 16,
-  },
-  iconButton: {
-    position: 'relative',
-    padding: 4,
-  },
-  notificationDot: {
-    position: 'absolute',
-    top: 4,
-    right: 4,
-    width: 6,
-    height: 6,
-    borderRadius: 3,
-    backgroundColor: '#EF4444',
-  },
-  searchBar: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#F9FAFB',
-    borderRadius: 12,
-    paddingHorizontal: 16,
-    height: 44,
-    gap: 12,
-  },
-  searchPlaceholder: {
-    flex: 1,
-    fontSize: 15,
-    color: '#9CA3AF',
-  },
   heroSection: {
-    marginTop: 16,
     marginBottom: 24,
   },
   heroSlide: {
     width: width,
-    height: 220,
+    height: 280,
     position: 'relative',
   },
   heroImage: {
@@ -326,32 +255,45 @@ const styles = StyleSheet.create({
     right: 0,
     height: '100%',
     justifyContent: 'flex-end',
-    paddingHorizontal: 20,
-    paddingBottom: 24,
+    paddingHorizontal: 24,
+    paddingBottom: 32,
   },
   heroContent: {
-    gap: 6,
+    gap: 8,
   },
   heroTitle: {
-    fontSize: 24,
-    fontWeight: '700',
+    fontSize: 32,
+    fontWeight: '800',
     color: '#FFFFFF',
+    textShadowColor: 'rgba(0, 0, 0, 0.3)',
+    textShadowOffset: { width: 0, height: 2 },
+    textShadowRadius: 4,
   },
   heroSubtitle: {
-    fontSize: 14,
+    fontSize: 16,
     color: '#FFFFFF',
-    opacity: 0.95,
+    fontWeight: '500',
+    textShadowColor: 'rgba(0, 0, 0, 0.3)',
+    textShadowOffset: { width: 0, height: 1 },
+    textShadowRadius: 2,
   },
   heroButton: {
     alignSelf: 'flex-start',
-    backgroundColor: '#FFFFFF',
-    paddingHorizontal: 20,
-    paddingVertical: 10,
-    borderRadius: 8,
-    marginTop: 8,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    paddingHorizontal: 24,
+    paddingVertical: 12,
+    borderRadius: 24,
+    marginTop: 12,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.2,
+    shadowRadius: 8,
+    elevation: 6,
   },
   heroButtonText: {
-    fontSize: 14,
+    fontSize: 15,
     fontWeight: '700',
     color: Colors.light.primary,
   },
@@ -445,10 +387,10 @@ const styles = StyleSheet.create({
     position: 'absolute',
     bottom: 24,
     right: 16,
-    width: 56,
-    height: 56,
-    borderRadius: 28,
-    overflow: 'hidden',
+    width: 64,
+    height: 64,
+    borderRadius: 32,
+    overflow: 'visible',
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.3,
@@ -460,24 +402,31 @@ const styles = StyleSheet.create({
     height: '100%',
     justifyContent: 'center',
     alignItems: 'center',
+    borderRadius: 32,
   },
   cartBadge: {
     position: 'absolute',
-    top: -2,
-    right: -2,
-    minWidth: 20,
-    height: 20,
-    borderRadius: 10,
+    top: -4,
+    right: -4,
+    minWidth: 24,
+    height: 24,
+    borderRadius: 12,
     backgroundColor: '#EF4444',
     justifyContent: 'center',
     alignItems: 'center',
     paddingHorizontal: 6,
-    borderWidth: 2,
+    borderWidth: 3,
     borderColor: '#FFFFFF',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    elevation: 4,
   },
   cartBadgeText: {
-    fontSize: 11,
-    fontWeight: '700',
+    fontSize: 12,
+    fontWeight: '800',
     color: '#FFFFFF',
+    lineHeight: 14,
   },
 });

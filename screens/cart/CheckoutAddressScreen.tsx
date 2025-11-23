@@ -1,12 +1,21 @@
 import React from 'react';
 import { View, StyleSheet, Pressable } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { Feather } from '@expo/vector-icons';
 import { ScreenScrollView } from '@/components/ScreenScrollView';
 import { ThemedText } from '@/components/ThemedText';
 import { Button } from '@/components/Button';
 import { Colors, Spacing, BorderRadius, Shadows } from '@/constants/theme';
+import type { HomeStackParamList } from '@/navigation/HomeStackNavigator';
 
 export default function CheckoutAddressScreen() {
+  const navigation = useNavigation<NativeStackNavigationProp<HomeStackParamList>>();
+
+  const handleDeliverHere = () => {
+    navigation.navigate('CheckoutPayment');
+  };
+
   return (
     <ScreenScrollView>
       <View style={styles.container}>
@@ -23,7 +32,9 @@ export default function CheckoutAddressScreen() {
           <ThemedText type="caption">Phone: +91 9876543210</ThemedText>
         </View>
         
-        <Button style={styles.button}>Deliver Here</Button>
+        <Button onPress={handleDeliverHere} style={styles.button}>
+          Deliver Here
+        </Button>
       </View>
     </ScreenScrollView>
   );
