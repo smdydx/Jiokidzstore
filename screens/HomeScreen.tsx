@@ -32,7 +32,7 @@ export default function HomeScreen() {
       } else {
         await wishlistStorage.addToWishlist(product);
       }
-      
+
       setProducts(prev =>
         prev.map(p =>
           p.id === productId ? { ...p, isWishlisted: !isWishlisted } : p

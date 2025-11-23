@@ -1,6 +1,7 @@
 
 import React from "react";
 import { StyleSheet, Pressable, ActivityIndicator } from "react-native";
+import { LinearGradient } from 'expo-linear-gradient';
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
@@ -10,9 +11,9 @@ import Animated, {
 import { ThemedText } from "@/components/ThemedText";
 import { useTheme } from "@/hooks/useTheme";
 import { useResponsive } from "@/hooks/useResponsive";
-import { BorderRadius } from "@/constants/theme";
+import { BorderRadius, Shadows, Colors } from "@/constants/theme";
 
-type ButtonVariant = "primary" | "secondary" | "outline";
+type ButtonVariant = "primary" | "secondary" | "outline" | "gradient";
 
 interface ButtonProps {
   title: string;
