@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import { View, StyleSheet, Pressable } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
@@ -16,13 +16,17 @@ export default function OrderHistoryScreen() {
     { id: '12344', status: 'In Transit', date: '5 days ago', total: 899, items: 1 },
   ];
 
-  const handleTrackOrder = (orderId: string) => {
-    navigation.navigate('OrderTracking', { orderId });
-  };
+  const handleTrackOrder = useCallback((orderId: string) => {
+    try {
+      navigation.navigate('OrderTracking', { orderId });
+    } catch (error) {
+      console.warn('Navigation error:', error);
+    }
+  }, [navigation]);
 
   return (
     <ScreenScrollView contentContainerStyle={{ paddingTop: Spacing.lg, paddingBottom: Spacing.xl }}>
-      <View style={[styles.container, { paddingTop: Spacing.lg }]}>
+      <View style={styles.container}>
         {orders.map((order) => (
           <Pressable 
             key={order.id} 
@@ -37,7 +41,9 @@ export default function OrderHistoryScreen() {
             </View>
             <ThemedText type="caption" style={styles.date}>{order.date}</ThemedText>
             <View style={styles.orderFooter}>
-              <ThemedText>{order.items} items • ₹{order.total}</ThemedText>
+              <ThemedText>
+                {order.items} items • ₹{order.total}
+              </ThemedText>
               <Feather name="chevron-right" size={20} color={Colors.light.textGray} />
             </View>
           </Pressable>
