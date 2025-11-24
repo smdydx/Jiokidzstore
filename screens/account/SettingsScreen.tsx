@@ -10,7 +10,7 @@ export default function SettingsScreen() {
   const [orderUpdates, setOrderUpdates] = React.useState(true);
 
   return (
-    <ScreenScrollView contentContainerStyle={{ paddingTop: Spacing.lg, paddingBottom: Spacing.xl }}>
+    <ScreenScrollView contentContainerStyle={{ paddingBottom: Spacing.xl }}>
       <View style={styles.container}>
         <ThemedText type="h3" style={styles.sectionTitle}>Notifications</ThemedText>
         <View style={styles.setting}>
@@ -41,8 +41,8 @@ export default function SettingsScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: { paddingHorizontal: Spacing.lg },
-  sectionTitle: { marginTop: Spacing.xl, marginBottom: Spacing.lg },
+  container: { paddingHorizontal: Spacing.lg, paddingTop: Spacing.lg },
+  sectionTitle: { marginTop: Spacing.md, marginBottom: Spacing.lg },
   setting: {
     flexDirection: 'row',
     justifyContent: 'space-between',

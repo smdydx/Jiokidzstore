@@ -14,7 +14,7 @@ export default function HelpSupportScreen() {
   ];
 
   return (
-    <ScreenScrollView contentContainerStyle={{ paddingTop: Spacing.lg, paddingBottom: Spacing.xl }}>
+    <ScreenScrollView contentContainerStyle={{ paddingBottom: Spacing.xl }}>
       <View style={styles.container}>
         <ThemedText type="h3" style={styles.title}>How can we help you?</ThemedText>
         {helpItems.map((item, index) => (
@@ -35,8 +35,8 @@ export default function HelpSupportScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: { paddingHorizontal: Spacing.lg },
-  title: { marginBottom: Spacing.xl },
+  container: { paddingHorizontal: Spacing.lg, paddingTop: Spacing.lg },
+  title: { marginBottom: Spacing.lg },
   helpCard: {
     flexDirection: 'row',
     alignItems: 'center',
