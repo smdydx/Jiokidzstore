@@ -101,14 +101,8 @@ export function Button({
     }
   };
 
-  const content = (
-    <Pressable
-      onPress={onPress}
-      onPressIn={handlePressIn}
-      onPressOut={handlePressOut}
-      disabled={disabled || loading}
-      style={[styles.button, getButtonStyle()]}
-    >
+  const buttonContent = (
+    <>
       {loading ? (
         <ActivityIndicator color={getTextColor()} />
       ) : (
@@ -129,7 +123,7 @@ export function Button({
           )}
         </>
       )}
-    </Pressable>
+    </>
   );
 
   return (
@@ -141,10 +135,26 @@ export function Button({
           end={{ x: 1, y: 0 }}
           style={[styles.button, getButtonStyle()]}
         >
-          {content}
+          <Pressable
+            onPress={onPress}
+            onPressIn={handlePressIn}
+            onPressOut={handlePressOut}
+            disabled={disabled || loading}
+            style={styles.button}
+          >
+            {buttonContent}
+          </Pressable>
         </LinearGradient>
       ) : (
-        content
+        <Pressable
+          onPress={onPress}
+          onPressIn={handlePressIn}
+          onPressOut={handlePressOut}
+          disabled={disabled || loading}
+          style={[styles.button, getButtonStyle()]}
+        >
+          {buttonContent}
+        </Pressable>
       )}
     </Animated.View>
   );
